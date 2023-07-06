@@ -32,12 +32,15 @@ type Leads struct {
 	SourceId          string `json:"sourceId,omitempty"`
 	SourceDescription string `json:"sourceDescription,omitempty"`
 	AssignedByLead    string `json:"assignedByLead"`
+	Email             string `json:"email"`
+	FormName          string `json:"formname"`
 }
 
 func GetLeadsAll(w http.ResponseWriter, r *http.Request) {
 	rows, err := DB.Db.Query(`select ID, COALESCE(ResponsibleID,0), COALESCE(Title, ''), 
        COALESCE(Name,''), COALESCE(Phone,''), COALESCE(DateCreate,''), 
-       COALESCE(SourceId,''), COALESCE(SourceDescription,''), COALESCE(AssignedByLead,'')
+       COALESCE(SourceId,''), COALESCE(SourceDescription,''), COALESCE(AssignedByLead,''), COALESCE(Email,''),
+       COALESCE(FormName,'')
 from Leads`)
 	if err != nil {
 		fmt.Println("cant get rows")
@@ -50,7 +53,7 @@ from Leads`)
 		//fmt.Println("started cycle from table")
 		p := Leads{}
 		err := rows.Scan(&p.ID, &p.ResponsibleID, &p.Title, &p.Name, &p.Phone, &p.DateCreate, &p.SourceId,
-			&p.SourceDescription, &p.AssignedByLead)
+			&p.SourceDescription, &p.AssignedByLead, &p.Email, &p.FormName)
 		if err != nil {
 			fmt.Println("i cant scan this")
 			fmt.Println(err)
@@ -59,7 +62,10 @@ from Leads`)
 		products = append(products, p)
 	}
 
-	//fmt.Fprintf(w, "%v\n", products)
+	for _, v := range products {
+		fmt.Fprintf(w, "%v\n", v)
+	}
+
 	/*tmpl, _ := template.ParseFiles("templates/index.html")
 	err = tmpl.Execute(w, products)
 	if err != nil {
@@ -81,7 +87,7 @@ func LeadsAdd(w http.ResponseWriter, r *http.Request) {
 	sourceDescription := r.Form.Get("source_description")
 	title := r.Form.Get("title")
 	email := r.Form.Get("email")
-	formName := r.Form.Get("formName")
+	formName := r.Form.Get("formname")
 	//DB.LeadTestAdd(leadId)
 	fmt.Println("lead added")
 

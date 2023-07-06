@@ -9,4 +9,5 @@ fetch("https://api.npms.io/v2/search?q=vue", { headers })
 .then(response => response.json())
 .then(data => (this.totalVuePackages = data.total));
 }
+
 </script>
