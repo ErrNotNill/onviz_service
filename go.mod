@@ -12,6 +12,7 @@ require (
 )
 
 require (
+	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/klauspost/compress v1.16.0 // indirect
 	github.com/kr/fs v0.1.0 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect

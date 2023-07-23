@@ -2,11 +2,61 @@ package chat
 
 import (
 	"fmt"
+	"github.com/gorilla/websocket"
+	"log"
 	"net"
 	"net/http"
 )
 
+var upgrader = websocket.Upgrader{}
+
 func TestChat(w http.ResponseWriter, r *http.Request) {
+	// Upgrade our raw HTTP connection to a websocket based one
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Print("Error during connection upgradation:", err)
+		return
+	}
+	defer conn.Close()
+
+	// The event loop
+	for {
+		messageType, message, err := conn.ReadMessage()
+		if err != nil {
+			log.Println("Error during message reading:", err)
+			break
+		}
+		log.Printf("Received: %s", message)
+		err = conn.WriteMessage(messageType, message)
+		if err != nil {
+			log.Println("Error during message writing:", err)
+			break
+		}
+	}
+}
+
+func TestChatOld(w http.ResponseWriter, r *http.Request) {
+	ws, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer ws.Close()
+	for {
+		messageType, message, err := ws.ReadMessage()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(string(message))
+		log.Printf("Received: %s", message)
+		err = ws.WriteMessage(messageType, message)
+		if err != nil {
+			log.Println("Error during message writing:", err)
+			break
+		}
+	}
+
 	// get client ip address
 	clientIp := r.Header.Get("X-Real-Ip")
 	if clientIp != "" {

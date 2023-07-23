@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"onviz/DB"
+	"onviz/chat"
 	"onviz/router"
 )
 
@@ -28,7 +29,7 @@ func main() {
 		fmt.Println("Server started with error")
 		return
 	}
-
+	chat.WsStart()
 }
 
 func taskAdd() {
