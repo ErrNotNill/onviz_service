@@ -4,11 +4,14 @@ import (
 	"net/http"
 	"onviz/LEADS"
 	"onviz/VK"
+	"onviz/chat"
 	"onviz/tests"
 )
 
 func Router() {
 
+	http.HandleFunc("/", LEADS.TestStatus)
+	http.HandleFunc("/chat", chat.TestChat)
 	//http.HandleFunc("/tilda", TildaWebHooks)
 	//http.HandleFunc("/getListOfLines", GetListOfLines)
 	http.HandleFunc("/callback", VK.CallBack)

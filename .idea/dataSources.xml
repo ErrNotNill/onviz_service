@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="@45.141.79.120" uuid="c3212ba7-8e6d-49ae-93ff-1e128afb1428">
+    <data-source source="LOCAL" name="Onviz@45.141.79.120" uuid="fc596e4d-f477-421b-b6fa-45ef5480296b">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://45.141.79.120:3306</jdbc-url>
+      <jdbc-url>jdbc:mysql://45.141.79.120:3306/Onviz</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

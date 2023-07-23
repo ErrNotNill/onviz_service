@@ -15,7 +15,7 @@ import (
 
 var SecretKey = "AA1379657aa"
 var Token = "vk1.a.uuGYW0HLLXGopIeCS0mwuHG6GnuBJwDMa8GaYgIwy07nKgjNRrE-gTUUg868oQvep7pjozOiTixAD9j_CpZXgxbCY37NFWoIm392Mxp41-4XfX6U_fhOXH2fg_o50dbGIJtRCNsH7J8YdHNxwcVYOhHC24X2lCqf8YghKs8FWJa4r7sW6u7qK4W_3CR2uSnT3hiXR9azxqjp8ZW89VyMSQ"
-var ConfirmationToken = "1ee66a1c"
+var ConfirmationToken = "17d6f039"
 
 var newUserId int
 var newPostId int

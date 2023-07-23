@@ -11,7 +11,6 @@ import (
 	"onviz/deals"
 	"strconv"
 	"strings"
-	"time"
 )
 
 type Lead struct {
@@ -36,6 +35,11 @@ type Leads struct {
 	FormName          string `json:"formname"`
 }
 
+func TestStatus(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("OK"))
+}
+
 func GetLeadsAll(w http.ResponseWriter, r *http.Request) {
 	rows, err := DB.Db.Query(`select ID, COALESCE(ResponsibleID,0), COALESCE(Title, ''), 
        COALESCE(Name,''), COALESCE(Phone,''), COALESCE(DateCreate,''), 
@@ -44,7 +48,7 @@ func GetLeadsAll(w http.ResponseWriter, r *http.Request) {
 from Leads`)
 	if err != nil {
 		fmt.Println("cant get rows")
-		log.Println(err)
+		//log.Println(err)
 	}
 	defer rows.Close()
 	products := []Leads{}
@@ -56,15 +60,36 @@ from Leads`)
 			&p.SourceDescription, &p.AssignedByLead, &p.Email, &p.FormName)
 		if err != nil {
 			fmt.Println("i cant scan this")
-			fmt.Println(err)
+			//	fmt.Println(err)
 			continue
 		}
 		products = append(products, p)
 	}
 
-	for _, v := range products {
-		fmt.Fprintf(w, "%v\n", v)
+	var count int
+	qry, err := DB.Db.Query(`SELECT COUNT(*) FROM Leads WHERE ID != ' '`)
+	if err != nil {
+		fmt.Println(`error query`)
 	}
+	for qry.Next() {
+		if err := qry.Scan(&count); err != nil {
+			fmt.Println(`error scan`)
+			//log.Fatal(err)
+		}
+	}
+	fmt.Fprintf(w, "COUNT is: %v\n", count)
+
+	data, err := json.MarshalIndent(&products, "", "    ")
+	if err != nil {
+		fmt.Println("i cant convert to json")
+	}
+	if r.Method == "GET" {
+		w.Write(data)
+	}
+
+	/*for _, v := range products {
+		fmt.Fprintf(w, "%v\n", v)
+	}*/
 
 	/*tmpl, _ := template.ParseFiles("templates/index.html")
 	err = tmpl.Execute(w, products)
@@ -89,7 +114,6 @@ func LeadsAdd(w http.ResponseWriter, r *http.Request) {
 	email := r.Form.Get("email")
 	formName := r.Form.Get("formname")
 	//DB.LeadTestAdd(leadId)
-	fmt.Println("lead added")
 
 	//responsibleID := 13983 //Admin
 	assignedNotFormatted := r.Form.Get("assigned")
@@ -144,7 +168,6 @@ func LeadsAdd(w http.ResponseWriter, r *http.Request) {
 
 	//DB.LeadCollectToDb(lead.Id, lead.Title, lead.Link, lead.Status, lead.Assigned)
 	fmt.Println("lead added")*/
-
 }
 
 func GetAllFromLead(db *sql.DB) {
@@ -160,7 +183,8 @@ func GetAllFromLead(db *sql.DB) {
 		p := Lead{}
 		err := rows.Scan(&p.Id, &p.Title, &p.Link, &p.Status, &p.Assigned)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("i cant scan this")
+			fmt.Println(err.Error())
 			continue
 		}
 		products = append(products, p)
@@ -194,7 +218,7 @@ func DealerDealAdded(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("id: ", dealId, "title: ", title, "name: ", name, "phone: ", phone, "email: ", email, "date_create: ", dateCreate, "source_id: ", sourceId, "source_desc: ", sourceDescription, "assigned: ", assignedByLead)
 
-	time.Now()
+	//time.Now()
 
 	deals.AddedDealToDB(dealId, title, name, phone, email, dateCreate, sourceId, sourceDescription, assignedByLead)
 
@@ -228,7 +252,8 @@ func DealerDealAdded(w http.ResponseWriter, r *http.Request) {
 	}
 	newData, err := json.Marshal(lead)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("i can't marshal lead")
+		fmt.Println(err.Error())
 	} else {
 		fmt.Println(string(newData))
 	}

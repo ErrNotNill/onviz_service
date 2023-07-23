@@ -1,9 +1,6 @@
-
 <template>
-  <main class="about-page">
+  <main id="about-page">
     <h1>About</h1>
-    <p> about us </p>
+    <p>This is the about page</p>
   </main>
 </template>
-
-
