@@ -20,6 +20,10 @@
         <span class="material-icons">description</span>
         <span class="text">About</span>
       </router-link>
+      <router-link to="/chat" class="button">
+        <span class="material-icons">chat</span>
+        <span class="text">Chat</span>
+      </router-link>
       <router-link to="/team" class="button">
         <span class="material-icons">group</span>
         <span class="text">Team</span>

@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:mysql://45.141.79.120:3306/Onviz</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="@45.141.79.120" uuid="8111e36f-5727-44e5-9a91-c630ecb9261a">
+      <driver-ref>redis</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>jdbc.RedisDriver</jdbc-driver>
+      <jdbc-url>jdbc:redis://45.141.79.120:6379/</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

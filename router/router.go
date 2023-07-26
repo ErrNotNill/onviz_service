@@ -10,7 +10,9 @@ import (
 
 func Router() {
 
-	http.HandleFunc("/", LEADS.TestStatus)
+	http.Handle("/", http.FileServer(http.Dir("./chat/public")))
+
+	//http.HandleFunc("/", LEADS.TestStatus)
 	http.HandleFunc("/chat", chat.TestChat)
 	//http.HandleFunc("/tilda", TildaWebHooks)
 	//http.HandleFunc("/getListOfLines", GetListOfLines)

@@ -4,101 +4,101 @@ import (
 	"fmt"
 	"github.com/gorilla/websocket"
 	"log"
-	"net"
 	"net/http"
+	"onviz/chat/cache"
+	"sync/atomic"
+	"time"
 )
 
 var upgrader = websocket.Upgrader{}
 
 func TestChat(w http.ResponseWriter, r *http.Request) {
-	// Upgrade our raw HTTP connection to a websocket based one
-	conn, err := upgrader.Upgrade(w, r, nil)
+	/*chatMessages, err := cache.RDB.LRange(context.Background(), "chat_messages", 0, -1).Result()
 	if err != nil {
-		log.Print("Error during connection upgradation:", err)
-		return
+		panic(err)
 	}
-	defer conn.Close()
+	fmt.Fprintf(w, "%s", chatMessages)*/
 
-	// The event loop
-	for {
-		messageType, message, err := conn.ReadMessage()
-		if err != nil {
-			log.Println("Error during message reading:", err)
-			break
-		}
-		log.Printf("Received: %s", message)
-		err = conn.WriteMessage(messageType, message)
-		if err != nil {
-			log.Println("Error during message writing:", err)
-			break
-		}
-	}
-}
-
-func TestChatOld(w http.ResponseWriter, r *http.Request) {
+	message := r.FormValue("message")
+	//upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Println(err)
 	}
-	defer ws.Close()
+	data := make([]string, 0)
+	Reader(message, ws)
+
+	if err != nil {
+		fmt.Print("i cant execute chat.html")
+	}
+	cache.Clients[ws] = true
+	log.Println("client connected!")
 	for {
-		messageType, message, err := ws.ReadMessage()
+		var msg cache.ChatMessage
+		err = ws.ReadJSON(&msg)
 		if err != nil {
-			fmt.Println(err)
-			return
+			delete(cache.Clients, ws)
 		}
-		fmt.Println(string(message))
-		log.Printf("Received: %s", message)
-		err = ws.WriteMessage(messageType, message)
-		if err != nil {
-			log.Println("Error during message writing:", err)
-			break
-		}
+		data = append(data, msg.Text)
+		cache.Broadcaster <- msg
 	}
 
-	// get client ip address
-	clientIp := r.Header.Get("X-Real-Ip")
-	if clientIp != "" {
-		fmt.Fprintf(w, "Hi, clientIp %s!\n", clientIp)
-	}
-	fmt.Fprintf(w, "Hello, remoteaddr %s!\n", r.RemoteAddr)
-
-	ip, _, _ := net.SplitHostPort(r.RemoteAddr)
-
-	fmt.Fprintf(w, "Hello 2nd remoteaddr %s!\n", r.RemoteAddr)
-	// print out the ip address
-	fmt.Fprintf(w, ip+"\n\n")
-
-	// sometimes, the user acccess the web server via a proxy or load balancer.
-	// The above IP address will be the IP address of the proxy or load balancer and not the user's machine.
-
-	// let's get the request HTTP header "X-Forwarded-For (XFF)"
-	// if the value returned is not null, then this is the real IP address of the user.
-	fmt.Fprintf(w, "X-Forwarded-For :"+r.Header.Get("X-FORWARDED-FOR"))
 }
 
-/*func TestChat(w http.ResponseWriter, r *http.Request) {
-	ip := getClientIpAddr(r)
-	w.Write([]byte(ip))
+type Brand struct {
+	ID         int
+	Title      string
+	Model      *Model
+	Generation *Generation
 }
 
-func getClientIpAddr(req *http.Request) string {
-	clientIp := req.Header.Get("X-Real-Ip")
-	if clientIp != "" {
-		return clientIp
-	}
-	return req.RemoteAddr
-}*/
+type Model struct {
+	ID          int
+	Title       string
+	Brand       *Brand
+	Generations *Generation
+}
 
-/*func ReadUserIP(r *http.Request) string {
-	fmt.Println("remote addr: ", r.RemoteAddr)
-	IPAddress := r.Header.Get("X-Real-Ip")
-	if IPAddress == "" {
-		IPAddress = r.Header.Get("X-FORWARDED-FOR")
+type Generation struct {
+	ID      int
+	Title   string
+	Brand   *Brand
+	Model   *Model
+	CurDate time.Time
+	RelDate time.Time
+}
+
+func (brand *Brand) NewBrand() {
+	atomic.Bool{}
+}
+
+/*func HandleMessages() {
+	for {
+
+		// grab any next message from channel
+		msg := <-cache.Broadcaster
+		for client := range cache.Clients {
+			err := client.WriteJSON(msg)
+			if err != nil {
+				log.Printf("error: %v", err)
+				client.Close()
+				delete(cache.Clients, client)
+			}
+			// send previous messages
+			for _, chatMessage := range cache.ChatMessage {
+				var msg ChatMessage
+				json.Unmarshal([]byte(chatMessage), &msg)
+				err := client.WriteJSON(msg)
+				if err != nil && unsafeError(err) {
+					log.Printf("error: %v", err)
+					client.Close()
+					delete(clients, client)
+				}
+			}
+
+			cache.RDB.RPush(context.Background(), "chat_messages", json)
+		}
 	}
-	if IPAddress == "" {
-		IPAddress = r.RemoteAddr
-	}
-	return IPAddress
+	// send previous messages
+
 }*/

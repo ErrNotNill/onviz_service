@@ -3,10 +3,11 @@ package main
 import (
 	"fmt"
 	_ "github.com/lib/pq"
+	"github.com/redis/go-redis/v9"
 	"log"
 	"net/http"
 	"onviz/DB"
-	"onviz/chat"
+	"onviz/chat/cache"
 	"onviz/router"
 )
 
@@ -23,13 +24,19 @@ func main() {
 
 	router.Router()
 
+	cache.RDB = redis.NewClient(&redis.Options{
+		Addr:     "45.141.79.120:6379",
+		Password: "redis",
+		DB:       0,
+	})
+
 	fmt.Println("Server started")
 	err = http.ListenAndServe(":9090", nil)
 	if err != nil {
 		fmt.Println("Server started with error")
 		return
 	}
-	chat.WsStart()
+	//go chat.WsStart()
 }
 
 func taskAdd() {
