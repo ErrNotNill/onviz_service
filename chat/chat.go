@@ -6,8 +6,6 @@ import (
 	"log"
 	"net/http"
 	"onviz/chat/cache"
-	"sync/atomic"
-	"time"
 )
 
 var upgrader = websocket.Upgrader{}
@@ -43,33 +41,6 @@ func TestChat(w http.ResponseWriter, r *http.Request) {
 		cache.Broadcaster <- msg
 	}
 
-}
-
-type Brand struct {
-	ID         int
-	Title      string
-	Model      *Model
-	Generation *Generation
-}
-
-type Model struct {
-	ID          int
-	Title       string
-	Brand       *Brand
-	Generations *Generation
-}
-
-type Generation struct {
-	ID      int
-	Title   string
-	Brand   *Brand
-	Model   *Model
-	CurDate time.Time
-	RelDate time.Time
-}
-
-func (brand *Brand) NewBrand() {
-	atomic.Bool{}
 }
 
 /*func HandleMessages() {
