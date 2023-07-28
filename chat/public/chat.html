@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p> {{ . }} </p>
+</body>
+</html>
+<script>
+    var socket = new WebSocket("ws://localhost:9090/ws");
+
+    socket.onopen = connectionOpen;
+    socket.onmessage = messageReceived;
+    socket.onerror = errorOccurred;
+    socket.onopen = connectionClosed;
+
+    function connectionOpen() {
+        socket.send("UserName:alexerohinzzz@gmail.com");
+    }
+    function messageReceived(e) {
+        var messageLog = document.getElementById("messageLog");
+        messageLog.innerHTML += "<br>" + "Ответ сервера: " + e.data;
+    }
+    function errorOccurred(e) {
+        var messageLog = document.getElementById("messageLog");
+        messageLog.innerHTML += "<br>" + "Ошибка: " + e.data;
+    }
+    function connectionClosed(e) {
+        var messageLog = document.getElementById("messageLog");
+        messageLog.innerHTML += "<br>" + "Соединение закрыто";
+        socket.disconnect();
+    }
+
+</script>

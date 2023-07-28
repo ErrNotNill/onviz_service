@@ -41,6 +41,8 @@ func TestStatus(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetLeadsAll(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	rows, err := DB.Db.Query(`select ID, COALESCE(ResponsibleID,0), COALESCE(Title, ''), 
        COALESCE(Name,''), COALESCE(Phone,''), COALESCE(DateCreate,''), 
        COALESCE(SourceId,''), COALESCE(SourceDescription,''), COALESCE(AssignedByLead,''), COALESCE(Email,''),
