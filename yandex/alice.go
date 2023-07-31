@@ -22,7 +22,6 @@ func SimpleSkill() {
 		}
 		return resp.Text(req.OriginalUtterance())
 	})
-
 }
 
 func Alice(w http.ResponseWriter, r *http.Request) {
