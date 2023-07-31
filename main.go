@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	_ "github.com/lib/pq"
 	"github.com/redis/go-redis/v9"
@@ -29,6 +30,10 @@ func main() {
 		Password: "redis",
 		DB:       0,
 	})
+	ping := cache.RDB.Ping(context.Background())
+	fmt.Println("redis started", ping)
+	//messageType := "access"
+	//cache.RDB.RPush(context.Background(), "chat_messages", messageType)
 
 	fmt.Println("Server started")
 	err = http.ListenAndServe(":9090", nil)

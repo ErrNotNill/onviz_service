@@ -27,5 +27,4 @@ func Reader(message string, conn *websocket.Conn) {
 			return
 		}
 	}
-
 }
