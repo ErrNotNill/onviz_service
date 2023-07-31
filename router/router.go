@@ -27,7 +27,7 @@ func Router() {
 	http.HandleFunc("/leads", LEADS.LeadsAdd)
 	http.HandleFunc("/leads_list", LEADS.GetLeads)
 	http.HandleFunc("/dealer_deal", LEADS.DealerDealAdded)
-	http.HandleFunc("/backend/leads_get", LEADS.GetLeadsAll)
+	http.HandleFunc("/leads_get", LEADS.GetLeadsAll)
 
-	http.HandleFunc("/backend/bot", bot_bitrix.BotBitrix)
+	http.HandleFunc("/bot", bot_bitrix.BotBitrix)
 }
