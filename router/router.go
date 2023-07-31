@@ -6,12 +6,14 @@ import (
 	"onviz/VK"
 	"onviz/chat"
 	"onviz/tests"
+	"onviz/yandex"
 )
 
 func Router() {
 
-	http.Handle("/", http.FileServer(http.Dir("./chat/public")))
+	//http.Handle("/", http.FileServer(http.Dir("./chat/public")))
 
+	http.HandleFunc("/yandex", yandex.Alice)
 	//http.HandleFunc("/", LEADS.TestStatus)
 	http.HandleFunc("/chat", chat.TestChat)
 	//http.HandleFunc("/tilda", TildaWebHooks)
