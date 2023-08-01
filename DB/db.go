@@ -11,9 +11,10 @@ var Db *sqlx.DB //global variable
 //mysql:mysql@/Onviz //on vps
 //mysql:mysql@tcp(45.141.79.120:3306)/Onviz //locally
 
-func InitDB() (err error) {
-	var dataSourceName = "mysqld:mysql@tcp(45.141.79.120:3306)/Onviz"
-	Db, err = sqlx.Connect("mysql", dataSourceName)
+func InitDB(url string) (err error) {
+
+	//var dataSourceName = "mysqld:mysql@tcp(45.141.79.120:3306)/Onviz"
+	Db, err = sqlx.Connect("mysql", url)
 	if err != nil {
 		fmt.Println("not connected")
 		return

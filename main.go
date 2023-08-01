@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/redis/go-redis/v9"
 	"log"
@@ -9,13 +10,23 @@ import (
 	"onviz/DB"
 	"onviz/chat/cache"
 	"onviz/router"
+	"os"
 )
 
 var linkToRemoteServerUsage = "http://45.141.79.120/getListOfLines"
 
+func init() {
+	// Loads the .env file using godotenv.
+	// Throws an error is the file cannot be found.
+	if err := godotenv.Load(); err != nil {
+		log.Print("No .env file found")
+	}
+}
+
 func main() {
 
-	err := DB.InitDB()
+	urlDb := os.Getenv("DATABASE_URL")
+	err := DB.InitDB(urlDb)
 	if err != nil {
 		log.Fatal(err)
 	} else {
@@ -24,9 +35,11 @@ func main() {
 
 	router.Router()
 
+	redisAddr := os.Getenv("REDIS_ADDR")
+	redisPass := os.Getenv("REDIS_PASS")
 	cache.RDB = redis.NewClient(&redis.Options{
-		Addr:     "45.141.79.120:6379",
-		Password: "redis",
+		Addr:     redisAddr,
+		Password: redisPass,
 		DB:       0,
 	})
 
