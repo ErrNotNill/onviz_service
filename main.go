@@ -25,7 +25,7 @@ func init() {
 
 func main() {
 
-	urlDb := os.Getenv("DATABASE_URL")
+	urlDb := os.Getenv("URL_MYSQL")
 	err := DB.InitDB(urlDb)
 	if err != nil {
 		log.Fatal(err)
