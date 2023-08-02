@@ -15,15 +15,13 @@ import (
 
 var linkToRemoteServerUsage = "http://45.141.79.120/getListOfLines"
 
-func init() {
-	// Loads the .env file using godotenv.
-	// Throws an error is the file cannot be found.
-	if err := godotenv.Load(); err != nil {
-		log.Print("No .env file found")
-	}
-}
-
 func main() {
+
+	if err := godotenv.Load(".env"); err != nil {
+		log.Print("No .env file found")
+	} else {
+		fmt.Println("Loaded .env file")
+	}
 
 	urlDb := os.Getenv("URL_MYSQL")
 	err := DB.InitDB(urlDb)
