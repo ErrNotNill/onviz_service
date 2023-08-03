@@ -40,6 +40,7 @@ func CallbackHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Failed to exchange authorization code for access token:", err)
 		return
 	}
+	fmt.Println(r.Body)
 	defer resp.Body.Close()
 
 	// Parse the JSON response to get the access token
@@ -55,5 +56,5 @@ func CallbackHandler(w http.ResponseWriter, r *http.Request) {
 	// Step 4: Use the access token to make API requests on behalf of the user
 	// Your code to make API requests goes here...
 
-	fmt.Println(accessToken)
+	fmt.Println("access token: ", accessToken)
 }
