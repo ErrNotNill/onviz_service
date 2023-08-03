@@ -31,4 +31,5 @@ func Router() {
 
 	http.HandleFunc("/bot", bot_bitrix.BotBitrix)
 	http.HandleFunc("/auth", bot_bitrix.CallbackHandler)
+	http.HandleFunc("/redir", bot_bitrix.RedirectHandler)
 }

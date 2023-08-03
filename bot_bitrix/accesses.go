@@ -7,8 +7,14 @@ import (
 )
 
 const (
-	redirectURI = "YOUR_REDIRECT_URI"
+	redirectURI = "https://onviz-api.ru/redir"
 )
+
+func RedirectHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(fmt.Sprintf("OK")))
+	fmt.Println(r.Body)
+}
 
 func GetAccess(w http.ResponseWriter, r *http.Request) {
 

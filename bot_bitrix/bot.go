@@ -13,10 +13,10 @@ func BotBitrix(w http.ResponseWriter, r *http.Request) {
 
 // Replace these with your actual credentials
 const (
-	clientID     = "YOUR_CLIENT_ID"
-	clientSecret = "YOUR_CLIENT_SECRET"
+	clientID     = "local.64c7a198b979a3.49589400"
+	clientSecret = "BHrEY2UHSpx8HcxaImxDIGghA7EZ0EFFa0empe9INxBtElOEpR"
 	accessToken  = "YOUR_ACCESS_TOKEN"
-	bitrixDomain = "your-domain.bitrix24.com"
+	bitrixDomain = "onviz.bitrix24.ru"
 )
 
 // APIResponse represents the response from the Bitrix24 API
@@ -33,7 +33,7 @@ type OpenLine struct {
 
 func OpenLines(w http.ResponseWriter, r *http.Request) {
 	// API endpoint to get the list of Open Lines
-	bitrixDomain := "onviz.bitrix24.ru"
+
 	apiEndpoint := fmt.Sprintf("https://%s/rest/imopenlines.bot.list", bitrixDomain)
 
 	// Set up the HTTP client
