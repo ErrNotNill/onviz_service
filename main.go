@@ -16,7 +16,7 @@ import (
 var linkToRemoteServerUsage = "http://45.141.79.120/getListOfLines"
 
 func main() {
-
+	fmt.Println("service started")
 	if err := godotenv.Load(".env"); err != nil {
 		log.Print("No .env file found")
 	} else {
