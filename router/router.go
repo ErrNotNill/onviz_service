@@ -30,4 +30,5 @@ func Router() {
 	http.HandleFunc("/leads_get", LEADS.GetLeadsAll)
 
 	http.HandleFunc("/bot", bot_bitrix.BotBitrix)
+	http.HandleFunc("/auth", bot_bitrix.CallbackHandler)
 }
