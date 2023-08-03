@@ -29,6 +29,7 @@ func CallbackHandler(w http.ResponseWriter, r *http.Request) {
 	// Extract the authorization code from the query parameters
 	code := r.URL.Query().Get("code")
 
+	//just checks git
 	// Step 3: Exchange the authorization code for the access token
 	tokenURL := fmt.Sprintf("https://onviz.bitrix24.com/oauth/token"+
 		"?grant_type=authorization_code&client_id=%s&client_secret=%s&code=%s&redirect_uri=%s",
