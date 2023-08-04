@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"onviz/chat/cache"
-	"text/template"
 )
 
 var upgrader = websocket.Upgrader{}
@@ -18,10 +17,10 @@ func TestChat(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Fprintf(w, "%s", chatMessages)*/
 	w.Header().Set("Upgrade", "websocket")
-	ts, err := template.ParseFiles("./chat/public/chat.html")
+	/*ts, err := template.ParseFiles("./chat/public/chat.html")
 	if err != nil {
 		panic(err)
-	}
+	}*/
 
 	//upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	ws, err := upgrader.Upgrade(w, r, nil)
@@ -32,7 +31,7 @@ func TestChat(w http.ResponseWriter, r *http.Request) {
 	msg := "Hello"
 	Reader(msg, ws)
 
-	ts.Execute(w, msg)
+	//ts.Execute(w, msg)
 	if err != nil {
 		fmt.Print("i cant execute chat.html")
 	}
