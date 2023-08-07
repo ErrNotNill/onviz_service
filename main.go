@@ -10,21 +10,43 @@ import (
 	"onviz/DB"
 	"onviz/chat/cache"
 	"onviz/router"
+	"onviz/tuya"
 	"os"
 )
 
 var linkToRemoteServerUsage = "http://45.141.79.120/getListOfLines"
 
 func main() {
-	fmt.Println("service started")
+
+	accessToken := tuya.GetToken()
+
+	//tuya.GetDevice(accessToken)
+
+	devices, err := tuya.GetDevices(accessToken)
+	if err != nil {
+		fmt.Println("i cannot getDevices: ", err)
+		return
+	}
+	for _, device := range devices {
+		fmt.Printf("Device ID: %s, Device Name: %s\n", device.ID, device.Name)
+	}
+
+	//tuya.OpenConnectTuya()
+	//VK.StartVkBridge()
+
+	// Make the "users.get" API call and handle the response here..
+
 	if err := godotenv.Load(".env"); err != nil {
 		log.Print("No .env file found")
 	} else {
 		fmt.Println("Loaded .env file")
 	}
 
+	//VK.StartVkBridge()
+	fmt.Println("Starting")
+
 	urlDb := os.Getenv("URL_MYSQL")
-	err := DB.InitDB(urlDb)
+	err = DB.InitDB(urlDb)
 	if err != nil {
 		log.Fatal(err)
 	} else {

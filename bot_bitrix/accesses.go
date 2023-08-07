@@ -43,11 +43,16 @@ func CallbackHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.Body)
 	defer resp.Body.Close()
 
+	var newToken string
+	err = json.NewDecoder(resp.Body).Decode(&newToken)
+	fmt.Println(newToken)
+
 	// Parse the JSON response to get the access token
 	var tokenResponse map[string]interface{}
 	err = json.NewDecoder(resp.Body).Decode(&tokenResponse)
 	if err != nil {
 		fmt.Println("Failed to parse token response:", err)
+		return
 	}
 
 	accessToken := tokenResponse["access_token"].(string)
