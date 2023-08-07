@@ -24,7 +24,7 @@ export default {
   methods: {
     getDataFromApi() {
       this.loading = true
-      axios.get('http://localhost:9090/leads_get')
+      axios.get('https://onviz-api.ru/leads_get')
         .then(response => {
           this.loading = false
           this.rows = response.data

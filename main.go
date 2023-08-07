@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -62,6 +63,10 @@ func main() {
 		Password: redisPass,
 		DB:       0,
 	})
+	ping := cache.RDB.Ping(context.Background())
+	fmt.Println("redis started", ping)
+	//messageType := "access"
+	//cache.RDB.RPush(context.Background(), "chat_messages", messageType)
 
 	fmt.Println("Server started")
 	err = http.ListenAndServe(":9090", nil)
