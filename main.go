@@ -18,8 +18,30 @@ import (
 var linkToRemoteServerUsage = "http://45.141.79.120/getListOfLines"
 
 func main() {
+	if err := godotenv.Load(".env"); err != nil {
+		log.Print("No .env file found")
+	} else {
+		fmt.Println("Loaded .env file")
+	}
+	/*
+		const (
+			clientID  = "9x8wfym7m5vyck7tdwwt&"
+			secretKey = "d8205ed66f15471fa969aecab48ab495"
+			baseURL   = "https://openapi.tuyaeu.com"
+			endpoint  = "/v1.0/token?"
+			grantType = "grant_type=1"
+		)
+	*/
+	client := os.Getenv("TUYA_CLIENT_ID")
+	secret := os.Getenv("TUYA_SECRET_KEY")
+	baseURL := os.Getenv("TUYA_BASE_URL")
+	endpoint := os.Getenv("TUYA_ENDPOINT")
+	grantType := os.Getenv("TUYA_GRANT_TYPE")
+	host := os.Getenv("TUYA_HOST")
 
-	accessToken := tuya.GetToken()
+	tuya.OpenConnectTuya(client, secret, baseURL, endpoint, grantType)
+
+	accessToken := tuya.GetToken(host)
 
 	//tuya.GetDevice(accessToken)
 

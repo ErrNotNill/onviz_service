@@ -8,13 +8,6 @@ import (
 )
 
 // Replace these with your actual Tuya credentials
-const (
-	clientID  = "9x8wfym7m5vyck7tdwwt&"
-	secretKey = "d8205ed66f15471fa969aecab48ab495"
-	baseURL   = "https://openapi.tuyaeu.com"
-	endpoint  = "/v1.0/token?"
-	grantType = "grant_type=1"
-)
 
 // https://openapi.tuyaeu.com/v1.0/token?grant_type=1&client_id=9x8wfym7m5vyck7tdwwt&secret=d8205ed66f15471fa969aecab48ab495
 type TokenResponse struct {
@@ -25,7 +18,7 @@ type TokenResponse struct {
 	TID     string `json:"tid"`
 }
 
-func OpenConnectTuya() {
+func OpenConnectTuya(clientID, secretKey, baseURL, endpoint, grantType string) {
 	// Create the request body parameters
 	params := url.Values{}
 	params.Set("client_id", clientID)

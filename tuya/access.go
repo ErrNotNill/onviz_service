@@ -18,7 +18,7 @@ import (
 const (
 	Host     = "https://openapi.tuyaeu.com"
 	ClientID = "9x8wfym7m5vyck7tdwwt"
-	Secret   = "d8205ed66f15471fa969aecab48ab495"
+	Secret   = "TUYA_SECRET"
 	DeviceID = ""
 )
 
@@ -91,7 +91,7 @@ func GetDevices(accessToken string) ([]Device, error) {
 	}
 }*/
 
-func GetToken() string {
+func GetToken(Host string) string {
 	method := "GET"
 	body := []byte(``)
 	req, _ := http.NewRequest(method, Host+"/v1.0/token?grant_type=1", bytes.NewReader(body))
