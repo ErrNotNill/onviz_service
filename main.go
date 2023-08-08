@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/redis/go-redis/v9"
 	"log"
@@ -10,13 +11,65 @@ import (
 	"onviz/DB"
 	"onviz/chat/cache"
 	"onviz/router"
+	"onviz/tuya"
+	"os"
 )
 
 var linkToRemoteServerUsage = "http://45.141.79.120/getListOfLines"
 
 func main() {
+	if err := godotenv.Load(".env"); err != nil {
+		log.Print("No .env file found")
+	} else {
+		fmt.Println("Loaded .env file")
+	}
+	/*
+		const (
+			clientID  = "9x8wfym7m5vyck7tdwwt&"
+			secretKey = "d8205ed66f15471fa969aecab48ab495"
+			baseURL   = "https://openapi.tuyaeu.com"
+			endpoint  = "/v1.0/token?"
+			grantType = "grant_type=1"
+		)
+	*/
+	client := os.Getenv("TUYA_CLIENT_ID")
+	secret := os.Getenv("TUYA_SECRET_KEY")
+	baseURL := os.Getenv("TUYA_BASE_URL")
+	endpoint := os.Getenv("TUYA_ENDPOINT")
+	grantType := os.Getenv("TUYA_GRANT_TYPE")
+	host := os.Getenv("TUYA_HOST")
 
-	err := DB.InitDB()
+	tuya.OpenConnectTuya(client, secret, baseURL, endpoint, grantType)
+
+	accessToken := tuya.GetToken(host)
+
+	//tuya.GetDevice(accessToken)
+
+	devices, err := tuya.GetDevices(accessToken)
+	if err != nil {
+		fmt.Println("i cannot getDevices: ", err)
+		return
+	}
+	for _, device := range devices {
+		fmt.Printf("Device ID: %s, Device Name: %s\n", device.ID, device.Name)
+	}
+
+	//tuya.OpenConnectTuya()
+	//VK.StartVkBridge()
+
+	// Make the "users.get" API call and handle the response here..
+
+	if err := godotenv.Load(".env"); err != nil {
+		log.Print("No .env file found")
+	} else {
+		fmt.Println("Loaded .env file")
+	}
+
+	//VK.StartVkBridge()
+	fmt.Println("Starting")
+
+	urlDb := os.Getenv("URL_MYSQL")
+	err = DB.InitDB(urlDb)
 	if err != nil {
 		log.Fatal(err)
 	} else {
@@ -25,9 +78,11 @@ func main() {
 
 	router.Router()
 
+	redisAddr := os.Getenv("REDIS_ADDR")
+	redisPass := os.Getenv("REDIS_PASS")
 	cache.RDB = redis.NewClient(&redis.Options{
-		Addr:     "45.141.79.120:6379",
-		Password: "redis",
+		Addr:     redisAddr,
+		Password: redisPass,
 		DB:       0,
 	})
 	ping := cache.RDB.Ping(context.Background())

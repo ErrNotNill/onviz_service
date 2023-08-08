@@ -1,36 +1,39 @@
+
 <template>
   <main id="Home-page">
     <h1>Home</h1>
-    <p>This is the home page</p>
+    <p>TThis is the home page</p>
   </main>
+  <div class="test">
+    <td>{{ rows }}</td>
+  </div>
 </template>
+
 <script>
-
-import axios from "axios";
-
-const url = `http://localhost:9090/leads_get`;
-//write function to get data from url
+import axios from 'axios'
 export default {
-  name: 'Home',
   data() {
     return {
-      leads: []
+      loading: false,
+      rows: []
     }
+  },
+  created() {
+    this.getDataFromApi()
   },
   methods: {
-    getLeads() {
-      axios.get(url)
-      .then(response => {
-          this.leads = response.data;
+    getDataFromApi() {
+      this.loading = true
+      axios.get('https://onviz-api.ru/leads_get')
+        .then(response => {
+          this.loading = false
+          this.rows = response.data
         })
-      .catch(error => {
-          console.log(error);
+        .catch(error => {
+          this.loading = false
+          console.log(error)
         })
     }
-  },
-  mounted() {
-    this.getLeads();
   }
 }
-
 </script>

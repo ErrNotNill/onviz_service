@@ -4,14 +4,17 @@ import (
 	"net/http"
 	"onviz/LEADS"
 	"onviz/VK"
+	"onviz/bot_bitrix"
 	"onviz/chat"
 	"onviz/tests"
+	"onviz/yandex"
 )
 
 func Router() {
 
-	http.Handle("/", http.FileServer(http.Dir("./chat/public")))
+	//http.Handle("/", http.FileServer(http.Dir("./chat/public")))
 
+	http.HandleFunc("/yandex", yandex.Alice)
 	//http.HandleFunc("/", LEADS.TestStatus)
 	http.HandleFunc("/chat", chat.TestChat)
 	//http.HandleFunc("/tilda", TildaWebHooks)
@@ -25,4 +28,8 @@ func Router() {
 	http.HandleFunc("/leads_list", LEADS.GetLeads)
 	http.HandleFunc("/dealer_deal", LEADS.DealerDealAdded)
 	http.HandleFunc("/leads_get", LEADS.GetLeadsAll)
+
+	http.HandleFunc("/bot", bot_bitrix.BotBitrix)
+	http.HandleFunc("/auth", bot_bitrix.CallbackHandler)
+	http.HandleFunc("/redir", bot_bitrix.RedirectHandler)
 }
