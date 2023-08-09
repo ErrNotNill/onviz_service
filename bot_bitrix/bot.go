@@ -7,7 +7,13 @@ import (
 	"net/http"
 )
 
+const FSPATH = "vite-project/index.html"
+
 func BotBitrix(w http.ResponseWriter, r *http.Request) {
+
+	fs := http.FileServer(http.Dir(FSPATH))
+	fs.ServeHTTP(w, r)
+
 	http.Redirect(w, r, "http://45.141.79.120:5173/", http.StatusMovedPermanently)
 	t, err := template.ParseFiles("bot_bitrix/bot_bitrix.html")
 	if err != nil {
