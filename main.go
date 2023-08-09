@@ -32,7 +32,7 @@ func main() {
 		)
 	*/
 
-	//tuya.TuyaStart()
+	//tuya.TuyaStart() //blocked tuya
 	//VK.StartVkBridge()
 
 	// Make the "users.get" API call and handle the response here..
