@@ -10,14 +10,13 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
 	"sort"
 	"strings"
 	"time"
 )
 
 const (
-	Host     = "https://openapi.tuyacn.com"
+	Host     = "https://openapi.tuyaeu.com"
 	ClientID = ""
 	Secret   = ""
 	DeviceID = ""
@@ -39,8 +38,7 @@ type TokenResponse struct {
 }
 
 func GetToken() {
-	os.Getenv("TOKEN")
-	
+	//token := os.Getenv("TOKEN")
 	method := "GET"
 	body := []byte(``)
 	req, _ := http.NewRequest(method, Host+"/v1.0/token?grant_type=1", bytes.NewReader(body))
