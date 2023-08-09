@@ -18,8 +18,8 @@ func BotBitrix(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
-	w.Write([]byte("OK"))
-	w.WriteHeader(http.StatusOK)
+	//w.Write([]byte("OK"))
+	//w.WriteHeader(http.StatusOK)
 }
 
 // Replace these with your actual credentials
