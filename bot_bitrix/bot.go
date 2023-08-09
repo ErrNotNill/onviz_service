@@ -9,7 +9,7 @@ import (
 
 func BotBitrix(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "http://45.141.79.120:5173/", http.StatusMovedPermanently)
-	t, err := template.ParseFiles("bot_bitrix.html")
+	t, err := template.ParseFiles("bot_bitrix/bot_bitrix.html")
 	if err != nil {
 		fmt.Println(err)
 	}
