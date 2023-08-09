@@ -14,7 +14,7 @@ import (
 	"os"
 )
 
-var linkToRemoteServerUsage = "http://45.141.79.120/getListOfLines"
+//var linkToRemoteServerUsage = "http://45.141.79.120/getListOfLines"
 
 func main() {
 	if err := godotenv.Load(".env"); err != nil {
