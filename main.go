@@ -15,14 +15,9 @@ import (
 	"os"
 )
 
-var linkToRemoteServerUsage = "http://45.141.79.120/getListOfLines"
+//var linkToRemoteServerUsage = "http://45.141.79.120/getListOfLines"
 
 func main() {
-	if err := godotenv.Load(".env"); err != nil {
-		log.Print("No .env file found")
-	} else {
-		fmt.Println("Loaded .env file")
-	}
 	/*
 		const (
 			clientID  = "9x8wfym7m5vyck7tdwwt&"
@@ -32,29 +27,7 @@ func main() {
 			grantType = "grant_type=1"
 		)
 	*/
-	client := os.Getenv("TUYA_CLIENT_ID")
-	secret := os.Getenv("TUYA_SECRET_KEY")
-	baseURL := os.Getenv("TUYA_BASE_URL")
-	endpoint := os.Getenv("TUYA_ENDPOINT")
-	grantType := os.Getenv("TUYA_GRANT_TYPE")
-	host := os.Getenv("TUYA_HOST")
 
-	tuya.OpenConnectTuya(client, secret, baseURL, endpoint, grantType)
-
-	accessToken := tuya.GetToken(host)
-
-	//tuya.GetDevice(accessToken)
-
-	devices, err := tuya.GetDevices(accessToken)
-	if err != nil {
-		fmt.Println("i cannot getDevices: ", err)
-		return
-	}
-	for _, device := range devices {
-		fmt.Printf("Device ID: %s, Device Name: %s\n", device.ID, device.Name)
-	}
-
-	//tuya.OpenConnectTuya()
 	//VK.StartVkBridge()
 
 	// Make the "users.get" API call and handle the response here..
@@ -65,11 +38,13 @@ func main() {
 		fmt.Println("Loaded .env file")
 	}
 
+	tuya.GetToken()
+	tuya.GetDevice(DeviceID)
 	//VK.StartVkBridge()
 	fmt.Println("Starting")
 
 	urlDb := os.Getenv("URL_MYSQL")
-	err = DB.InitDB(urlDb)
+	err := DB.InitDB(urlDb)
 	if err != nil {
 		log.Fatal(err)
 	} else {

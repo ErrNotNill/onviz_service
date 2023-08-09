@@ -1,70 +1,154 @@
 package tuya
 
 import (
+	"bytes"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"io"
+	"log"
 	"net/http"
-	"net/url"
+	"os"
+	"sort"
+	"strings"
+	"time"
 )
 
-// Replace these with your actual Tuya credentials
+const (
+	Host     = "https://openapi.tuyacn.com"
+	ClientID = ""
+	Secret   = ""
+	DeviceID = ""
+)
 
-// https://openapi.tuyaeu.com/v1.0/token?grant_type=1&client_id=9x8wfym7m5vyck7tdwwt&secret=d8205ed66f15471fa969aecab48ab495
+var (
+	Token string
+)
+
 type TokenResponse struct {
-	Code    int    `json:"code"`
-	Msg     string `json:"msg"`
-	Success bool   `json:"success"`
-	T       int64  `json:"t"`
-	TID     string `json:"tid"`
+	Result struct {
+		AccessToken  string `json:"access_token"`
+		ExpireTime   int    `json:"expire_time"`
+		RefreshToken string `json:"refresh_token"`
+		UID          string `json:"uid"`
+	} `json:"result"`
+	Success bool  `json:"success"`
+	T       int64 `json:"t"`
 }
 
-func OpenConnectTuya(clientID, secretKey, baseURL, endpoint, grantType string) {
-	// Create the request body parameters
-	params := url.Values{}
-	params.Set("client_id", clientID)
-	params.Set("secret", secretKey)
+func GetToken() {
+	os.Getenv("TOKEN")
+	
+	method := "GET"
+	body := []byte(``)
+	req, _ := http.NewRequest(method, Host+"/v1.0/token?grant_type=1", bytes.NewReader(body))
 
-	// Send the POST request
-	//url = https://openapi.tuyaeu.com/v1.0/token?grant_type=1&client_id=your_client_id&secret=your_secret_key
-	response, err := http.PostForm(baseURL+endpoint+grantType, params)
-	//fmt.Println("response is: ", response)
+	buildHeader(req, body)
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		fmt.Printf("Error making the request: %s\n", err)
+		log.Println(err)
 		return
 	}
-	defer response.Body.Close()
+	defer resp.Body.Close()
+	bs, _ := io.ReadAll(resp.Body)
+	ret := TokenResponse{}
+	json.Unmarshal(bs, &ret)
+	log.Println("resp:", string(bs))
 
-	if response.StatusCode == http.StatusOK {
-		fmt.Println(http.StatusOK)
-		// Parse the response JSON
-		var data TokenResponse
-		err := json.NewDecoder(response.Body).Decode(&data)
-		if err != nil {
-			fmt.Printf("Error decoding the response: %s\n", err)
-			return
-		}
-		/*	{
-			"code": 1108,
-			"msg": "uri path invalid",
-			"success": false,
-			"t": 1691412745295,
-			"tid": "4206274d352111ee97740a4306e7517e"
-		}*/
-		// Handle the API response data here
-		if data.Success {
-			// The API request was successful, process the data
-			fmt.Printf("Code: %v\n", data.Code)
-			fmt.Printf("Msg: %s\n", data.Msg)
-			fmt.Printf("Success: %v\n", data.Success)
-			fmt.Printf("Token Type: %v\n", data.T)
-			fmt.Printf("Token ID: %s\n", data.TID)
-		} else {
-			// The API request encountered an error, handle the error
-			fmt.Printf("Error Code: %d\n", data.Code)
-			fmt.Printf("Error Message: %s\n", data.Msg)
-		}
-	} else {
-		// Handle errors
-		fmt.Printf("Error: %s\n", response.Status)
+	if v := ret.Result.AccessToken; v != "" {
+		Token = v
 	}
+}
+
+func GetDevice(deviceId string) {
+	method := "GET"
+	body := []byte(``)
+	req, _ := http.NewRequest(method, Host+"/v1.0/devices/"+deviceId, bytes.NewReader(body))
+
+	buildHeader(req, body)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	defer resp.Body.Close()
+	bs, _ := io.ReadAll(resp.Body)
+	log.Println("resp:", string(bs))
+}
+
+func buildHeader(req *http.Request, body []byte) {
+	req.Header.Set("client_id", ClientID)
+	req.Header.Set("sign_method", "HMAC-SHA256")
+
+	ts := fmt.Sprint(time.Now().UnixNano() / 1e6)
+	req.Header.Set("t", ts)
+
+	if Token != "" {
+		req.Header.Set("access_token", Token)
+	}
+
+	sign := buildSign(req, body, ts)
+	req.Header.Set("sign", sign)
+}
+
+func buildSign(req *http.Request, body []byte, t string) string {
+	headers := getHeaderStr(req)
+	urlStr := getUrlStr(req)
+	contentSha256 := Sha256(body)
+	stringToSign := req.Method + "\n" + contentSha256 + "\n" + headers + "\n" + urlStr
+	signStr := ClientID + Token + t + stringToSign
+	sign := strings.ToUpper(HmacSha256(signStr, Secret))
+	return sign
+}
+
+func Sha256(data []byte) string {
+	sha256Contain := sha256.New()
+	sha256Contain.Write(data)
+	return hex.EncodeToString(sha256Contain.Sum(nil))
+}
+
+func getUrlStr(req *http.Request) string {
+	url := req.URL.Path
+	keys := make([]string, 0, 10)
+
+	query := req.URL.Query()
+	for key, _ := range query {
+		keys = append(keys, key)
+	}
+	if len(keys) > 0 {
+		url += "?"
+		sort.Strings(keys)
+		for _, keyName := range keys {
+			value := query.Get(keyName)
+			url += keyName + "=" + value + "&"
+		}
+	}
+
+	if url[len(url)-1] == '&' {
+		url = url[:len(url)-1]
+	}
+	return url
+}
+
+func getHeaderStr(req *http.Request) string {
+	signHeaderKeys := req.Header.Get("Signature-Headers")
+	if signHeaderKeys == "" {
+		return ""
+	}
+	keys := strings.Split(signHeaderKeys, ":")
+	headers := ""
+	for _, key := range keys {
+		headers += key + ":" + req.Header.Get(key) + "\n"
+	}
+	return headers
+}
+
+func HmacSha256(message string, secret string) string {
+	key := []byte(secret)
+	h := hmac.New(sha256.New, key)
+	h.Write([]byte(message))
+	sha := hex.EncodeToString(h.Sum(nil))
+	return sha
 }

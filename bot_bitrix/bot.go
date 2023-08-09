@@ -3,12 +3,36 @@ package bot_bitrix
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"net/http"
 )
 
+const FSPATH = "vite-project/index.html"
+
+type Data struct {
+	Title string
+	Size  string
+}
+
 func BotBitrix(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("OK"))
-	w.WriteHeader(http.StatusOK)
+
+	//fs := http.FileServer(http.Dir(FSPATH))
+	//fs.ServeHTTP(w, r)
+
+	//	http.Redirect(w, r, "http://45.141.79.120:5173/", http.StatusMovedPermanently)
+	t, err := template.ParseFiles("bot_bitrix/bot_bitrix.html")
+	if err != nil {
+		fmt.Println(err)
+	}
+	var data = Data{Title: "Тип одежды", Size: "Размер"}
+
+	err = t.Execute(w, data)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	//w.Write([]byte("OK"))
+	//w.WriteHeader(http.StatusOK)
 }
 
 // Replace these with your actual credentials
