@@ -11,18 +11,13 @@ import (
 	"onviz/DB"
 	"onviz/chat/cache"
 	"onviz/router"
+	"onviz/tuya"
 	"os"
 )
 
 //var linkToRemoteServerUsage = "http://45.141.79.120/getListOfLines"
 
 func main() {
-
-	if err := godotenv.Load(".env"); err != nil {
-		log.Print("No .env file found")
-	} else {
-		fmt.Println("Loaded .env file")
-	}
 	/*
 		const (
 			clientID  = "9x8wfym7m5vyck7tdwwt&"
@@ -33,7 +28,6 @@ func main() {
 		)
 	*/
 
-	//tuya.TuyaStart() //blocked tuya
 	//VK.StartVkBridge()
 
 	// Make the "users.get" API call and handle the response here..
@@ -44,6 +38,8 @@ func main() {
 		fmt.Println("Loaded .env file")
 	}
 
+	tuya.GetToken()
+	tuya.GetDevice(DeviceID)
 	//VK.StartVkBridge()
 	fmt.Println("Starting")
 

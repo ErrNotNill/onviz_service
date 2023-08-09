@@ -1,10 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <style>
+      /* внешние границы таблицы серого цвета толщиной 1px */
+      table {
+          width: 20%;
+          height: 20%;
+          border: 1px solid grey;
+      }
+      /* границы ячеек первого ряда таблицы */
+      th {
+          border: 1px solid grey;
+      }
+      /* границы ячеек тела таблицы */
+      td {
+          border: 1px solid grey;
+      }
+      label {
+
+      }
+  </style>
   <meta charset="UTF-8">
   <title>Title</title>
 </head>
 <body>
-<p> HELLO </p>
+<table>
+  <tr><th>{{ .Title }}</th><th> {{ .Title }}</th></tr> <!--ряд с ячейками заголовков-->
+  <tr><td><label for="selectType"></label><select id="selectType">
+    <option value=”Комбинезон”>Комбинезон</option>
+    <option value=”Куртка”>Куртка</option>
+    <option value=”Футболка”>Футболка</option>
+  </select></td><td>данные</td></tr> <!--ряд с ячейками тела таблицы-->
+  <tr><th>{{ .Size }}</th><th> {{ .Size }}</th></tr>
+  <tr><td><label for="selectSize"></label><select id="selectSize">
+    <option value=”88-92”>88-92</option>
+    <option value=”96-100”>96-100</option>
+    <option value=”104-108”>104-108</option>
+  </select></td><td>данные</td></tr>
+
+
+  <tr><th>{{ .Title }}</th><th> {{ .Title }}</th></tr>
+</table>
+
+<script type="text/javascript">
+  var selectType = document.getElementById("selectType");
+  var selectSize = document.getElementById("selectSize");
+  selectType.addEventListener("change", function() {
+    if (selectType.value === "Комбинезон") {
+      selectSize.disabled = false;
+    } else {
+      selectSize.disabled = true;
+    }
+    console.log(selectType.value);
+    console.log(selectSize.value);
+  })
+</script>
+
 </body>
 </html>

@@ -9,17 +9,24 @@ import (
 
 const FSPATH = "vite-project/index.html"
 
+type Data struct {
+	Title string
+	Size  string
+}
+
 func BotBitrix(w http.ResponseWriter, r *http.Request) {
 
-	fs := http.FileServer(http.Dir(FSPATH))
-	fs.ServeHTTP(w, r)
+	//fs := http.FileServer(http.Dir(FSPATH))
+	//fs.ServeHTTP(w, r)
 
-	http.Redirect(w, r, "http://45.141.79.120:5173/", http.StatusMovedPermanently)
+	//	http.Redirect(w, r, "http://45.141.79.120:5173/", http.StatusMovedPermanently)
 	t, err := template.ParseFiles("bot_bitrix/bot_bitrix.html")
 	if err != nil {
 		fmt.Println(err)
 	}
-	err = t.Execute(w, nil)
+	var data = Data{Title: "Тип одежды", Size: "Размер"}
+
+	err = t.Execute(w, data)
 	if err != nil {
 		fmt.Println(err)
 		return
