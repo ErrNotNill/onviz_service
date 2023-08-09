@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"os"
 )
 
 // Replace these with your actual Tuya credentials
@@ -16,6 +17,30 @@ type TokenResponse struct {
 	Success bool   `json:"success"`
 	T       int64  `json:"t"`
 	TID     string `json:"tid"`
+}
+
+func TuyaStart() {
+	client := os.Getenv("TUYA_CLIENT_ID")
+	secret := os.Getenv("TUYA_SECRET_KEY")
+	baseURL := os.Getenv("TUYA_BASE_URL")
+	endpoint := os.Getenv("TUYA_ENDPOINT")
+	grantType := os.Getenv("TUYA_GRANT_TYPE")
+	host := os.Getenv("TUYA_HOST")
+
+	OpenConnectTuya(client, secret, baseURL, endpoint, grantType)
+
+	accessToken := GetToken(host)
+
+	//tuya.GetDevice(accessToken)
+
+	devices, err := GetDevices(accessToken)
+	if err != nil {
+		fmt.Println("i cannot getDevices: ", err)
+		return
+	}
+	for _, device := range devices {
+		fmt.Printf("Device ID: %s, Device Name: %s\n", device.ID, device.Name)
+	}
 }
 
 func OpenConnectTuya(clientID, secretKey, baseURL, endpoint, grantType string) {
