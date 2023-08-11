@@ -10,17 +10,16 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
 	"sort"
 	"strings"
 	"time"
 )
 
 const (
-	Host     = "https://openapi.tuyacn.com"
-	ClientID = ""
-	Secret   = ""
-	DeviceID = ""
+	Host     = "https://openapi.tuyaeu.com"
+	ClientID = "9x8wfym7m5vyck7tdwwt"
+	Secret   = "d8205ed66f15471fa969aecab48ab495"
+	DeviceID = "bf85de23e4cf1c10fb6bsn" //example
 )
 
 var (
@@ -38,9 +37,12 @@ type TokenResponse struct {
 	T       int64 `json:"t"`
 }
 
+/*func main() {
+	GetToken()
+	GetDevice(DeviceID)
+}*/
+
 func GetToken() {
-	os.Getenv("TOKEN")
-	
 	method := "GET"
 	body := []byte(``)
 	req, _ := http.NewRequest(method, Host+"/v1.0/token?grant_type=1", bytes.NewReader(body))
@@ -60,22 +62,7 @@ func GetToken() {
 	if v := ret.Result.AccessToken; v != "" {
 		Token = v
 	}
-}
-
-func GetDevice(deviceId string) {
-	method := "GET"
-	body := []byte(``)
-	req, _ := http.NewRequest(method, Host+"/v1.0/devices/"+deviceId, bytes.NewReader(body))
-
-	buildHeader(req, body)
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	defer resp.Body.Close()
-	bs, _ := io.ReadAll(resp.Body)
-	log.Println("resp:", string(bs))
+	log.Println("Token:", Token)
 }
 
 func buildHeader(req *http.Request, body []byte) {

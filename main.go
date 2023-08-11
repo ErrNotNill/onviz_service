@@ -39,7 +39,12 @@ func main() {
 	}
 
 	tuya.GetToken()
-	tuya.GetDevice(DeviceID)
+	tuya.GetDevicesWithToken()
+
+	tuya.GetDeviceList()
+
+	tuya.GetDevice(tuya.DeviceID)
+
 	//VK.StartVkBridge()
 	fmt.Println("Starting")
 
