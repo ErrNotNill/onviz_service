@@ -20,22 +20,18 @@ func RefreshTokenHandler(w http.ResponseWriter, r *http.Request) {
 	go GetTokenHandler(w, r)
 	clientID := ClientID
 	refreshToken := RefreshTokenVal
-
 	if clientID == "" || refreshToken == "" {
 		http.Error(w, "Missing client_id or refresh_token", http.StatusBadRequest)
 		return
 	}
-
 	response := struct {
-		AccessToken string `json:"access_token"`
+		AccessToken string `json:"refresh_token"`
 	}{
 		AccessToken: RefreshTokenVal,
 	}
-
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
-	w.Write([]byte(refreshToken))
 }
 
 func RefreshToken(ClientID, RefreshTokenVal string) (string, error) {
