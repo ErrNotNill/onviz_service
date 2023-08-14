@@ -17,6 +17,7 @@ import (
 )
 
 func RefreshTokenHandler(w http.ResponseWriter, r *http.Request) {
+	go GetTokenHandler(w, r)
 	clientID := ClientID
 	refreshToken := RefreshTokenVal
 
