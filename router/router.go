@@ -31,10 +31,10 @@ func Router() {
 	http.HandleFunc("/leads_get", LEADS.GetLeadsAll)
 
 	http.HandleFunc("/bot", bot_bitrix.BotBitrix)
-	http.HandleFunc("/bot_auth", bot_bitrix.CallbackHandler)
+	http.HandleFunc("/auth", bot_bitrix.CallbackHandler)
 	http.HandleFunc("/redir", bot_bitrix.RedirectHandler)
 
-	http.HandleFunc("/auth", tuya.AuthHandler)
+	http.HandleFunc("/auth_tuya", tuya.AuthHandler)
 	http.HandleFunc("/get_token", tuya.GetTokenHandler)
 	http.HandleFunc("/refresh_token", tuya.RefreshTokenHandler)
 }
