@@ -1,0 +1,8 @@
+2023-08-14 11:42:04 [runtime/proc.go:250] [INFO] -> ### iot core init success ###
+2023-08-14 11:42:04 [messaging/base.go:11] [INFO] -> start creating consumer, pulsar=pulsar://mqe.tuyaeu.com:7285, topic=persistent://9x8wfym7m5vyck7tdwwt/out/event
+2023-08-14 11:42:04 [./.:0] [ERROR] -> async errors AuthenticationError: Failed to authenticate
+2023-08-14 11:42:04 [./.:0] [ERROR] -> async errors read tcp 192.168.2.18:52799->3.120.66.229:7285: use of closed network connection
+2023-08-14 11:42:06 [./.:0] [ERROR] -> async errors EOF
+2023-08-14 11:42:06 [./.:0] [ERROR] -> async errors AuthenticationError: Failed to authenticate
+2023-08-14 11:42:11 [./.:0] [ERROR] -> async errors EOF
+2023-08-14 11:42:11 [./.:0] [ERROR] -> async errors AuthenticationError: Failed to authenticate

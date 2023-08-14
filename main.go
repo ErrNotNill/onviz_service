@@ -15,7 +15,7 @@ import (
 	"os"
 )
 
-//var linkToRemoteServerUsage = "http://45.141.79.120/getListOfLines"
+// var linkToRemoteServerUsage = "http://45.141.79.120/getListOfLines"
 
 func main() {
 	/*
@@ -38,12 +38,19 @@ func main() {
 		fmt.Println("Loaded .env file")
 	}
 
-	tuya.GetToken()
-	tuya.GetDevicesWithToken()
+	//tuya.GetToken()
+
+	//tuya.PolicyAction()
+
+	//tuya.GetUsers()
+	//tuya.RefreshToken()
 
 	tuya.GetDeviceList()
+	tuya.GetDevicesWithToken()
 
-	tuya.GetDevice(tuya.DeviceID)
+	//todo get device from ID's list
+	//tuya.GetDevice(tuya.DeviceID)
+	//tuya.GetDevice("bf85de23e4cf1c10fb6bsn")
 
 	//VK.StartVkBridge()
 	fmt.Println("Starting")
@@ -51,6 +58,7 @@ func main() {
 	urlDb := os.Getenv("URL_MYSQL")
 	err := DB.InitDB(urlDb)
 	if err != nil {
+		fmt.Println("cant' connect to mysql")
 		log.Fatal(err)
 	} else {
 		fmt.Println("db init accepted")

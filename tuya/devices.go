@@ -7,13 +7,14 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"time"
 )
 
 func GetDevicesWithToken() {
 	accessToken := Token // Replace with your actual access token
 
-	req, err := http.NewRequest("GET", "https://openapi.tuyaeu.com/v1.0/devices", nil)
+	req, err := http.NewRequest("GET", "https://openapi.tuyaeu.com/v1.0/devices?", nil)
 	if err != nil {
 		fmt.Println("Error creating request:", err)
 		return
@@ -21,8 +22,6 @@ func GetDevicesWithToken() {
 
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 	req.Header.Set("client_id", ClientID)
-	timestamp := time.Now().UTC().Format("Mon, 02 Jan 2006 15:04:05 GMT")
-	req.Header.Set("timestamp", timestamp)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -91,40 +90,47 @@ func GetDevice(deviceId string) {
 	log.Println("resp:", string(bs))
 }
 
-type Device struct {
-	Result  DeviceInfo `json:"result"`
-	Success bool       `json:"success"`
-	T       int64      `json:"t"`
-	TID     string     `json:"tid"`
-}
+func GetUsers() {
+	urlz := "https://openapi.tuyacn.com/v2.0/apps/schema/users"
 
-type DeviceInfo struct {
-	ActiveTime  int64        `json:"active_time"`
-	BizType     int64        `json:"biz_type"`
-	Category    string       `json:"category"`
-	CreateTime  int64        `json:"create_time"`
-	Icon        string       `json:"icon"`
-	ID          string       `json:"id"`
-	IP          string       `json:"ip"`
-	Lat         string       `json:"lat"`
-	LocalKey    string       `json:"local_key"`
-	Lon         string       `json:"lon"`
-	Model       string       `json:"model"`
-	Name        string       `json:"name"`
-	NodeID      string       `json:"node_id"`
-	Online      bool         `json:"online"`
-	OwnerID     string       `json:"owner_id"`
-	ProductID   string       `json:"product_id"`
-	ProductName string       `json:"product_name"`
-	Status      []StatusInfo `json:"status"`
-	Sub         bool         `json:"sub"`
-	TimeZone    string       `json:"time_zone"`
-	UID         string       `json:"uid"`
-	UpdateTime  int64        `json:"update_time"`
-	UUID        string       `json:"uuid"`
-}
+	// Configure start_time and end_time
+	startTimeStr := "2023-05-22 20:36:55"
+	endTime := time.Now()
 
-type StatusInfo struct {
-	Code  string      `json:"code"`
-	Value interface{} `json:"value"`
+	startTime, err := time.Parse("2006-01-02 15:04:05", startTimeStr)
+	if err != nil {
+		fmt.Println("Error parsing start_time:", err)
+		return
+	}
+
+	params := url.Values{}
+	params.Set("page_no", "1")
+	params.Set("page_size", "50")
+	params.Set("start_time", fmt.Sprintf("%d", startTime.Unix()))
+	params.Set("end_time", fmt.Sprintf("%d", endTime.Unix()))
+
+	urlz += "?" + params.Encode()
+
+	req, err := http.NewRequest("GET", urlz, nil)
+	if err != nil {
+		fmt.Println("Error creating request:", err)
+		return
+	}
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println("Error sending request:", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusOK {
+		fmt.Println("Request successful!")
+
+		// Read and print the response body or process it as needed
+	} else {
+		fmt.Printf("Request failed with status code: %d\n", resp.StatusCode)
+	}
+
 }

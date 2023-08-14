@@ -7,6 +7,7 @@ import (
 	"onviz/bot_bitrix"
 	"onviz/chat"
 	"onviz/tests"
+	"onviz/tuya"
 	"onviz/yandex"
 )
 
@@ -32,4 +33,8 @@ func Router() {
 	http.HandleFunc("/bot", bot_bitrix.BotBitrix)
 	http.HandleFunc("/auth", bot_bitrix.CallbackHandler)
 	http.HandleFunc("/redir", bot_bitrix.RedirectHandler)
+
+	http.HandleFunc("/auth", tuya.AuthHandler)
+	http.HandleFunc("/get_token", tuya.GetTokenHandler)
+	http.HandleFunc("/refresh_token", tuya.RefreshTokenHandler)
 }
