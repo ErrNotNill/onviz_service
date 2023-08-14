@@ -25,21 +25,16 @@ func RefreshTokenHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	accessToken, err := RefreshToken(clientID, refreshToken)
-	if err != nil {
-		http.Error(w, "Error refreshing token", http.StatusInternalServerError)
-		return
-	}
-
 	response := struct {
 		AccessToken string `json:"access_token"`
 	}{
-		AccessToken: accessToken,
+		AccessToken: RefreshTokenVal,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
+	w.Write([]byte(refreshToken))
 }
 
 func RefreshToken(ClientID, RefreshTokenVal string) (string, error) {
