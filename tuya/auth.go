@@ -10,10 +10,7 @@ import (
 func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	clientID := ClientID
 	redirectURI := YaRedirectUri
-	if r.Response == nil {
-		http.Error(w, "Missing client_id or redirect_uri", http.StatusBadRequest)
-		return
-	}
+
 	reader := r.Body
 	var yaparams = YandexAuthParams{}
 
