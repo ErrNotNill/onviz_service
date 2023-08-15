@@ -2,17 +2,32 @@ package tuya
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 )
 
 func AuthHandler(w http.ResponseWriter, r *http.Request) {
-	clientID := r.URL.Query().Get("client_id")
-	redirectURI := r.URL.Query().Get("redirect_uri")
-	if clientID == "" || redirectURI == "" {
+	clientID := ClientID
+	redirectURI := YaRedirectUri
+	if r.Response == nil {
 		http.Error(w, "Missing client_id or redirect_uri", http.StatusBadRequest)
 		return
 	}
+	reader := r.Body
+	var yaparams = YandexAuthParams{}
+
+	js, err := json.MarshalIndent(reader, "", "  ")
+	if err != nil {
+		fmt.Println(err)
+	}
+	json.Unmarshal(js, &yaparams)
+	w.Write(js)
+	w.Write([]byte(yaparams.State))
+
+	state := yaparams.State
+	http.Redirect(w, r, fmt.Sprintf("https://social.yandex.net/broker/redirect?state=%s", state), http.StatusTemporaryRedirect)
+
 	authURL := GenerateAuthorizationURL(clientID, redirectURI)
 	response := struct {
 		AuthURL string `json:"auth_url"`

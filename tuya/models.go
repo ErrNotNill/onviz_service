@@ -1,11 +1,20 @@
 package tuya
 
 const (
-	Host     = "https://openapi.tuyaeu.com"
-	ClientID = "9x8wfym7m5vyck7tdwwt"
-	Secret   = "d8205ed66f15471fa969aecab48ab495"
-	DeviceID = "bf85de23e4cf1c10fb6bsn" //example
+	Host          = "https://openapi.tuyaeu.com"
+	ClientID      = "9x8wfym7m5vyck7tdwwt"
+	Secret        = "d8205ed66f15471fa969aecab48ab495"
+	DeviceID      = "bf85de23e4cf1c10fb6bsn" //example
+	YaRedirectUri = "https://social.yandex.net/broker/redirect"
 )
+
+type YandexAuthParams struct {
+	State        string `json:"state,omitempty"`         // состояние авторизации
+	RedirectURI  string `json:"redirect_uri,omitempty"`  // страница, куда перенаправляется авторизованный пользователь (redirect endpoint)
+	ResponseType string `json:"response_type,omitempty"` // тип авторизации. Принимает значение code
+	ClientID     string `json:"client_id,omitempty"`     // идентификатор OAuth-приложения
+	Scope        string `json:"scope,omitempty"`         // список разрешений, которые следует выдавать для запрашиваемых OAuth-токенов (access token scope)
+}
 
 var (
 	Token           string
