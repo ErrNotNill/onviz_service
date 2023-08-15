@@ -42,8 +42,9 @@ func RefreshToken(ClientID, RefreshTokenVal string) (string, error) {
 	values.Set("client_id", clientID)
 	values.Set("refresh_token", refreshToken)
 
-	req, err := http.NewRequest("POST", "https://openapi.tuyaeu.com/v1.0/token", strings.NewReader(values.Encode()))
+	req, err := http.NewRequest("POST", "https://openapi.tuyaeu.com/v1.0/token", strings.NewReader(RefreshTokenVal))
 	if err != nil {
+		fmt.Println("Error creating request: ", err)
 		return "", err
 	}
 
@@ -52,6 +53,7 @@ func RefreshToken(ClientID, RefreshTokenVal string) (string, error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
+		fmt.Println("Error creating client: ", err)
 		return "", err
 	}
 	defer resp.Body.Close()
@@ -62,12 +64,42 @@ func RefreshToken(ClientID, RefreshTokenVal string) (string, error) {
 		}
 		err := json.NewDecoder(resp.Body).Decode(&response)
 		if err != nil {
+			fmt.Println("Error decoding")
 			return "", err
 		}
+		fmt.Println("The body of the response: ", resp.Body)
+		fmt.Println("access_token: ", response.AccessToken)
 		return response.AccessToken, nil
 	} else {
 		return "", fmt.Errorf("Token refresh failed with status code: %d", resp.StatusCode)
 	}
+}
+func GetToken() {
+	//token := os.Getenv("TOKEN")
+	method := "GET"
+	body := []byte(``)
+	req, _ := http.NewRequest(method, Host+"/v1.0/token?grant_type=1", bytes.NewReader(body))
+
+	buildHeader(req, body)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	defer resp.Body.Close()
+	bs, _ := io.ReadAll(resp.Body)
+	ret := TokenResponse{}
+	json.Unmarshal(bs, &ret)
+	log.Println("resp:", string(bs))
+
+	if v := ret.Result.AccessToken; v != "" {
+		Token = v
+	}
+	if refToken := ret.Result.RefreshToken; refToken != "" {
+		RefreshTokenVal = refToken
+	}
+	log.Println("Token:", Token)
+	log.Println("Refresh Token:", RefreshTokenVal)
 }
 
 func GetTokenHandler(w http.ResponseWriter, r *http.Request) {
