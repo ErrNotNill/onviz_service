@@ -1,11 +1,13 @@
 package tuya
 
 const (
-	Host          = "https://openapi.tuyaeu.com"
-	ClientID      = "9x8wfym7m5vyck7tdwwt"
-	Secret        = "d8205ed66f15471fa969aecab48ab495"
-	DeviceID      = "bf85de23e4cf1c10fb6bsn" //example
-	YaRedirectUri = "https://social.yandex.net/broker/redirect"
+	Host           = "https://openapi.tuyaeu.com"
+	ClientID       = "9x8wfym7m5vyck7tdwwt"
+	Secret         = "d8205ed66f15471fa969aecab48ab495"
+	DeviceID       = "bf85de23e4cf1c10fb6bsn" //example
+	YaRedirectUri  = "https://social.yandex.net/broker/redirect"
+	EndpointURL    = "https://openapi.tuyaeu.com/v1.0"
+	DeviceListPath = "/devices"
 )
 
 type YandexAuthParams struct {
@@ -20,6 +22,8 @@ var (
 	Token           string
 	RefreshTokenVal string
 	ResultPolicy    string
+	AccessToken     string
+	Uid             string
 )
 
 type TokenResponse struct {
@@ -54,6 +58,12 @@ type DeviceModel struct {
 	OwnerID     string `json:"owner_id"`
 	ProductID   string `json:"product_id"`
 	ProductName string `json:"product_name"`
+}
+
+type DeviceListResponse struct {
+	Success bool     `json:"success"`
+	T       int64    `json:"t"`
+	Result  []Device `json:"result"`
 }
 
 type GetDeviceResponse struct {

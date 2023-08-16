@@ -10,12 +10,10 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"sort"
-	"strconv"
 	"time"
 )
 
-func GetDevicesWithToken() {
+/*func GetDevicesWithToken() {
 	accessToken := Token // Replace with your actual access token
 
 	req, err := http.NewRequest("GET", "https://openapi.tuyaeu.com/v1.0/devices?", nil)
@@ -23,9 +21,11 @@ func GetDevicesWithToken() {
 		fmt.Println("Error creating request:", err)
 		return
 	}
+	ts := fmt.Sprintf("%d", time.Now().UTC().UnixNano()/int64(time.Millisecond))
 
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 	req.Header.Set("client_id", ClientID)
+	req.Header.Set("t", ts)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -52,7 +52,7 @@ func GetDevicesWithToken() {
 	} else {
 		fmt.Printf("Request failed with status code: %d\n", resp.StatusCode)
 	}
-}
+}*/
 
 func GetDeviceList() {
 	method := "GET"
@@ -149,47 +149,26 @@ type Devices struct {
 	Name string `json:"name"`
 }
 
-func generateSignature(path, accessID, secretKey string, params map[string]string) string {
+func generateSignature(accessID, path, secretKey string) string {
 	data := accessID + path
-
-	if len(params) > 0 {
-		keys := make([]string, 0, len(params))
-		for k := range params {
-			keys = append(keys, k)
-		}
-		// Sort keys for consistent signature generation
-		keys = sort.StringSlice(keys)
-		for _, k := range keys {
-			data += k + params[k]
-		}
-	}
-
 	hmacHash := hmac.New(sha256.New, []byte(secretKey))
 	hmacHash.Write([]byte(data))
 	signature := fmt.Sprintf("%x", hmacHash.Sum(nil))
-
+	fmt.Println("SIGNATURE : ", signature)
 	return signature
 }
 
-func getDeviceList(accessID, secretKey string) ([]Device, error) {
+func GetDevicesList() ([]Device, error) {
 	client := &http.Client{}
-	params := map[string]string{
-		// Add any additional parameters here if needed
-		//"page": "1",
-		//"size": "10",
-	}
 
-	signature := generateSignature(DevicesPath, accessID, secretKey, params)
-
-	req, err := http.NewRequest("GET", BaseURL+DevicesPath, nil)
+	req, err := http.NewRequest("GET", "https://openapi.tuyaeu.com/v1.0/devices", nil)
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("client_id", accessID)
-	req.Header.Add("sign_method", "HMAC-SHA256")
-	req.Header.Add("t", strconv.Itoa(int(time.Now().Unix())))
-	req.Header.Add("sign", signature)
+	fmt.Println("access_token is: ", AccessToken)
+	req.Header.Add("Authorization", "Bearer "+AccessToken)
+	fmt.Println("Uid : ", Uid)
+	req.Header.Add("client_id", Uid)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -198,32 +177,19 @@ func getDeviceList(accessID, secretKey string) ([]Device, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusOK {
+		fmt.Println("OK", http.StatusOK)
 		body, _ := io.ReadAll(resp.Body)
-		var response struct {
-			Success bool     `json:"success"`
-			Data    []Device `json:"data"`
-		}
-		if err := json.Unmarshal(body, &response); err != nil {
+		var deviceListResponse DeviceListResponse
+		if err := json.Unmarshal(body, &deviceListResponse); err != nil {
 			return nil, err
 		}
-		if response.Success {
-			return response.Data, nil
+		if deviceListResponse.Success {
+			return deviceListResponse.Result, nil
 		} else {
 			return nil, fmt.Errorf("API request failed: %s", string(body))
 		}
+	} else {
+		return nil, fmt.Errorf("API request failed with status: %s", resp.Status)
 	}
 
-	return nil, fmt.Errorf("API request failed with status: %s", resp.Status)
-}
-
-func GetDevicesList() {
-	deviceList, err := getDeviceList(ClientID, "b1291899c7f5bb70c79797727b7ed148")
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-	fmt.Println("Device list:", deviceList)
-	for _, device := range deviceList {
-		fmt.Println("Device ID:", device)
-	}
 }

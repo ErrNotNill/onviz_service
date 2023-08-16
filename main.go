@@ -37,12 +37,17 @@ func main() {
 	//tuya.PolicyAction()
 
 	//tuya.GetUsers()
-
+	devices, err := tuya.GetDevicesList()
+	if err != nil {
+		log.Println("No devices")
+	}
+	for _, device := range devices {
+		fmt.Printf("ID: %v, Name: %v, Online: %v\n", device.Result, device.Success, device.T)
+	}
 	tuya.RefreshToken(tuya.ClientID, tuya.RefreshTokenVal)
-	tuya.GetDevicesList()
 
 	//tuya.GetDeviceList()
-	tuya.GetDevicesWithToken()
+	//tuya.GetDevicesWithToken()
 
 	//todo get device from ID's list
 	//tuya.GetDevice(tuya.DeviceID)

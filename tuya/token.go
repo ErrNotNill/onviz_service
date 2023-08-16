@@ -16,39 +16,20 @@ import (
 	"time"
 )
 
-func RefreshTokenHandler(w http.ResponseWriter, r *http.Request) {
-	go GetTokenHandler(w, r)
-	clientID := ClientID
-	refreshToken := RefreshTokenVal
-	if clientID == "" || refreshToken == "" {
-		http.Error(w, "Missing client_id or refresh_token", http.StatusBadRequest)
-		return
-	}
-	response := struct {
-		AccessToken string `json:"refresh_token"`
-	}{
-		AccessToken: RefreshTokenVal,
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(response)
-}
-
 func RefreshToken(ClientID, RefreshTokenVal string) (string, error) {
 	clientID := ClientID
 	refreshToken := RefreshTokenVal
+
 	values := url.Values{}
 	values.Set("grant_type", "refresh_token")
 	values.Set("client_id", clientID)
 	values.Set("refresh_token", refreshToken)
 
-	req, err := http.NewRequest("POST", "https://openapi.tuyaeu.com/v1.0/token", strings.NewReader(RefreshTokenVal))
+	req, err := http.NewRequest("POST", "https://openapi.tuyaeu.com/v1.0/token", nil)
 	if err != nil {
 		fmt.Println("Error creating request: ", err)
 		return "", err
 	}
-
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -59,6 +40,7 @@ func RefreshToken(ClientID, RefreshTokenVal string) (string, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusOK {
+		fmt.Println("OK", http.StatusOK)
 		var response struct {
 			AccessToken string `json:"access_token"`
 		}
@@ -67,13 +49,13 @@ func RefreshToken(ClientID, RefreshTokenVal string) (string, error) {
 			fmt.Println("Error decoding")
 			return "", err
 		}
-		fmt.Println("The body of the response: ", resp.Body)
 		fmt.Println("access_token: ", response.AccessToken)
 		return response.AccessToken, nil
 	} else {
 		return "", fmt.Errorf("Token refresh failed with status code: %d", resp.StatusCode)
 	}
 }
+
 func GetToken() {
 	//token := os.Getenv("TOKEN")
 	method := "GET"
@@ -95,41 +77,15 @@ func GetToken() {
 	if v := ret.Result.AccessToken; v != "" {
 		Token = v
 	}
+	//here we got AccessToken and UID / clientID
+	AccessToken = ret.Result.AccessToken
+	Uid = ret.Result.UID
+
 	if refToken := ret.Result.RefreshToken; refToken != "" {
 		RefreshTokenVal = refToken
 	}
 	log.Println("Token:", Token)
 	log.Println("Refresh Token:", RefreshTokenVal)
-}
-
-func GetTokenHandler(w http.ResponseWriter, r *http.Request) {
-	//token := os.Getenv("TOKEN")
-	method := "GET"
-	body := []byte(``)
-	req, _ := http.NewRequest(method, Host+"/v1.0/token?grant_type=1", bytes.NewReader(body))
-
-	buildHeader(req, body)
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	defer resp.Body.Close()
-	bs, _ := io.ReadAll(resp.Body)
-	ret := TokenResponse{}
-	json.Unmarshal(bs, &ret)
-	log.Println("resp:", string(bs))
-
-	if v := ret.Result.AccessToken; v != "" {
-		Token = v
-	}
-	if refToken := ret.Result.RefreshToken; refToken != "" {
-		RefreshTokenVal = refToken
-	}
-	log.Println("Token:", Token)
-	log.Println("Refresh Token:", RefreshTokenVal)
-	w.Write([]byte(Token))
-	w.Write([]byte(RefreshTokenVal))
 }
 
 func buildHeader(req *http.Request, body []byte) {
