@@ -1,12 +1,18 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	"github.com/redis/go-redis/v9"
 	"log"
 	"net/http"
+	"onviz/DB"
+	"onviz/chat/cache"
+	"onviz/router"
 	"onviz/tuya"
+	"os"
 )
 
 // var linkToRemoteServerUsage = "http://45.141.79.120/getListOfLines"
@@ -54,10 +60,10 @@ func main() {
 	//tuya.GetDevice("bf85de23e4cf1c10fb6bsn")
 
 	//VK.StartVkBridge()
-	/*fmt.Println("Starting")
+	fmt.Println("Starting")
 
 	urlDb := os.Getenv("URL_MYSQL")
-	err := DB.InitDB(urlDb)
+	err = DB.InitDB(urlDb)
 	if err != nil {
 		fmt.Println("cant' connect to mysql")
 		log.Fatal(err)
@@ -85,7 +91,7 @@ func main() {
 		fmt.Println("Server started with error")
 		return
 	}
-	//go chat.WsStart()*/
+	//go chat.WsStart()
 }
 
 func taskAdd() {
