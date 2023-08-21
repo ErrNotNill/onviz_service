@@ -172,6 +172,7 @@ func GetDevicesList() ([]Device, error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
+		fmt.Println("Failed to create client: ", err)
 		return nil, err
 	}
 	defer resp.Body.Close()

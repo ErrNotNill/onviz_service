@@ -10,6 +10,7 @@ import (
 )
 
 func AuthHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 	clientID := ClientID
 	redirectURI := YaRedirectUri
 
@@ -34,8 +35,7 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(js)
 	w.Write([]byte(yaParams.State))
 
-	state := yaParams.State
-	http.Redirect(w, r, fmt.Sprintf("https://social.yandex.net/broker/redirect?state=%s", state), http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "https://social.yandex.net/broker/redirect", http.StatusTemporaryRedirect)
 
 }
 
@@ -60,6 +60,10 @@ func GetTokenHandler(w http.ResponseWriter, r *http.Request) {
 	if v := ret.Result.AccessToken; v != "" {
 		Token = v
 	}
+	//here we got AccessToken and UID / clientID
+	AccessToken = ret.Result.AccessToken
+	Uid = ret.Result.UID
+
 	if refToken := ret.Result.RefreshToken; refToken != "" {
 		RefreshTokenVal = refToken
 	}
@@ -67,6 +71,12 @@ func GetTokenHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Refresh Token:", RefreshTokenVal)
 	w.Write([]byte(Token))
 	w.Write([]byte(RefreshTokenVal))
+
+	if uid := ret.Result.UID; uid != "" {
+		w.Write([]byte("Uid is: " + Uid))
+		http.Redirect(w, r, "https://social.yandex.net/broker/redirect", http.StatusFound)
+	}
+
 }
 
 func RefreshTokenHandler(w http.ResponseWriter, r *http.Request) {

@@ -38,18 +38,20 @@ func main() {
 		fmt.Println("Loaded .env file")
 	}
 
+	//tuya.Cfg()
+
 	tuya.GetToken()
 
 	//tuya.PolicyAction()
 
 	//tuya.GetUsers()
-	devices, err := tuya.GetDevicesList()
+	/*devices, err := tuya.GetDevicesList()
 	if err != nil {
 		log.Println("No devices")
 	}
 	for _, device := range devices {
 		fmt.Printf("ID: %v, Name: %v, Online: %v\n", device.Result, device.Success, device.T)
-	}
+	}*/
 	tuya.RefreshToken(tuya.ClientID, tuya.RefreshTokenVal)
 
 	//tuya.GetDeviceList()
@@ -57,13 +59,13 @@ func main() {
 
 	//todo get device from ID's list
 	//tuya.GetDevice(tuya.DeviceID)
-	//tuya.GetDevice("bf85de23e4cf1c10fb6bsn")
+	tuya.GetDevice("bf85de23e4cf1c10fb6bsn")
 
 	//VK.StartVkBridge()
 	fmt.Println("Starting")
 
 	urlDb := os.Getenv("URL_MYSQL")
-	err = DB.InitDB(urlDb)
+	err := DB.InitDB(urlDb)
 	if err != nil {
 		fmt.Println("cant' connect to mysql")
 		log.Fatal(err)

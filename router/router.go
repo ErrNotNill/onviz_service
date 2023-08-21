@@ -37,4 +37,5 @@ func Router() {
 	http.HandleFunc("/auth_tuya", tuya.AuthHandler)
 	http.HandleFunc("/get_token", tuya.GetTokenHandler)
 	http.HandleFunc("/refresh_token", tuya.RefreshTokenHandler)
+
 }
