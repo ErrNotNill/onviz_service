@@ -38,28 +38,7 @@ func main() {
 		fmt.Println("Loaded .env file")
 	}
 
-	//tuya.Cfg()
-
-	tuya.GetToken()
-
-	//tuya.PolicyAction()
-
-	//tuya.GetUsers()
-	/*devices, err := tuya.GetDevicesList()
-	if err != nil {
-		log.Println("No devices")
-	}
-	for _, device := range devices {
-		fmt.Printf("ID: %v, Name: %v, Online: %v\n", device.Result, device.Success, device.T)
-	}*/
-	tuya.RefreshToken(tuya.ClientID, tuya.RefreshTokenVal)
-
-	//tuya.GetDeviceList()
-	//tuya.GetDevicesWithToken()
-
-	//todo get device from ID's list
-	//tuya.GetDevice(tuya.DeviceID)
-	tuya.GetDevice("bf85de23e4cf1c10fb6bsn")
+	//TheTuyaAllFunctions()
 
 	//VK.StartVkBridge()
 	fmt.Println("Starting")
@@ -106,4 +85,29 @@ func GetListOfLines(w http.ResponseWriter, r *http.Request) {
 		log.Println(err.Error(), "Cant get list of OpenLines in bitrix")
 	}
 	fmt.Println(getList.Body)
+}
+
+func TheTuyaAllFunctions() {
+	//tuya.Cfg()
+
+	tuya.GetToken()
+
+	//tuya.PolicyAction()
+
+	//tuya.GetUsers()
+	/*devices, err := tuya.GetDevicesList()
+	if err != nil {
+		log.Println("No devices")
+	}
+	for _, device := range devices {
+		fmt.Printf("ID: %v, Name: %v, Online: %v\n", device.Result, device.Success, device.T)
+	}*/
+	tuya.RefreshToken(tuya.ClientID, tuya.RefreshTokenVal)
+
+	//tuya.GetDeviceList()
+	//tuya.GetDevicesWithToken()
+
+	//todo get device from ID's list
+	//tuya.GetDevice(tuya.DeviceID)
+	tuya.GetDevice("bf85de23e4cf1c10fb6bsn")
 }
