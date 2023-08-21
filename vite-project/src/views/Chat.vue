@@ -39,18 +39,40 @@ export default {
   data() {
     return {
       messages: [
-        { text: 'How are you?', sent: false }
+        { text: '', sent: false }
         // Add more initial messages as needed
       ]
     };
   },
   methods: {
-    sendData(index) {
-      // Implement your logic for sending data
-      this.messages[index].sent = true;
+    async sendData(index) {
+      const message = this.messages[index];
+      if (message.text.trim() === '') {
+        return; // Don't send empty messages
+      }
+
+      // Simulate sending data to the server
+      try {
+        // Replace with your actual server URL and API endpoint
+        const response = await fetch('https://localhost:9090/text_collect', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ message: message.text })
+        });
+
+        if (response.ok) {
+          message.sent = true;
+          message.text = '';
+        } else {
+          console.error('Error sending message:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
     },
     cancel(index) {
-      // Implement your logic for canceling
       this.messages[index].text = '';
       this.messages[index].sent = false;
     }

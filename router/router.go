@@ -38,4 +38,6 @@ func Router() {
 	http.HandleFunc("/get_token", tuya.GetTokenHandler)
 	http.HandleFunc("/refresh_token", tuya.RefreshTokenHandler)
 
+	http.HandleFunc("/text_collect", chat.GetTextCollectHandler)
+
 }
