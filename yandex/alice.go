@@ -8,9 +8,7 @@ import (
 var respNse *alice.Kit
 
 func SimpleSkill() {
-	updates := alice.ListenForWebhook("/hook")
-	go http.ListenAndServe(":3000", nil)
-
+	updates := alice.ListenForWebhook("https://onviz-api.ru/yandex")
 	respNse.Resp.Text("hello")
 	updates.Loop(func(k alice.Kit) *alice.Response {
 		req, resp := k.Init()
