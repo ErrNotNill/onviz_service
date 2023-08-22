@@ -11,6 +11,7 @@
         :class="{ 'sent-message': message.sent, 'cancelled-message': !message.sent }"
       >
         {{ message.text }}
+        {{ rcvMessage }}
       </p>
     </div>
 
@@ -20,11 +21,12 @@
           rows="5"
           v-model="message.text"
           placeholder="Enter your text here..."
-          @keyup.enter="sendData(index)"
+          @click.prevent="onSubmit"
+          @keyup.enter="sendMessage(index)"
         ></textarea>
         <div class="button-block">
           <div class="button-group">
-            <button class="button send-button" @click="sendData(index)">Send</button>
+            <button type="submit" class="button send-button" @click="sendMessage(index)">Send</button>
             <button class="button cancel-button" @click="cancel(index)">Cancel</button>
           </div>
         </div>
@@ -41,42 +43,37 @@ export default {
       messages: [
         { text: '', sent: false }
         // Add more initial messages as needed
-      ]
+      ],
+      socket : null,
+      rcvMessage:''
     };
   },
-  methods: {
-    async sendData(index) {
-      const message = this.messages[index];
-      if (message.text.trim() === '') {
-        return; // Don't send empty messages
+  mounted() {
+    this.socket = new WebSocket("ws://localhost:9090/chat")
+    this.socket.onmessage = (msg) => {
+      this.rcvMessage = msg.data
+    }
+  },
+  methods:{
+    sendMessage(){
+      let msg = {
+        "greeting": this.message
       }
-
-      // Simulate sending data to the server
-      try {
-        // Replace with your actual server URL and API endpoint
-        const response = await fetch('https://localhost:9090/text_collect', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ message: message.text })
-        });
-
-        if (response.ok) {
-          message.sent = true;
-          message.text = '';
-        } else {
-          console.error('Error sending message:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Error sending message:', error);
-      }
-    },
-    cancel(index) {
-      this.messages[index].text = '';
-      this.messages[index].sent = false;
+      this.socket.send(JSON.stringify(msg))
+    }
+  },
+  created: function() {
+    console.log("started")
+    this.connection = new WebSocket("ws://localhost:9090/chat")
+    this.connection.onmessage = function(event) {
+      console.log(event);
+    }
+    this.connection.onopen = function(event) {
+      console.log(event)
+      console.log("Successfully connected to the echo websocket server...")
     }
   }
+  ,
 };
 </script>
 

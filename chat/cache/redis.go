@@ -10,6 +10,7 @@ var (
 )
 
 type ChatMessage struct {
+	Message  string `json:"message"`
 	Username string `json:"username"`
 	Text     string `json:"text"`
 }

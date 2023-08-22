@@ -10,43 +10,46 @@ import (
 
 var upgrader = websocket.Upgrader{}
 
+var wsConn *websocket.Conn
+
 func TestChat(w http.ResponseWriter, r *http.Request) {
+	upgrader.CheckOrigin = func(r *http.Request) bool {
+		return true
+	}
 	/*chatMessages, err := cache.RDB.LRange(context.Background(), "chat_messages", 0, -1).Result()
 	if err != nil {
 		panic(err)
 	}
 	fmt.Fprintf(w, "%s", chatMessages)*/
-	w.Header().Set("Upgrade", "websocket")
-	/*ts, err := template.ParseFiles("./chat/public/chat.html")
-	if err != nil {
-		panic(err)
-	}*/
 
 	//upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
+		return
 	}
-
-	msg := "Hello"
-	Reader(msg, ws)
-
-	//ts.Execute(w, msg)
-	if err != nil {
-		fmt.Print("i cant execute chat.html")
-	}
+	defer ws.Close()
 	cache.Clients[ws] = true
-	log.Println("client connected!")
 	for {
 		var msg cache.ChatMessage
-
 		err = ws.ReadJSON(&msg)
 		if err != nil {
 			delete(cache.Clients, ws)
+			continue
 		}
 		cache.Broadcaster <- msg
+		fmt.Println("msg: ", msg)
+		fmt.Println(<-cache.Broadcaster)
+		sendMessage("Hello, client")
 	}
 
+}
+
+func sendMessage(msg string) {
+	err := wsConn.WriteMessage(websocket.TextMessage, []byte(msg))
+	if err != nil {
+		fmt.Println("msg: ", err)
+	}
 }
 
 /*func HandleMessages() {
