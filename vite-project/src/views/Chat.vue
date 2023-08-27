@@ -2,79 +2,72 @@
   <main id="chat">
     <h1>Chat</h1>
     <p>This is chat page</p>
-
-    <!-- New block for sent messages -->
     <div class="sent-messages">
-      <p
-        v-for="(message, index) in messages"
-        :key="index"
-        :class="{ 'sent-message': message.sent, 'cancelled-message': !message.sent }"
-      >
-        {{ message.text }}
-        {{ rcvMessage }}
-      </p>
+      <div :class="{ 'sent-message': sent, 'cancelled-message': !sent }">
+        <p> {{ message }}  </p>
+      </div>
+    </div>
+    <div class="chat-container">
+      <form :action="sendMessage" @click.prevent="onSubmit">
+      </form>
+      <textarea rows="5" v-model="message"></textarea>
+      <div class="button-block">
+        <div class="button-group">
+          <input class="button send-button" type="submit" value="Send" @click="sendMessage" />
+          <button class="button cancel-button" @click="cancelMessage">Cancel</button>
+        </div>
+      </div>
     </div>
 
-    <div class="chat-container">
-      <div v-for="(message, index) in messages" :key="index" class="input-block">
-        <textarea
-          rows="5"
-          v-model="message.text"
-          placeholder="Enter your text here..."
-          @click.prevent="onSubmit"
-          @keyup.enter="sendMessage(index)"
-        ></textarea>
-        <div class="button-block">
-          <div class="button-group">
-            <button type="submit" class="button send-button" @click="sendMessage(index)">Send</button>
-            <button class="button cancel-button" @click="cancel(index)">Cancel</button>
-          </div>
-        </div>
-        <p v-if="message.sent">Sent message: {{ message.text }}</p>
-      </div>
+
+    <!-- New block for sent messages -->
+    <div>
+      <h1> Request </h1>
+      <p> {{ rcvMessage }}</p>
     </div>
   </main>
 </template>
-
 <script>
 export default {
+  name: 'App',
   data() {
     return {
-      messages: [
-        { text: '', sent: false }
-        // Add more initial messages as needed
-      ],
-      socket : null,
-      rcvMessage:''
-    };
-  },
-  mounted() {
-    this.socket = new WebSocket("ws://localhost:9090/chat")
-    this.socket.onmessage = (msg) => {
-      this.rcvMessage = msg.data
+      message: '',
+      socket: null,
+      rcvMessage: '',
+      sent: false,
+      error: false
     }
   },
-  methods:{
-    sendMessage(){
+  mounted() {
+    this.$nextTick(function (){
+      this.socket = new WebSocket("ws://localhost:9090/chat")
+      this.socket.onmessage = (msg) => {
+        this.rcvMessage = msg.data
+      }
+    });
+  },
+  methods: {
+    sendMessage() {
       let msg = {
         "greeting": this.message
       }
       this.socket.send(JSON.stringify(msg))
-    }
-  },
-  created: function() {
-    console.log("started")
-    this.connection = new WebSocket("ws://localhost:9090/chat")
-    this.connection.onmessage = function(event) {
-      console.log(event);
-    }
-    this.connection.onopen = function(event) {
-      console.log(event)
-      console.log("Successfully connected to the echo websocket server...")
+      this.sent = true
+    },
+    //socketError(){
+    // this.socketError()
+    //},
+   // quitFromChat(){
+    //  this.socket.disconnect()
+    //  this.sent = false
+   // },
+    cancelMessage(){
+      this.message = ""
+      this.sent = false
     }
   }
-  ,
-};
+}
 </script>
 
 <style scoped>

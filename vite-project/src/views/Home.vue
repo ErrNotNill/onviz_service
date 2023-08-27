@@ -1,11 +1,10 @@
-
 <template>
   <main id="Home-page">
     <h1>Home</h1>
-    <p>TThis is the home page</p>
+    <p>This is the home page</p>
   </main>
   <div class="test">
-    <td>{{ rows }}</td>
+    <pre>{{ rows }}</pre>
   </div>
 </template>
 
@@ -15,7 +14,9 @@ export default {
   data() {
     return {
       loading: false,
-      rows: []
+      rows: [{
+        ID: "ID",
+      }]
     }
   },
   created() {
@@ -28,6 +29,7 @@ export default {
         .then(response => {
           this.loading = false
           this.rows = response.data
+          this.rows.ID = response.data.ID
         })
         .catch(error => {
           this.loading = false

@@ -1,16 +1,26 @@
 package chat
 
 import (
+	"context"
 	"fmt"
 	"github.com/gorilla/websocket"
 	"log"
+	"math/rand"
 	"net/http"
 	"onviz/chat/cache"
+	"strconv"
 )
 
-var upgrader = websocket.Upgrader{}
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+}
 
 var wsConn *websocket.Conn
+
+type Message struct {
+	Greeting string `json:"greeting"`
+}
 
 func TestChat(w http.ResponseWriter, r *http.Request) {
 	upgrader.CheckOrigin = func(r *http.Request) bool {
@@ -29,20 +39,37 @@ func TestChat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer ws.Close()
-	cache.Clients[ws] = true
+	//cache.Clients[ws] = true
+	//ws.SetReadLimit(86400)
 	for {
-		var msg cache.ChatMessage
+		//fmt.Println(r.Body)
+		//var msg cache.ChatMessage
+		var msg Message
+
 		err = ws.ReadJSON(&msg)
 		if err != nil {
-			delete(cache.Clients, ws)
-			continue
+			cache.RDB.RPush(context.Background(), "chat_messages", msg)
+			//	cache.ChatMessage{Message: msg.Greeting}
+			fmt.Println("i can't read message")
+			//delete(cache.Clients, ws)
+			break
 		}
-		cache.Broadcaster <- msg
-		fmt.Println("msg: ", msg)
-		fmt.Println(<-cache.Broadcaster)
-		sendMessage("Hello, client")
-	}
+		fmt.Println("not errors,", "message:", msg)
+		//fmt.Println(msg.Greeting)
+		//cache.Broadcaster <- msg
+		//fmt.Println("msg: ", msg)
+		//fmt.Println(<-cache.Broadcaster)
+		messages := make([]Message, 0)
+		messages = append(messages, msg)
+		err = ws.WriteMessage(websocket.TextMessage, []byte(strconv.Itoa(rand.Intn(12313123123))))
+		if err != nil {
+			//todo correct redis adding
+			cache.RDB.RPush(context.Background(), "chat_messages", msg)
+			log.Println("write:", err)
+			break
+		}
 
+	}
 }
 
 func sendMessage(msg string) {
