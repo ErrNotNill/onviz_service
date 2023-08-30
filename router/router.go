@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"onviz/LEADS"
 	"onviz/VK"
+	"onviz/addons"
 	"onviz/bot_bitrix"
 	"onviz/chat"
 	"onviz/tests"
@@ -39,5 +40,6 @@ func Router() {
 	http.HandleFunc("/refresh_token", tuya.RefreshTokenHandler)
 
 	http.HandleFunc("/text_collect", chat.GetTextCollectHandler)
+	http.HandleFunc("/iframe", addons.IframeHandler)
 
 }
