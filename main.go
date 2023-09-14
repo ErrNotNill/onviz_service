@@ -17,7 +17,16 @@ import (
 
 // var linkToRemoteServerUsage = "http://45.141.79.120/getListOfLines"
 
+type NewTask struct {
+	Title         string `json:"title"`
+	CreatedBy     string `json:"createdBy"`
+	ResponsibleId string `json:"responsible_id"`
+}
+
 func main() {
+
+	//queue.MqttInit()
+
 	/*
 		const (
 			clientID  = "9x8wfym7m5vyck7tdwwt&"
