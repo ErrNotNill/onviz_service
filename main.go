@@ -47,7 +47,7 @@ func main() {
 		fmt.Println("Loaded .env file")
 	}
 
-	//TheTuyaAllFunctions()
+	TheTuyaAllFunctions()
 
 	//VK.StartVkBridge()
 	fmt.Println("Starting")
@@ -100,7 +100,8 @@ func TheTuyaAllFunctions() {
 	//tuya.Cfg()
 
 	tuya.GetToken()
-
+	tuya.RefreshToken()
+	tuya.GetDevicesInProject()
 	//tuya.PolicyAction()
 
 	//tuya.GetUsers()
@@ -111,7 +112,7 @@ func TheTuyaAllFunctions() {
 	for _, device := range devices {
 		fmt.Printf("ID: %v, Name: %v, Online: %v\n", device.Result, device.Success, device.T)
 	}*/
-	tuya.RefreshToken(tuya.ClientID, tuya.RefreshTokenVal)
+	//tuya.RefreshToken(tuya.ClientID, tuya.RefreshTokenVal)
 
 	//tuya.GetDeviceList()
 	//tuya.GetDevicesWithToken()
