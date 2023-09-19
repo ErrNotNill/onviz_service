@@ -67,13 +67,14 @@ func CallbackHandlerOld(w http.ResponseWriter, r *http.Request) {
 
 func CallbackHandler(w http.ResponseWriter, r *http.Request) {
 	client := &http.Client{}
+
 	//client_id := `FM9Vb9sOseDFnAx4BNOvgbpr7r37dBmL`
 	//client_secret := `mM20SgbV7mWjlSLvQ1IR8UpMsFSlUXtl`
-	code := r.URL.Query().Get("code")
+
 	//url := fmt.Sprintf("https://api.cdek.ru/v2/oauth/token?grant_type=client_credentials&client_id=%s&client_secret=%s", client_id, client_secret)
-	tokenURL := fmt.Sprintf("https://onviz.bitrix24.com/oauth/token"+
-		"?grant_type=authorization_code&client_id=%s&client_secret=%s&code=%s&redirect_uri=%s",
-		clientID, clientSecret, code, redirectURI)
+	tokenURL := fmt.Sprintf(`https://onviz.bitrix24.ru/oauth/authorize/?
+	client_id=%s`,
+		clientID)
 
 	post, err := client.Post(tokenURL, "application/x-www-form-urlencoded", nil)
 	if err != nil {
@@ -81,7 +82,31 @@ func CallbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	body, err := io.ReadAll(post.Body)
-	fmt.Fprint(w, body)
+	fmt.Println("post.Body", post.Body)
+	json.Unmarshal(body, &post.Body)
+	fmt.Fprint(w, string(body))
+}
+
+func NextStepAuth(w http.ResponseWriter, r *http.Request) {
+	client := &http.Client{}
+
+	//client_id := `FM9Vb9sOseDFnAx4BNOvgbpr7r37dBmL`
+	//client_secret := `mM20SgbV7mWjlSLvQ1IR8UpMsFSlUXtl`
+	code := r.URL.Query().Get("")
+	//url := fmt.Sprintf("https://api.cdek.ru/v2/oauth/token?grant_type=client_credentials&client_id=%s&client_secret=%s", client_id, client_secret)
+	tokenURL := fmt.Sprintf("https://onviz.bitrix24.com/oauth/token"+
+		"?grant_type=authorization_code&client_id=%s&client_secret=%s&code=%s",
+		clientID, clientSecret, code)
+
+	post, err := client.Post(tokenURL, "application/x-www-form-urlencoded", nil)
+	if err != nil {
+		fmt.Println("Failed to exchange authorization code for access token:", err)
+		return
+	}
+	body, err := io.ReadAll(post.Body)
+	fmt.Println("post.Body", post.Body)
+	json.Unmarshal(body, &post.Body)
+	fmt.Fprint(w, string(body))
 
 	/*resp := &Response{}
 	//fmt.Println("post.Body", post.Body)
