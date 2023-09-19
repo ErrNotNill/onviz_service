@@ -194,3 +194,41 @@ func GetDevicesList() ([]Device, error) {
 	}
 
 }
+
+func GetDevicesInProject() ([]Device, error) {
+	fmt.Println("Getting devices")
+	client := &http.Client{}
+
+	req, err := http.NewRequest("GET", "https://openapi.tuyaeu.com/v2.0/cloud/thing/device", nil)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println("access_token is: ", AccessToken)
+	req.Header.Add("Authorization", "Bearer "+AccessToken)
+	fmt.Println("Uid : ", Uid)
+	//req.Header.Add("client_id", Uid)
+
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println("Failed to create client: ", err)
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusOK {
+		fmt.Println("OK", http.StatusOK)
+		body, _ := io.ReadAll(resp.Body)
+		var deviceListResponse DeviceListResponse
+		if err := json.Unmarshal(body, &deviceListResponse); err != nil {
+			return nil, err
+		}
+		if deviceListResponse.Success {
+			return deviceListResponse.Result, nil
+		} else {
+			return nil, fmt.Errorf("API request failed: %s", string(body))
+		}
+	} else {
+		return nil, fmt.Errorf("API request failed with status: %s", resp.Status)
+	}
+
+}
