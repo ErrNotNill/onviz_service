@@ -10,39 +10,50 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"sort"
 	"strings"
 	"time"
 )
 
-func RefreshToken() {
+func RefreshToken(ClientID, RefreshTokenVal string) (string, error) {
+	clientID := ClientID
+	refreshToken := RefreshTokenVal
 
-	token := &TokenResponse{}
-	fmt.Println("RefreshToken Token is : ", RefreshTokenVal)
-	//values := url.Values{}
-	//values.Set("grant_type", "refresh_token")
-	//values.Set("client_id", clientID)
-	//values.Set("refresh_token", refreshToken)
-	uri := `https://openapi.tuyaeu.com/v1.0/token/` + RefreshTokenVal
+	values := url.Values{}
+	values.Set("grant_type", "refresh_token")
+	values.Set("client_id", clientID)
+	values.Set("refresh_token", refreshToken)
 
-	req, err := http.NewRequest("GET", uri, nil)
+	req, err := http.NewRequest("POST", "https://openapi.tuyaeu.com/v1.0/token", nil)
 	if err != nil {
 		fmt.Println("Error creating request: ", err)
+		return "", err
 	}
-	//req.Header.Add("grant_type", "refresh_token")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("Error creating client: ", err)
+		return "", err
 	}
 	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
-	json.Unmarshal(body, &token)
-	fmt.Println("string(body).RefreshToken : ", string(body))
-	fmt.Println("token.Result.AccessToken: ", token.Result.AccessToken)
-	fmt.Println("token.Result.RefreshToken: ", token.Result.RefreshToken)
 
+	if resp.StatusCode == http.StatusOK {
+		fmt.Println("OK", http.StatusOK)
+		var response struct {
+			AccessToken string `json:"access_token"`
+		}
+		err := json.NewDecoder(resp.Body).Decode(&response)
+		if err != nil {
+			fmt.Println("Error decoding")
+			return "", err
+		}
+		fmt.Println("access_token: ", response.AccessToken)
+		return response.AccessToken, nil
+	} else {
+		return "", fmt.Errorf("Token refresh failed with status code: %d", resp.StatusCode)
+	}
 }
 
 func GetToken() {
@@ -68,13 +79,13 @@ func GetToken() {
 	}
 	//here we got AccessToken and UID / clientID
 	AccessToken = ret.Result.AccessToken
-
 	Uid = ret.Result.UID
 
 	refToken := ret.Result.RefreshToken
-	fmt.Println("refToken :", string(refToken))
 
-	RefreshTokenVal = refToken
+	if ret.Result.ExpireTime <= 100 {
+		RefreshTokenVal = refToken
+	}
 
 	log.Println("Token:", Token)
 	log.Println("Refresh Token:", RefreshTokenVal)
