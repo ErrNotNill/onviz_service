@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -24,11 +25,30 @@ func RefreshToken() {
 	//values.Set("client_id", clientID)
 	//values.Set("refresh_token", refreshToken)
 	uri := `https://openapi.tuyaeu.com/v1.0/token/` + RefreshTokenVal
-
+	/*stringToSign:=
+	"GET" + "\n" +
+		"Content-SHA256" + "\n" +
+		Headers + "\n" +
+		URL*/
 	req, err := http.NewRequest("GET", uri, nil)
 	if err != nil {
 		fmt.Println("Error creating request: ", err)
 	}
+	req.Header.Add("client_id", ClientID)
+	ts := fmt.Sprintf("%d", time.Now().UTC().UnixNano()/int64(time.Millisecond))
+	req.Header.Add("sign_method", "HMAC-SHA256")
+	fmt.Println("ts:", ts)
+	req.Header.Add("t", strconv.Itoa(int(TimeToken)))
+
+	/*str := ClientID + ts + Uid + stringToSign
+	//знак = HMAC-SHA256(str, секретный).Прописной()
+	stringToSign := "GET" + "\n" +
+		//HTTPMethod + "\n" +
+		//Content-SHA256 + "\n" +
+		//Headers + "\n" +
+		//URL
+
+		req.Header.Add("nonce", Uid)*/
 	//req.Header.Add("grant_type", "refresh_token")
 
 	client := &http.Client{}
@@ -70,6 +90,7 @@ func GetToken() {
 	AccessToken = ret.Result.AccessToken
 
 	Uid = ret.Result.UID
+	TimeToken = ret.T
 
 	refToken := ret.Result.RefreshToken
 	fmt.Println("refToken :", string(refToken))

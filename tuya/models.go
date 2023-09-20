@@ -24,6 +24,7 @@ var (
 	ResultPolicy    string
 	AccessToken     string
 	Uid             string
+	TimeToken       int64
 )
 
 type TokenResponse struct {
