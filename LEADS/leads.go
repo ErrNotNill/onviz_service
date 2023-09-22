@@ -9,9 +9,12 @@ import (
 	"net/http"
 	"onviz/DB"
 	"onviz/deals"
+	"os"
 	"strconv"
 	"strings"
 )
+
+var WebHookLeads = os.Getenv("WEBHOOK_LEADS")
 
 type Lead struct {
 	Id       string `json:"id,omitempty"`
@@ -50,19 +53,16 @@ func GetLeadsAll(w http.ResponseWriter, r *http.Request) {
 from Leads`)
 	if err != nil {
 		fmt.Println("cant get rows")
-		//log.Println(err)
 	}
 	defer rows.Close()
 	products := []Leads{}
 
 	for rows.Next() {
-		//fmt.Println("started cycle from table")
 		p := Leads{}
 		err := rows.Scan(&p.ID, &p.ResponsibleID, &p.Title, &p.Name, &p.Phone, &p.DateCreate, &p.SourceId,
 			&p.SourceDescription, &p.AssignedByLead, &p.Email, &p.FormName)
 		if err != nil {
 			fmt.Println("i cant scan this")
-			//	fmt.Println(err)
 			continue
 		}
 		products = append(products, p)
@@ -76,7 +76,6 @@ from Leads`)
 	for qry.Next() {
 		if err := qry.Scan(&count); err != nil {
 			fmt.Println(`error scan`)
-			//log.Fatal(err)
 		}
 	}
 	fmt.Fprintf(w, "COUNT is: %v\n", count)
@@ -105,7 +104,7 @@ func LeadsAdd(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		fmt.Println("error parse form")
-	} // Parses the request body
+	}
 	leadId := r.Form.Get("lead_id")
 	name := r.Form.Get("name") // x will be "" if parameter is not set
 	phone := r.Form.Get("phone")
@@ -115,9 +114,7 @@ func LeadsAdd(w http.ResponseWriter, r *http.Request) {
 	title := r.Form.Get("title")
 	email := r.Form.Get("email")
 	formName := r.Form.Get("formname")
-	//DB.LeadTestAdd(leadId)
 
-	//responsibleID := 13983 //Admin
 	assignedNotFormatted := r.Form.Get("assigned")
 	assignedFormatted := strings.Split(assignedNotFormatted, "_")
 	assignedByLead := assignedFormatted[1]
@@ -129,47 +126,7 @@ func LeadsAdd(w http.ResponseWriter, r *http.Request) {
 	formattedLeadId, _ := strconv.Atoi(leadId)
 	fmt.Println("FORMATTEDLeadID", formattedLeadId)
 	//tasks.AddTaskToLead("✅ НОВАЯ ЗАЯВКА!", assignedByLead, formattedLeadId)
-
-	/*jsnm, err := json.Marshal(newreq)
-	if err != nil {
-		log.Println("Error to convert json fields from struct")
-	}*/
-
 	fmt.Println("lead added")
-	/*defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-			fmt.Println(err.Error())
-			fmt.Println("error body close")
-		}
-	}(r.Body)
-
-	if r.Method == "POST" {
-		w.WriteHeader(http.StatusOK)
-	}
-
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		fmt.Println("error read body")
-	}
-	fmt.Println("BODY: ", string(body))
-	var lead Lead
-
-	err = json.Unmarshal(body, &lead)
-	if err != nil {
-		fmt.Println("error unmarshall")
-		return
-	}
-	newData, err := json.Marshal(lead)
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println(string(newData))
-	}
-	fmt.Println("LEAD :", lead)
-
-	//DB.LeadCollectToDb(lead.Id, lead.Title, lead.Link, lead.Status, lead.Assigned)
-	fmt.Println("lead added")*/
 }
 
 func GetAllFromLead(db *sql.DB) {
@@ -196,13 +153,11 @@ func GetAllFromLead(db *sql.DB) {
 	}
 }
 
-//maybe need to use fields in crm.deal.list parameters
-
 func DealerDealAdded(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		fmt.Println("error parse form")
-	} // Parses the request body
+	}
 	dealId := r.Form.Get("deal_id")
 	name := r.Form.Get("name") // x will be "" if parameter is not set
 	phone := r.Form.Get("phone")
@@ -211,23 +166,13 @@ func DealerDealAdded(w http.ResponseWriter, r *http.Request) {
 	sourceId := r.Form.Get("source_id")
 	sourceDescription := r.Form.Get("source_description")
 	title := r.Form.Get("title")
-
-	//DB.LeadTestAdd(dealId)
 	fmt.Println("lead added")
 
-	//responsibleID := 13983 //Admin
 	assignedByLead := r.Form.Get("assigned")
 
 	fmt.Println("id: ", dealId, "title: ", title, "name: ", name, "phone: ", phone, "email: ", email, "date_create: ", dateCreate, "source_id: ", sourceId, "source_desc: ", sourceDescription, "assigned: ", assignedByLead)
 
-	//time.Now()
-
 	deals.AddedDealToDB(dealId, title, name, phone, email, dateCreate, sourceId, sourceDescription, assignedByLead)
-
-	/*jsnm, err := json.Marshal(newreq)
-	if err != nil {
-		log.Println("Error to convert json fields from struct")
-	}*/
 
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
@@ -260,15 +205,10 @@ func DealerDealAdded(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(string(newData))
 	}
 	fmt.Println("LEAD :", lead)
-
-	fmt.Println("error lead collect")
-	//DB.LeadCollectToDb(lead.Id, lead.Title, lead.Link, lead.Status, lead.Assigned)
-	fmt.Println("lead added")
 }
 
 func GetLeads(w http.ResponseWriter, r *http.Request) {
-
-	req, err := http.Get("https://onviz.bitrix24.ru/rest/13938/xldrq7vlqx5suw13/crm.lead.list")
+	req, err := http.Get(WebHookLeads)
 	if err != nil {
 		log.Println("Error http:post request to Bitrix24")
 	}
@@ -285,18 +225,4 @@ func GetLeads(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("error read body")
 	}
 	fmt.Println("BODY: ", string(body))
-
-	//var lead Lead
-
-	/*err = json.Unmarshal(body, &lead)
-	if err != nil {
-		fmt.Println("error unmarshall")
-		return
-	}
-	newData, err := json.Marshal(lead)
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println(string(newData))
-	}*/
 }
