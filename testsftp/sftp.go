@@ -13,38 +13,34 @@ import (
 	"strings"
 )
 
+var (
+	RootSftpUrl = os.Getenv("SFTP_ROOT_URL")
+	SFTP        = os.Getenv("SFTP_URL")
+	HostUrl     = os.Getenv("SFTP_HOST_URL")
+)
+
 func StartSfTp() {
-
-	/*envs, err := godotenv.Read(".env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}*/
-
 	// Get SFTP To Go URL from environment
 	//rawurl := os.Getenv("SFTPTOGO_URL")
 
-	fmt.Printf("%q", `testsftp://[root:AA139657aa@]45.141.79.120[:22]/~/URI[?queryParameters]`)
+	fmt.Printf("%q", SFTP)
 	fmt.Println()
-	urlStr := `testsftp root@45.141.79.120`
+	urlStr := `testsftp ` + RootSftpUrl
 	parsedUrl, err := url.Parse(urlStr)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to parse SFTP To Go URL: %s\n", err)
 		os.Exit(1)
 	}
 
-	// Get user name and pass
 	user := parsedUrl.User.Username()
 	pass, _ := parsedUrl.User.Password()
 
-	// Parse Host and Port
-	parsedUrl.Host = "45.141.79.120"
-	host := parsedUrl.Host
 	// Default SFTP port
 	port := 22
 
-	hostKey := getHostKey(host)
+	hostKey := getHostKey(HostUrl)
 
-	fmt.Fprintf(os.Stdout, "Connecting to %s ...\n", host)
+	fmt.Fprintf(os.Stdout, "Connecting to %s ...\n", HostUrl)
 
 	var auths []ssh.AuthMethod
 
@@ -68,7 +64,7 @@ func StartSfTp() {
 		HostKeyCallback: ssh.FixedHostKey(hostKey),
 	}
 
-	addr := fmt.Sprintf("%s:%d", host, port)
+	addr := fmt.Sprintf("%s:%d", HostUrl, port)
 
 	// Connect to server
 	conn, err := ssh.Dial("tcp", addr, &config)
