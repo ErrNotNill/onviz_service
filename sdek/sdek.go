@@ -6,20 +6,22 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
+)
+
+var (
+	CdekCLientId     = os.Getenv("CDEK_CLIENT_ID")
+	CdekClientSecret = os.Getenv("CDEK_CLIENT_SECRET")
 )
 
 func SdekStart() {
 	client := &http.Client{}
-	//client_id := `FM9Vb9sOseDFnAx4BNOvgbpr7r37dBmL`
-	//client_secret := `mM20SgbV7mWjlSLvQ1IR8UpMsFSlUXtl`
+	url := fmt.Sprintf("https://api.cdek.ru/v2/oauth/token?grant_type=client_credentials&client_id=%s&client_secret=%s", CdekCLientId, CdekClientSecret)
 
-	//url := fmt.Sprintf("https://api.cdek.ru/v2/oauth/token?grant_type=client_credentials&client_id=%s&client_secret=%s", client_id, client_secret)
-
-	post, err := client.Post(`https://api.cdek.ru/v2/oauth/token?grant_type=client_credentials&client_id=FM9Vb9sOseDFnAx4BNOvgbpr7r37dBmL&client_secret=mM20SgbV7mWjlSLvQ1IR8UpMsFSlUXtl`, "application/x-www-form-urlencoded", nil)
+	post, err := client.Post(url, "application/x-www-form-urlencoded", nil)
 	body, err := io.ReadAll(post.Body)
 
 	resp := &Response{}
-	//fmt.Println("post.Body", post.Body)
 	json.Unmarshal(body, &resp)
 
 	fmt.Println(post.StatusCode)
@@ -74,7 +76,6 @@ func SdekStart() {
 
 	//client.Get(`https://api.cdek.ru/v2/payment`)
 
-	//req, err := http.NewRequest("POST", `https://api.cdek.ru/v2/oauth/token?grant_type=client_credentials&client_id=FM9Vb9sOseDFnAx4BNOvgbpr7r37dBmL&client_secret=mM20SgbV7mWjlSLvQ1IR8UpMsFSlUXtl`, nil)
 	//req.Header.Set("Content-Type", "x-www-form-urlencoded")
 	//fmt.Println("req.Body", req.Body)
 }
