@@ -1,9 +1,1 @@
 version: '3'
-services:
-go-web-app:
-restart: always
-build:
-dockerfile: Dockerfile
-context: .
-environment:
-- VIRTUAL_HOST=onviz-api.ru

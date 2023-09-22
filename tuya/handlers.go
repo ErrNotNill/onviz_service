@@ -9,6 +9,25 @@ import (
 	"net/http"
 )
 
+func TheTuyaAllFunctions() {
+	//tuya.Cfg()
+
+	GetToken()
+	RefreshToken()
+	GetDevicesInProject()
+	//tuya.PolicyAction()
+
+	//tuya.GetUsers()
+	/*devices, err := tuya.GetDevicesList()
+	if err != nil {
+		log.Println("No devices")
+	}
+	for _, device := range devices {
+		fmt.Printf("ID: %v, Name: %v, Online: %v\n", device.Result, device.Success, device.T)
+	}*/
+	GetDevice("bf85de23e4cf1c10fb6bsn")
+}
+
 func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	clientID := ClientID
