@@ -4,17 +4,17 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
+	"os"
+)
+
+var (
+	MysqlUrl = os.Getenv("URL_MYSQL")
 )
 
 var Db *sqlx.DB //global variable
 
-//mysql:mysql@/Onviz //on vps
-//mysql:mysql@tcp(45.141.79.120:3306)/Onviz //locally
-
-func InitDB(url string) (err error) {
-
-	//var dataSourceName = "mysqld:mysql@tcp(45.141.79.120:3306)/Onviz"
-	Db, err = sqlx.Connect("mysql", url)
+func InitDB() (err error) {
+	Db, err = sqlx.Connect("mysql", MysqlUrl)
 	if err != nil {
 		fmt.Println("not connected")
 		return
@@ -31,7 +31,7 @@ func LeadTestAdd(Id string) {
 		panic(err)
 	}
 	fmt.Println("rows inserted")
-	fmt.Println(result.RowsAffected()) // количество доба
+	fmt.Println(result.RowsAffected())
 }
 
 func AddLeadToDB(Id, Title, Name, Phone, Email, DateCreate, SourceId, SourceDescription, AssignedByLead, FormName string) {
@@ -44,18 +44,5 @@ func AddLeadToDB(Id, Title, Name, Phone, Email, DateCreate, SourceId, SourceDesc
 		panic(err)
 	}
 	fmt.Println("rows inserted")
-	fmt.Println(result.RowsAffected()) // количество добавленных строк
+	fmt.Println(result.RowsAffected())
 }
-
-/*func LeadCollectToDb(id, title, link, status, assigned string) {
-	db, err := ConnectToDb()
-
-	result, err := db.Exec("insert into Leads (id, title, link, status, assigned) values ($1, $2, $3, $4, $5)",
-		id, title, link, status, assigned)
-	if err != nil {
-		fmt.Println("cant insert data to dbase")
-		panic(err)
-	}
-	fmt.Println("rows inserted")
-	fmt.Println(result.RowsAffected()) // количество добавленных строк
-}*/
