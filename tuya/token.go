@@ -20,10 +20,7 @@ func RefreshToken() {
 
 	token := &TokenResponse{}
 	fmt.Println("RefreshToken Token is : ", RefreshTokenVal)
-	//values := url.Values{}
-	//values.Set("grant_type", "refresh_token")
-	//values.Set("client_id", clientID)
-	//values.Set("refresh_token", refreshToken)
+
 	uri := `https://openapi.tuyaeu.com/v1.0/token/` + RefreshTokenVal
 	/*stringToSign:=
 	"GET" + "\n" +
@@ -86,7 +83,6 @@ func GetToken() {
 	if v := ret.Result.AccessToken; v != "" {
 		Token = v
 	}
-	//here we got AccessToken and UID / clientID
 	AccessToken = ret.Result.AccessToken
 
 	Uid = ret.Result.UID

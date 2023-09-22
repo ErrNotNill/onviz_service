@@ -32,10 +32,11 @@ type App struct {
 var Deviceid = "bay1675253638992fSA4"
 
 func Cfg() {
+
 	config := Config{
 		Host:      "https://openapi.tuyaeu.com",
-		AccessKey: "9x8wfym7m5vyck7tdwwt",             //TUYA_CLIENT_ID
-		SecretKey: "d8205ed66f15471fa969aecab48ab495", //TUYA_SECRET_KEY
+		AccessKey: ClientID, //TUYA_CLIENT_ID
+		SecretKey: Secret,   //TUYA_SECRET_KEY
 		DeviceID:  Deviceid,
 	}
 

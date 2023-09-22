@@ -9,13 +9,15 @@ import (
 	"github.com/SevereCloud/vksdk/v2/events"
 	"log"
 	"net/http"
+	"os"
 	"regexp"
 	"strconv"
 )
 
-var SecretKey = "AA1379657aa"
-var Token = "vk1.a.uuGYW0HLLXGopIeCS0mwuHG6GnuBJwDMa8GaYgIwy07nKgjNRrE-gTUUg868oQvep7pjozOiTixAD9j_CpZXgxbCY37NFWoIm392Mxp41-4XfX6U_fhOXH2fg_o50dbGIJtRCNsH7J8YdHNxwcVYOhHC24X2lCqf8YghKs8FWJa4r7sW6u7qK4W_3CR2uSnT3hiXR9azxqjp8ZW89VyMSQ"
-var ConfirmationToken = "17d6f039"
+var VkBitrixWebhookUrl = os.Getenv("VK_BITRIX_LEAD_ADD_WEBHOOK")
+var SecretKey = os.Getenv("VK_SECRET_KEY")
+var Token = os.Getenv("VK_TOKEN")
+var ConfirmationToken = os.Getenv("VK_CONFIRM_TOKEN")
 
 var newUserId int
 var newPostId int
@@ -71,7 +73,7 @@ func CallBack(w http.ResponseWriter, r *http.Request) {
 
 		if is_words == true && len(bytesRune) > 1 && obj.Text != "" && obj.FromID != 628998745 && obj.FromID != 629352947 && obj.FromID != 642491603 {
 			fmt.Println(obj.FromID)
-			_, err = http.Post("https://onviz.bitrix24.ru/rest/13938/pqq6j4ohvutvzfmi/crm.lead.add", "application/json", r)
+			_, err = http.Post(VkBitrixWebhookUrl, "application/json", r)
 			if err != nil {
 				log.Println("Error http:post request to Bitrix24")
 			}
