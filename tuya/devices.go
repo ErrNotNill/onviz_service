@@ -13,47 +13,6 @@ import (
 	"time"
 )
 
-/*func GetDevicesWithToken() {
-	accessToken := Token // Replace with your actual access token
-
-	req, err := http.NewRequest("GET", "https://openapi.tuyaeu.com/v1.0/devices?", nil)
-	if err != nil {
-		fmt.Println("Error creating request:", err)
-		return
-	}
-	ts := fmt.Sprintf("%d", time.Now().UTC().UnixNano()/int64(time.Millisecond))
-
-	req.Header.Set("Authorization", "Bearer "+accessToken)
-	req.Header.Set("client_id", ClientID)
-	req.Header.Set("t", ts)
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		fmt.Println("Error sending request:", err)
-		return
-	}
-	defer resp.Body.Close()
-	bs, _ := io.ReadAll(resp.Body)
-
-	var deviceInfo Device
-	err = json.Unmarshal(bs, &deviceInfo)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-
-	fmt.Printf("Device ID: %s, Name: %s, Online: %v\n", deviceInfo.Result.ID, deviceInfo.Result.Name, deviceInfo.Result.Online)
-	log.Println("resp devices:", string(bs))
-
-	if resp.StatusCode == http.StatusOK {
-		fmt.Println("Request successful!")
-		// Handle the response body here
-	} else {
-		fmt.Printf("Request failed with status code: %d\n", resp.StatusCode)
-	}
-}*/
-
 func GetDeviceList() {
 	method := "GET"
 	body := []byte(``)
@@ -132,7 +91,6 @@ func GetUsers() {
 	if resp.StatusCode == http.StatusOK {
 		fmt.Println("Request successful!")
 
-		// Read and print the response body or process it as needed
 	} else {
 		fmt.Printf("Request failed with status code: %d\n", resp.StatusCode)
 	}

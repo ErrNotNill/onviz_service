@@ -1,9 +1,9 @@
 package tuya
 
+import "os"
+
 const (
 	Host           = "https://openapi.tuyaeu.com"
-	ClientID       = "9x8wfym7m5vyck7tdwwt"
-	Secret         = "d8205ed66f15471fa969aecab48ab495"
 	DeviceID       = "bf85de23e4cf1c10fb6bsn" //example
 	YaRedirectUri  = "https://social.yandex.net/broker/redirect"
 	EndpointURL    = "https://openapi.tuyaeu.com/v1.0"
@@ -19,6 +19,8 @@ type YandexAuthParams struct {
 }
 
 var (
+	ClientID        = os.Getenv("TUYA_CLIENT_ID")
+	Secret          = os.Getenv("TUYA_SECRET_KEY")
 	Token           string
 	RefreshTokenVal string
 	ResultPolicy    string

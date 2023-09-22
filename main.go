@@ -15,31 +15,10 @@ import (
 	"os"
 )
 
-// var linkToRemoteServerUsage = "http://45.141.79.120/getListOfLines"
-
-type NewTask struct {
-	Title         string `json:"title"`
-	CreatedBy     string `json:"createdBy"`
-	ResponsibleId string `json:"responsible_id"`
-}
-
 func main() {
 
 	//queue.MqttInit()
-
-	/*
-		const (
-			clientID  = "9x8wfym7m5vyck7tdwwt&"
-			secretKey = "d8205ed66f15471fa969aecab48ab495"
-			baseURL   = "https://openapi.tuyaeu.com"
-			endpoint  = "/v1.0/token?"
-			grantType = "grant_type=1"
-		)
-	*/
-
 	//VK.StartVkBridge()
-
-	// Make the "users.get" API call and handle the response here..
 
 	if err := godotenv.Load(".env"); err != nil {
 		log.Print("No .env file found")
@@ -72,7 +51,6 @@ func main() {
 	})
 	ping := cache.RDB.Ping(context.Background())
 	fmt.Println("redis started", ping)
-	//messageType := "access"
 	//cache.RDB.RPush(context.Background(), "chat_messages", messageType)
 
 	fmt.Println("Server started")
@@ -82,18 +60,6 @@ func main() {
 		return
 	}
 	//go chat.WsStart()
-}
-
-func taskAdd() {
-
-}
-
-func GetListOfLines(w http.ResponseWriter, r *http.Request) {
-	getList, err := http.Get("https://onviz.bitrix24.ru/rest/13938/6rh8x17zqjx2sb9x/imopenlines.config.list.get")
-	if err != nil {
-		log.Println(err.Error(), "Cant get list of OpenLines in bitrix")
-	}
-	fmt.Println(getList.Body)
 }
 
 func TheTuyaAllFunctions() {
@@ -112,12 +78,5 @@ func TheTuyaAllFunctions() {
 	for _, device := range devices {
 		fmt.Printf("ID: %v, Name: %v, Online: %v\n", device.Result, device.Success, device.T)
 	}*/
-	//tuya.RefreshToken(tuya.ClientID, tuya.RefreshTokenVal)
-
-	//tuya.GetDeviceList()
-	//tuya.GetDevicesWithToken()
-
-	//todo get device from ID's list
-	//tuya.GetDevice(tuya.DeviceID)
 	tuya.GetDevice("bf85de23e4cf1c10fb6bsn")
 }
