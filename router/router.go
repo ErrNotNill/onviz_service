@@ -16,6 +16,7 @@ func Router() {
 
 	//http.Handle("/", http.FileServer(http.Dir("./chat/public")))
 
+	http.HandleFunc("/devices/:device_id", tuya.GetDeviceNew)
 	http.HandleFunc("/yandex", yandex.Alice)
 	//http.HandleFunc("/", LEADS.TestStatus)
 	http.HandleFunc("/chat", chat.TestChat)

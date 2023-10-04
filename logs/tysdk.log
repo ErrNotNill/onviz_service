@@ -6,3 +6,104 @@
 2023-08-14 11:42:06 [./.:0] [ERROR] -> async errors AuthenticationError: Failed to authenticate
 2023-08-14 11:42:11 [./.:0] [ERROR] -> async errors EOF
 2023-08-14 11:42:11 [./.:0] [ERROR] -> async errors AuthenticationError: Failed to authenticate
+2023-10-04 09:03:41 [runtime/panic.go:260] [ERROR] -> unknown error, err=runtime error: invalid memory address or nil pointer dereference
+2023-10-04 10:03:43 [bitrix/main.go:27] [INFO] -> ### iot core init success ###
+2023-10-04 10:03:43 [messaging/base.go:11] [INFO] -> start creating consumer, pulsar=https://openapi.tuyaeu.com, topic=persistent://9x8wfym7m5vyck7tdwwt/out/event
+2023-10-04 10:03:43 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:03:45 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:03:49 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:03:57 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:10:52 [bitrix/main.go:27] [INFO] -> ### iot core init success ###
+2023-10-04 10:10:52 [messaging/base.go:11] [INFO] -> start creating consumer, pulsar=https://openapi.tuyaeu.com, topic=persistent://9x8wfym7m5vyck7tdwwt/out/event
+2023-10-04 10:10:52 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:10:54 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:27:22 [bitrix/main.go:27] [INFO] -> ### iot core init success ###
+2023-10-04 10:27:22 [messaging/base.go:11] [INFO] -> start creating consumer, pulsar=https://openapi.tuyaeu.com, topic=persistent://9x8wfym7m5vyck7tdwwt/out/event
+2023-10-04 10:27:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:27:24 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:27:28 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:27:36 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:33:18 [bitrix/main.go:27] [INFO] -> ### iot core init success ###
+2023-10-04 10:33:18 [messaging/base.go:11] [INFO] -> start creating consumer, pulsar=https://openapi.tuyaeu.com, topic=persistent://9x8wfym7m5vyck7tdwwt/out/event
+2023-10-04 10:33:18 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:33:20 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:33:24 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:33:32 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:33:48 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:33:53 [token/api.go:55] [DEBUG] -> [calStringToSign] httpMethod=GET, contentSha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855, headers=, uri=/v1.0/token?grant_type=1, stringToSign=GET
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+
+/v1.0/token?grant_type=1
+2023-10-04 10:33:54 [token/api.go:35] [INFO] -> [ProxyHttp] success req:&{GET https://openapi.tuyaeu.com/v1.0/token?grant_type=1  0 0 map[Client_id:[9x8wfym7m5vyck7tdwwt] Content-Type:[application/json] Nonce:[d300ddcf-dbf8-4228-be98-763f6e88d267] Sign:[3CBE59956B260791A8189568C2E99CF75C4A8AE49DF45ED9CA332B4E2389A1D7] Sign_method:[HMAC-SHA256] T:[1696404833700]] <nil> <nil> 0 [] false  map[] map[] <nil> map[]   <nil> <nil> <nil> <nil>}, resp:&{Success:true Code:0 Msg: T:1696404834248 Result:{ExpireTime:1787 UID:bay1675253638992fSA4 AccessToken:6b1e4df45ee187f89b808a500bc9c595 RefreshToken:2947f4ef747e89ab59c02523255c4a11}}
+2023-10-04 10:33:54 [header/base.go:51] [DEBUG] -> [calStringToSign] httpMethod=GET, contentSha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855, headers=, uri=/v1.0/devices/:device_id, stringToSign=GET
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+
+/v1.0/devices/:device_id
+2023-10-04 10:33:54 [connector/base.go:57] [ERROR] -> [ProxyHttp] do req failed req:&{GET https://openapi.tuyaeu.com/v1.0/devices/:device_id  0 0 map[Access_token:[6b1e4df45ee187f89b808a500bc9c595] Client_id:[9x8wfym7m5vyck7tdwwt] Content-Type:[application/json] Dev_channel:[SaaSFramework] Dev_lang:[golang] Nonce:[495e64bc-ef8b-46d0-878c-46a7925cdfa9] Sign:[4E6AFEF17A93BD9C10826FD246A8E6CA8D5D1427315141D39757E69D06D70A78] Sign_method:[HMAC-SHA256] T:[1696404834012]] <nil> <nil> 0 [] false  map[] map[] <nil> map[]   <nil> <nil> <nil> <nil>}, resp:{"code":1106,"msg":"permission deny","success":false,"t":1696404834334,"tid":"5ef2f67f628811eeab9046acc027565a"}
+2023-10-04 10:33:54 [connector/base.go:57] [INFO] -> [ProxyHttp] success req:&{GET https://openapi.tuyaeu.com/v1.0/devices/:device_id  0 0 map[Access_token:[6b1e4df45ee187f89b808a500bc9c595] Client_id:[9x8wfym7m5vyck7tdwwt] Content-Type:[application/json] Dev_channel:[SaaSFramework] Dev_lang:[golang] Nonce:[495e64bc-ef8b-46d0-878c-46a7925cdfa9] Sign:[4E6AFEF17A93BD9C10826FD246A8E6CA8D5D1427315141D39757E69D06D70A78] Sign_method:[HMAC-SHA256] T:[1696404834012]] <nil> <nil> 0 [] false  map[] map[] <nil> map[]   <nil> <nil> <nil> <nil>}, resp:&{Code:1106 Msg:permission deny Success:false Result:{UUID: UID: Name: IP: Sub:false Model: Status:[] Category: Online:false ID: TimeZone: LocalKey: UpdateTime:0 ActiveTime:0 OwnerID: ProductID: ProductName:} T:1696404834334}
+2023-10-04 10:34:15 [bitrix/main.go:27] [INFO] -> ### iot core init success ###
+2023-10-04 10:34:15 [messaging/base.go:11] [INFO] -> start creating consumer, pulsar=https://openapi.tuyaeu.com, topic=persistent://9x8wfym7m5vyck7tdwwt/out/event
+2023-10-04 10:34:15 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:34:17 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:34:21 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:34:30 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:34:46 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:34:48 [token/api.go:55] [DEBUG] -> [calStringToSign] httpMethod=GET, contentSha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855, headers=, uri=/v1.0/token?grant_type=1, stringToSign=GET
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+
+/v1.0/token?grant_type=1
+2023-10-04 10:35:05 [token/api.go:35] [INFO] -> [ProxyHttp] success req:&{GET https://openapi.tuyaeu.com/v1.0/token?grant_type=1  0 0 map[Client_id:[9x8wfym7m5vyck7tdwwt] Content-Type:[application/json] Nonce:[073c5fc4-3a52-4376-b304-5a4aeada4320] Sign:[2185DEF5BBD403723EC1C515396EA66094EEABB478807CB3635329612B8C0F1A] Sign_method:[HMAC-SHA256] T:[1696404888050]] <nil> <nil> 0 [] false  map[] map[] <nil> map[]   <nil> <nil> <nil> <nil>}, resp:&{Success:true Code:0 Msg: T:1696404905711 Result:{ExpireTime:1716 UID:bay1675253638992fSA4 AccessToken:6b1e4df45ee187f89b808a500bc9c595 RefreshToken:2947f4ef747e89ab59c02523255c4a11}}
+2023-10-04 10:35:05 [header/base.go:51] [DEBUG] -> [calStringToSign] httpMethod=GET, contentSha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855, headers=, uri=/v1.0/devices/bf85de23e4cf1c10fb6bsn, stringToSign=GET
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+
+/v1.0/devices/bf85de23e4cf1c10fb6bsn
+2023-10-04 10:35:05 [connector/base.go:57] [ERROR] -> [ProxyHttp] do req failed req:&{GET https://openapi.tuyaeu.com/v1.0/devices/bf85de23e4cf1c10fb6bsn  0 0 map[Access_token:[6b1e4df45ee187f89b808a500bc9c595] Client_id:[9x8wfym7m5vyck7tdwwt] Content-Type:[application/json] Dev_channel:[SaaSFramework] Dev_lang:[golang] Nonce:[2f52eb7b-d82a-4458-b341-385477d13bc8] Sign:[7106EC68B13E90CDB770CA29DA8E0890FEB41319E2D95C20D3C44E1C4EF6DC5A] Sign_method:[HMAC-SHA256] T:[1696404905472]] <nil> <nil> 0 [] false  map[] map[] <nil> map[]   <nil> <nil> <nil> <nil>}, resp:{"code":1106,"msg":"permission deny","success":false,"t":1696404905803,"tid":"898b58b9628811eeac3ca676bdf790ea"}
+2023-10-04 10:35:05 [connector/base.go:57] [INFO] -> [ProxyHttp] success req:&{GET https://openapi.tuyaeu.com/v1.0/devices/bf85de23e4cf1c10fb6bsn  0 0 map[Access_token:[6b1e4df45ee187f89b808a500bc9c595] Client_id:[9x8wfym7m5vyck7tdwwt] Content-Type:[application/json] Dev_channel:[SaaSFramework] Dev_lang:[golang] Nonce:[2f52eb7b-d82a-4458-b341-385477d13bc8] Sign:[7106EC68B13E90CDB770CA29DA8E0890FEB41319E2D95C20D3C44E1C4EF6DC5A] Sign_method:[HMAC-SHA256] T:[1696404905472]] <nil> <nil> 0 [] false  map[] map[] <nil> map[]   <nil> <nil> <nil> <nil>}, resp:&{Code:1106 Msg:permission deny Success:false Result:{UUID: UID: Name: IP: Sub:false Model: Status:[] Category: Online:false ID: TimeZone: LocalKey: UpdateTime:0 ActiveTime:0 OwnerID: ProductID: ProductName:} T:1696404905803}
+2023-10-04 10:35:18 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:36:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:37:06 [header/base.go:51] [DEBUG] -> [calStringToSign] httpMethod=GET, contentSha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855, headers=, uri=/v1.0/devices/device_id=bf85de23e4cf1c10fb6bsn, stringToSign=GET
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+
+/v1.0/devices/device_id=bf85de23e4cf1c10fb6bsn
+2023-10-04 10:37:07 [connector/base.go:57] [ERROR] -> [ProxyHttp] do req failed req:&{GET https://openapi.tuyaeu.com/v1.0/devices/device_id=bf85de23e4cf1c10fb6bsn  0 0 map[Access_token:[6b1e4df45ee187f89b808a500bc9c595] Client_id:[9x8wfym7m5vyck7tdwwt] Content-Type:[application/json] Dev_channel:[SaaSFramework] Dev_lang:[golang] Nonce:[d3816788-5e1d-4bf1-8ab9-b58a6c094f04] Sign:[4A7773E4ED12783AB35E51A3CEB4E4A1887835166E0BED2BC6281AE93B48DAD0] Sign_method:[HMAC-SHA256] T:[1696405026980]] <nil> <nil> 0 [] false  map[] map[] <nil> map[]   <nil> <nil> <nil> <nil>}, resp:{"code":1106,"msg":"permission deny","success":false,"t":1696405027504,"tid":"d2144634628811ee95454a52bad04d54"}
+2023-10-04 10:37:07 [connector/base.go:57] [INFO] -> [ProxyHttp] success req:&{GET https://openapi.tuyaeu.com/v1.0/devices/device_id=bf85de23e4cf1c10fb6bsn  0 0 map[Access_token:[6b1e4df45ee187f89b808a500bc9c595] Client_id:[9x8wfym7m5vyck7tdwwt] Content-Type:[application/json] Dev_channel:[SaaSFramework] Dev_lang:[golang] Nonce:[d3816788-5e1d-4bf1-8ab9-b58a6c094f04] Sign:[4A7773E4ED12783AB35E51A3CEB4E4A1887835166E0BED2BC6281AE93B48DAD0] Sign_method:[HMAC-SHA256] T:[1696405026980]] <nil> <nil> 0 [] false  map[] map[] <nil> map[]   <nil> <nil> <nil> <nil>}, resp:&{Code:1106 Msg:permission deny Success:false Result:{UUID: UID: Name: IP: Sub:false Model: Status:[] Category: Online:false ID: TimeZone: LocalKey: UpdateTime:0 ActiveTime:0 OwnerID: ProductID: ProductName:} T:1696405027504}
+2023-10-04 10:37:43 [header/base.go:51] [DEBUG] -> [calStringToSign] httpMethod=GET, contentSha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855, headers=, uri=/v1.0/devices/bf85de23e4cf1c10fb6bsn, stringToSign=GET
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+
+/v1.0/devices/bf85de23e4cf1c10fb6bsn
+2023-10-04 10:37:43 [connector/base.go:57] [ERROR] -> [ProxyHttp] do req failed req:&{GET https://openapi.tuyaeu.com/v1.0/devices/bf85de23e4cf1c10fb6bsn  0 0 map[Access_token:[6b1e4df45ee187f89b808a500bc9c595] Client_id:[9x8wfym7m5vyck7tdwwt] Content-Type:[application/json] Dev_channel:[SaaSFramework] Dev_lang:[golang] Nonce:[3630f2a4-ec98-47bc-9b34-ff95cd1e9b1f] Sign:[143559E2AADD0075832093910122BF633F594A3A3E787FD54A1EBAF094B4ED1D] Sign_method:[HMAC-SHA256] T:[1696405063129]] <nil> <nil> 0 [] false  map[] map[] <nil> map[]   <nil> <nil> <nil> <nil>}, resp:{"code":1106,"msg":"permission deny","success":false,"t":1696405063464,"tid":"e784706c628811ee8665fe445e07f2df"}
+2023-10-04 10:37:43 [connector/base.go:57] [INFO] -> [ProxyHttp] success req:&{GET https://openapi.tuyaeu.com/v1.0/devices/bf85de23e4cf1c10fb6bsn  0 0 map[Access_token:[6b1e4df45ee187f89b808a500bc9c595] Client_id:[9x8wfym7m5vyck7tdwwt] Content-Type:[application/json] Dev_channel:[SaaSFramework] Dev_lang:[golang] Nonce:[3630f2a4-ec98-47bc-9b34-ff95cd1e9b1f] Sign:[143559E2AADD0075832093910122BF633F594A3A3E787FD54A1EBAF094B4ED1D] Sign_method:[HMAC-SHA256] T:[1696405063129]] <nil> <nil> 0 [] false  map[] map[] <nil> map[]   <nil> <nil> <nil> <nil>}, resp:&{Code:1106 Msg:permission deny Success:false Result:{UUID: UID: Name: IP: Sub:false Model: Status:[] Category: Online:false ID: TimeZone: LocalKey: UpdateTime:0 ActiveTime:0 OwnerID: ProductID: ProductName:} T:1696405063464}
+2023-10-04 10:38:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:40:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:42:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:44:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:46:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:48:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:50:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:52:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:54:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:56:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 10:58:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:00:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:02:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:04:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:06:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:08:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:10:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:12:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:14:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:16:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:18:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:20:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:22:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:24:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:26:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:28:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:30:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:32:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:34:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:36:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:38:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:40:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:42:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.
+2023-10-04 11:44:22 [./.:0] [ERROR] -> async errors dial tcp: lookup tcp///openapi.tuyaeu.com: getaddrinfow: The specified class was not found.

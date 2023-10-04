@@ -7,14 +7,24 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 )
 
 func TheTuyaAllFunctions() {
 	//tuya.Cfg()
-
+	//706020145002916b779e //my device
+	//bf223afc6530ce5259mfcx
 	GetToken()
-	RefreshToken()
-	GetDevicesInProject()
+	GetDevice("706020145002916b779e")
+	//GetDeviceWithConnector()
+	//GetUsers()
+	//RefreshToken()
+
+	project, err := GetDevicesInProject()
+	if err != nil {
+		fmt.Println("Couldn't get devices in project: ", project)
+
+	}
 	//tuya.PolicyAction()
 
 	//tuya.GetUsers()
@@ -25,12 +35,12 @@ func TheTuyaAllFunctions() {
 	for _, device := range devices {
 		fmt.Printf("ID: %v, Name: %v, Online: %v\n", device.Result, device.Success, device.T)
 	}*/
-	GetDevice("bf85de23e4cf1c10fb6bsn")
+
 }
 
 func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	clientID := ClientID
+	clientID := os.Getenv("TUYA_CLIENT_ID")
 	redirectURI := YaRedirectUri
 
 	authURL := GenerateAuthorizationURL(clientID, redirectURI)

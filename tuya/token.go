@@ -10,6 +10,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -22,19 +23,25 @@ func RefreshToken() {
 	fmt.Println("RefreshToken Token is : ", RefreshTokenVal)
 
 	uri := `https://openapi.tuyaeu.com/v1.0/token/` + RefreshTokenVal
-	/*stringToSign:=
+	/*stringToSign :=
 	"GET" + "\n" +
 		"Content-SHA256" + "\n" +
-		Headers + "\n" +
-		URL*/
+		req.Header.Add("client_id", ClientID) + "\n" +
+		uri*/
+
 	req, err := http.NewRequest("GET", uri, nil)
 	if err != nil {
 		fmt.Println("Error creating request: ", err)
 	}
+	ClientID = os.Getenv("TUYA_CLIENT_ID")
 	req.Header.Add("client_id", ClientID)
+	clientSecret := os.Getenv("TUYA_SECRET_KEY")
+	req.Header.Add("access_token", AccessToken)
+	req.Header.Add("secret", clientSecret)
 	ts := fmt.Sprintf("%d", time.Now().UTC().UnixNano()/int64(time.Millisecond))
 	req.Header.Add("sign_method", "HMAC-SHA256")
 	fmt.Println("ts:", ts)
+	fmt.Println("strconv.Itoa(int(TimeToken))", strconv.Itoa(int(TimeToken)))
 	req.Header.Add("t", strconv.Itoa(int(TimeToken)))
 
 	/*str := ClientID + ts + Uid + stringToSign
@@ -103,10 +110,10 @@ func GetToken() {
 	for _, v := range list {
 		fmt.Println("Device:", v)
 	}
-
 }
 
 func buildHeader(req *http.Request, body []byte) {
+	ClientID = os.Getenv("TUYA_CLIENT_ID")
 	req.Header.Set("client_id", ClientID)
 	req.Header.Set("sign_method", "HMAC-SHA256")
 
@@ -127,7 +134,9 @@ func buildSign(req *http.Request, body []byte, t string) string {
 	urlStr := getUrlStr(req)
 	contentSha256 := Sha256(body)
 	stringToSign := req.Method + "\n" + contentSha256 + "\n" + headers + "\n" + urlStr
+	ClientID = os.Getenv("TUYA_CLIENT_ID")
 	signStr := ClientID + Token + t + stringToSign
+	Secret = os.Getenv("TUYA_SECRET_KEY")
 	sign := strings.ToUpper(HmacSha256(signStr, Secret))
 	return sign
 }
@@ -141,7 +150,6 @@ func Sha256(data []byte) string {
 func getUrlStr(req *http.Request) string {
 	url := req.URL.Path
 	keys := make([]string, 0, 10)
-
 	query := req.URL.Query()
 	for key, _ := range query {
 		keys = append(keys, key)
@@ -154,7 +162,6 @@ func getUrlStr(req *http.Request) string {
 			url += keyName + "=" + value + "&"
 		}
 	}
-
 	if url[len(url)-1] == '&' {
 		url = url[:len(url)-1]
 	}

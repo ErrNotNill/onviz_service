@@ -2,14 +2,18 @@ package tuya
 
 import (
 	"bytes"
+	"context"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"github.com/tuya/tuya-connector-go/connector"
+	"github.com/tuya/tuya-connector-go/connector/logger"
 	"io"
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"time"
 )
 
@@ -38,10 +42,25 @@ func GetDeviceList() {
 }
 
 func GetDevice(deviceId string) {
+
 	method := "GET"
 	body := []byte(``)
 	req, _ := http.NewRequest(method, Host+"/v1.0/devices/"+deviceId, bytes.NewReader(body))
+	buildHeader(req, body)
 
+	req.Header.Add("client_id", ClientID)
+	clientSecret := os.Getenv("TUYA_SECRET_KEY")
+	req.Header.Add("access_token", AccessToken)
+	req.Header.Add("secret", clientSecret)
+	fmt.Println("deviceId:::", deviceId)
+	reader, err := io.ReadAll(req.Body)
+	var i interface{}
+	err = json.Unmarshal(reader, &i)
+	if err != nil {
+		fmt.Println("CANT UNMARSHALL :", err)
+		//return
+	}
+	fmt.Println("i:interface::: ", i)
 	buildHeader(req, body)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -54,7 +73,7 @@ func GetDevice(deviceId string) {
 }
 
 func GetUsers() {
-	urlz := "https://openapi.tuyacn.com/v2.0/apps/schema/users"
+	urlz := "https://openapi.tuyaeu.com/v2.0/apps/schema/users"
 
 	// Configure start_time and end_time
 	startTimeStr := "2023-05-22 20:36:55"
@@ -154,7 +173,7 @@ func GetDevicesList() ([]Device, error) {
 }
 
 func GetDevicesInProject() ([]Device, error) {
-	fmt.Println("Getting devices")
+	//fmt.Println("Getting devices")
 	client := &http.Client{}
 
 	req, err := http.NewRequest("GET", "https://openapi.tuyaeu.com/v2.0/cloud/thing/device", nil)
@@ -189,4 +208,36 @@ func GetDevicesInProject() ([]Device, error) {
 		return nil, fmt.Errorf("API request failed with status: %s", resp.Status)
 	}
 
+}
+
+// GetDevice  Call OpenAPI (taking Gin framework for example)
+func GetDeviceWithConnector() {
+	resp := &GetDeviceResponse{}
+	// Initiate an API request
+	err := connector.MakeGetRequest(
+		context.Background(),
+		connector.WithAPIUri(fmt.Sprintf("/v1.0/devices/%s", DeviceID)),
+		connector.WithResp(resp))
+	connector.WithErrProc(1102, &DeviceError{})
+	if err != nil {
+		fmt.Println("err:", err.Error())
+		return
+	}
+}
+
+// GetDeviceResponse Data structure returned by OpenAPI
+type GetDeviceResponseWithConnector struct {
+	Code    int         `json:"code"`
+	Msg     string      `json:"msg"`
+	Success bool        `json:"success"`
+	Result  interface{} `json:"result"`
+	T       int64       `json:"t"`
+}
+
+// DeviceError the struct class that implements the IError interface.
+type DeviceError struct {
+}
+
+func (d *DeviceError) Process(ctx context.Context, code int, msg string) {
+	logger.Log.Error(code, msg)
 }

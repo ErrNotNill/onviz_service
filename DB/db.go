@@ -13,8 +13,8 @@ var (
 
 var Db *sqlx.DB //global variable
 
-func InitDB() (err error) {
-	Db, err = sqlx.Connect("mysql", MysqlUrl)
+func InitDB(url string) (err error) {
+	Db, err = sqlx.Connect("mysql", url)
 	if err != nil {
 		fmt.Println("not connected")
 		return

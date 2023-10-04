@@ -24,13 +24,14 @@ func main() {
 	} else {
 		fmt.Println("Loaded .env file")
 	}
-
+	//tuya.InitConnector()
 	router.Router()
 	fmt.Println("Starting")
 
 	tuya.TheTuyaAllFunctions()
 
-	err := DB.InitDB()
+	urlMysql := os.Getenv("URL_MYSQL")
+	err := DB.InitDB(urlMysql)
 	if err != nil {
 		fmt.Println("cant' connect to mysql")
 		log.Fatal(err)
