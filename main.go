@@ -19,6 +19,8 @@ func main() {
 	//queue.MqttInit()
 	//VK.StartVkBridge()
 
+	router.Auth()
+
 	if err := godotenv.Load(".env"); err != nil {
 		log.Print("No .env file found")
 	} else {

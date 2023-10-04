@@ -14,8 +14,10 @@ func TheTuyaAllFunctions() {
 	//tuya.Cfg()
 	//706020145002916b779e //my device
 	//bf223afc6530ce5259mfcx
+	myDeviceId := `706020145002916b779e`
 	GetToken()
-	GetDevice("706020145002916b779e")
+	GetDevice(myDeviceId)
+	DeviceControl(myDeviceId)
 	//GetDeviceWithConnector()
 	//GetUsers()
 	//RefreshToken()

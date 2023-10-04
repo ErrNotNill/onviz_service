@@ -41,6 +41,54 @@ func GetDeviceList() {
 	//log.Println("resp devices:", string(bs))
 }
 
+type Control struct {
+	Commands []string `json:"commands"`
+}
+
+func DeviceControl(deviceId string) {
+	method := "POST"
+	command := `{
+  "commands": [
+    {
+      "code": "control",
+      "value": "stop"
+    },
+    {
+      "code": "percent_control",
+      "value": 100
+    }
+  ]
+}`
+	body := []byte(command)
+	uriDevice := fmt.Sprintf("/v1.0/devices/%s/commands", deviceId)
+	req, _ := http.NewRequest(method, Host+uriDevice, bytes.NewReader(body))
+	fmt.Println("req STRUCTURE:::", req)
+	buildHeader(req, body)
+
+	req.Header.Add("client_id", ClientID)
+	clientSecret := os.Getenv("TUYA_SECRET_KEY")
+	req.Header.Add("access_token", AccessToken)
+	req.Header.Add("secret", clientSecret)
+	//fmt.Println("deviceId:::", deviceId)
+	//reader, err := io.ReadAll(req.Body)
+	/*var i interface{}
+	err = json.Unmarshal(reader, &i)
+	if err != nil {
+		fmt.Println("CANT UNMARSHALL :", err)
+		//return
+	}
+	fmt.Println("i:interface::: ", i)
+	buildHeader(req, body)*/
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	defer resp.Body.Close()
+	bs, _ := io.ReadAll(resp.Body)
+	log.Println("responze::", string(bs))
+}
+
 func GetDevice(deviceId string) {
 
 	method := "GET"
