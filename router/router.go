@@ -1,6 +1,7 @@
 package router
 
 import (
+	"fmt"
 	"github.com/go-oauth2/oauth2/v4/errors"
 	"github.com/go-oauth2/oauth2/v4/manage"
 	"github.com/go-oauth2/oauth2/v4/models"
@@ -98,11 +99,13 @@ func Auth() {
 func GetAuthTokenYandex(w http.ResponseWriter, r *http.Request) {
 	//http://localhost:9096/token?grant_type=client_credentials&client_id=000000&client_secret=999999&scope=read
 	method := "GET"
+	clientID := r.FormValue("client_id")
+	clientSecret := r.FormValue("client_secret")
+	uri := fmt.Sprintf("http://localhost:9090/token?grant_type=client_credentials&client_id=%s&client_secret=%s&scope=read", clientID, clientSecret)
 	//body := []byte(``)
-	req, _ := http.NewRequest(method, `http://localhost:9090/token?grant_type=client_credentials&client_id=000000&client_secret=999999&scope=read`, nil)
+	req, _ := http.NewRequest(method, uri, nil)
 	//req.Header.Set("client_id", "000000")
 	//req.Header.Set("client_secret", "999999")
-
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println(err)
