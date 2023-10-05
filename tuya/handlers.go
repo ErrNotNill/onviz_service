@@ -8,6 +8,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
+	"time"
 )
 
 func TheTuyaAllFunctions() {
@@ -38,6 +40,39 @@ func TheTuyaAllFunctions() {
 		fmt.Printf("ID: %v, Name: %v, Online: %v\n", device.Result, device.Success, device.T)
 	}*/
 
+}
+
+func RefreshToken(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		w.WriteHeader(http.StatusOK)
+		token := &TokenResponse{}
+		fmt.Println("RefreshToken Token is : ", RefreshTokenVal)
+		uri := `https://openapi.tuyaeu.com/v1.0/token/` + RefreshTokenVal
+
+		req, err := http.NewRequest("GET", uri, nil)
+		if err != nil {
+			fmt.Println("Error creating request: ", err)
+		}
+		ClientID = os.Getenv("TUYA_CLIENT_ID")
+		req.Header.Add("client_id", ClientID)
+		clientSecret := os.Getenv("TUYA_SECRET_KEY")
+		req.Header.Add("access_token", AccessToken)
+		req.Header.Add("secret", clientSecret)
+		ts := fmt.Sprintf("%d", time.Now().UTC().UnixNano()/int64(time.Millisecond))
+		req.Header.Add("sign_method", "HMAC-SHA256")
+		fmt.Println("ts:", ts)
+		fmt.Println("strconv.Itoa(int(TimeToken))", strconv.Itoa(int(TimeToken)))
+		req.Header.Add("t", strconv.Itoa(int(TimeToken)))
+
+		client := &http.Client{}
+		resp, err := client.Do(req)
+		if err != nil {
+			fmt.Println("Error creating client: ", err)
+		}
+		defer resp.Body.Close()
+		body, err := io.ReadAll(resp.Body)
+		json.Unmarshal(body, &token)
+	}
 }
 
 func AuthHandler(w http.ResponseWriter, r *http.Request) {

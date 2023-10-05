@@ -12,62 +12,9 @@ import (
 	"net/http"
 	"os"
 	"sort"
-	"strconv"
 	"strings"
 	"time"
 )
-
-func RefreshToken() {
-
-	token := &TokenResponse{}
-	fmt.Println("RefreshToken Token is : ", RefreshTokenVal)
-
-	uri := `https://openapi.tuyaeu.com/v1.0/token/` + RefreshTokenVal
-	/*stringToSign :=
-	"GET" + "\n" +
-		"Content-SHA256" + "\n" +
-		req.Header.Add("client_id", ClientID) + "\n" +
-		uri*/
-
-	req, err := http.NewRequest("GET", uri, nil)
-	if err != nil {
-		fmt.Println("Error creating request: ", err)
-	}
-	ClientID = os.Getenv("TUYA_CLIENT_ID")
-	req.Header.Add("client_id", ClientID)
-	clientSecret := os.Getenv("TUYA_SECRET_KEY")
-	req.Header.Add("access_token", AccessToken)
-	req.Header.Add("secret", clientSecret)
-	ts := fmt.Sprintf("%d", time.Now().UTC().UnixNano()/int64(time.Millisecond))
-	req.Header.Add("sign_method", "HMAC-SHA256")
-	fmt.Println("ts:", ts)
-	fmt.Println("strconv.Itoa(int(TimeToken))", strconv.Itoa(int(TimeToken)))
-	req.Header.Add("t", strconv.Itoa(int(TimeToken)))
-
-	/*str := ClientID + ts + Uid + stringToSign
-	//знак = HMAC-SHA256(str, секретный).Прописной()
-	stringToSign := "GET" + "\n" +
-		//HTTPMethod + "\n" +
-		//Content-SHA256 + "\n" +
-		//Headers + "\n" +
-		//URL
-
-		req.Header.Add("nonce", Uid)*/
-	//req.Header.Add("grant_type", "refresh_token")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		fmt.Println("Error creating client: ", err)
-	}
-	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
-	json.Unmarshal(body, &token)
-	fmt.Println("string(body).RefreshToken : ", string(body))
-	fmt.Println("token.Result.AccessToken: ", token.Result.AccessToken)
-	fmt.Println("token.Result.RefreshToken: ", token.Result.RefreshToken)
-
-}
 
 func GetToken() {
 	//token := os.Getenv("TOKEN")

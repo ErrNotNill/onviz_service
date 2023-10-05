@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"onviz/DB"
 	"onviz/chat/cache"
+	"onviz/login"
 	"onviz/router"
 	"onviz/tuya"
 	"os"
@@ -19,7 +20,7 @@ func main() {
 	//queue.MqttInit()
 	//VK.StartVkBridge()
 
-	router.Auth()
+	login.Auth()
 
 	if err := godotenv.Load(".env"); err != nil {
 		log.Print("No .env file found")
