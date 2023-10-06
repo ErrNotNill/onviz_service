@@ -12,7 +12,7 @@ import (
 	"onviz/chat/cache"
 	"onviz/login"
 	"onviz/router"
-	"onviz/tuya"
+	"onviz/service/tuya"
 	"os"
 )
 

@@ -2,15 +2,15 @@ package router
 
 import (
 	"net/http"
-	"onviz/LEADS"
-	"onviz/VK"
 	"onviz/addons"
 	"onviz/bot_bitrix"
 	"onviz/chat"
 	"onviz/login"
+	"onviz/repository/bitrix"
+	"onviz/service/VK"
+	tuya2 "onviz/service/tuya"
+	yandex2 "onviz/service/yandex"
 	"onviz/tests"
-	"onviz/tuya"
-	"onviz/yandex"
 )
 
 func Router() {
@@ -20,11 +20,11 @@ func Router() {
 
 	http.HandleFunc("/auth_page", login.AuthPage)
 
-	http.HandleFunc("/devices/:device_id", tuya.GetDeviceNew)
-	http.HandleFunc("/yandex", yandex.Alice)
-	http.HandleFunc("/v1.0", yandex.CheckConnectionYandex)
+	http.HandleFunc("/devices/:device_id", tuya2.GetDeviceNew)
+	http.HandleFunc("/yandex", yandex2.Alice)
+	http.HandleFunc("/v1.0", yandex2.CheckConnectionYandex)
 	http.HandleFunc("/get_auth_token", login.GetAuthTokenYandex)
-	http.HandleFunc("/refresh_token", tuya.RefreshToken)
+	http.HandleFunc("/refresh_token", tuya2.RefreshToken)
 
 	//http.HandleFunc("/", LEADS.TestStatus)
 	http.HandleFunc("/chat", chat.TestChat)
@@ -35,17 +35,17 @@ func Router() {
 	http.HandleFunc("/test", tests.NewTestHandleFunc)
 	http.HandleFunc("/check", tests.NewTestHandleFunc)
 
-	http.HandleFunc("/leads", LEADS.LeadsAdd)
-	http.HandleFunc("/leads_list", LEADS.GetLeads)
-	http.HandleFunc("/dealer_deal", LEADS.DealerDealAdded)
-	http.HandleFunc("/leads_get", LEADS.GetLeadsAll)
+	http.HandleFunc("/leads", bitrix.LeadsAdd)
+	http.HandleFunc("/leads_list", bitrix.GetLeads)
+	http.HandleFunc("/dealer_deal", bitrix.DealerDealAdded)
+	http.HandleFunc("/leads_get", bitrix.GetLeadsAll)
 
 	http.HandleFunc("/bot", bot_bitrix.BotBitrix)
 	http.HandleFunc("/auth", bot_bitrix.CallbackHandler)
 	http.HandleFunc("/redir", bot_bitrix.RedirectHandler)
 
-	http.HandleFunc("/auth_tuya", tuya.AuthHandler)
-	http.HandleFunc("/get_token", tuya.GetTokenHandler)
+	http.HandleFunc("/auth_tuya", tuya2.AuthHandler)
+	http.HandleFunc("/get_token", tuya2.GetTokenHandler)
 	//http.HandleFunc("/refresh_token", tuya.RefreshTokenHandler)
 
 	http.HandleFunc("/text_collect", chat.GetTextCollectHandler)
