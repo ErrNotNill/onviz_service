@@ -62,8 +62,12 @@ from Leads`)
 		}
 		products = append(products, p)
 	}
+	err = json.NewEncoder(w).Encode(&products)
+	if err != nil {
+		log.Println("i cant encode")
+	}
 
-	var count int
+	/*var count int
 	qry, err := DB.Db.Query(`SELECT COUNT(*) FROM Leads WHERE ID != ' '`)
 	if err != nil {
 		fmt.Println(`error query`)
@@ -81,7 +85,7 @@ from Leads`)
 	}
 	if r.Method == "GET" {
 		w.Write(data)
-	}
+	}*/
 
 	/*for _, v := range products {
 		fmt.Fprintf(w, "%v\n", v)

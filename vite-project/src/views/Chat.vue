@@ -5,6 +5,7 @@
     <div class="sent-messages">
       <div :class="{ 'sent-message': sent, 'cancelled-message': !sent }">
         <p> {{ message }}  </p>
+
       </div>
     </div>
     <div class="chat-container">
@@ -18,7 +19,6 @@
         </div>
       </div>
     </div>
-
 
     <!-- New block for sent messages -->
     <div>
