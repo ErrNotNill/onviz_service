@@ -2,18 +2,21 @@ package chat
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/gorilla/websocket"
 	"log"
-	"math/rand"
 	"net/http"
 	"onviz/chat/cache"
-	"strconv"
 )
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+}
+
+type Client struct {
+	conn *websocket.Conn
 }
 
 var wsConn *websocket.Conn
@@ -26,11 +29,6 @@ func TestChat(w http.ResponseWriter, r *http.Request) {
 	upgrader.CheckOrigin = func(r *http.Request) bool {
 		return true
 	}
-	/*chatMessages, err := cache.RDB.LRange(context.Background(), "chat_messages", 0, -1).Result()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Fprintf(w, "%s", chatMessages)*/
 
 	//upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	ws, err := upgrader.Upgrade(w, r, nil)
@@ -54,6 +52,7 @@ func TestChat(w http.ResponseWriter, r *http.Request) {
 			//delete(cache.Clients, ws)
 			break
 		}
+
 		fmt.Println("not errors,", "message:", msg)
 		//fmt.Println(msg.Greeting)
 		//cache.Broadcaster <- msg
@@ -61,10 +60,30 @@ func TestChat(w http.ResponseWriter, r *http.Request) {
 		//fmt.Println(<-cache.Broadcaster)
 		messages := make([]Message, 0)
 		messages = append(messages, msg)
-		err = ws.WriteMessage(websocket.TextMessage, []byte(strconv.Itoa(rand.Intn(12313123123))))
+		js, err := json.Marshal(&messages)
+		if err != nil {
+			fmt.Println("error marshalling messages")
+		}
+		fmt.Println("msg.Greeting", msg.Greeting)
+		status := cache.RDB.RPush(context.Background(), "chat_messages", msg.Greeting)
+
+		chatMessages, err := cache.RDB.LRange(context.Background(), "chat_messages", 0, -1).Result()
+		if err != nil {
+			panic(err)
+		}
+		//fmt.Fprintf(w, "%s", chatMessages)
+		byteSlice := []byte{}
+		for _, str := range chatMessages {
+			err = ws.WriteMessage(websocket.TextMessage, []byte(str))
+			byteSlice = append(byteSlice, []byte(str)...)
+		}
+		fmt.Println("chatMessages", chatMessages)
+		fmt.Println(status.Result())
+
+		fmt.Println("websocket.TextMessage, js", websocket.TextMessage, string(js))
 		if err != nil {
 			//todo correct redis adding
-			cache.RDB.RPush(context.Background(), "chat_messages", msg)
+			cache.RDB.Set(context.Background(), "chat_messages", msg, 0)
 			log.Println("write:", err)
 			break
 		}

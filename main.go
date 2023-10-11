@@ -34,6 +34,7 @@ func main() {
 	tuya.TheTuyaAllFunctions()
 
 	urlMysql := os.Getenv("URL_MYSQL")
+	fmt.Println("urlMysql: ", urlMysql)
 	err := DB.InitDB(urlMysql)
 	if err != nil {
 		fmt.Println("cant' connect to mysql")

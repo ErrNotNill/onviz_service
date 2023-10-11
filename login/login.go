@@ -7,7 +7,6 @@ import (
 	"github.com/go-oauth2/oauth2/v4/models"
 	"github.com/go-oauth2/oauth2/v4/server"
 	"github.com/go-oauth2/oauth2/v4/store"
-	"html/template"
 	"io"
 	"log"
 	"net/http"
@@ -27,22 +26,8 @@ func CreateAccount(login, password string) {
 }
 
 func AuthPage(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
-		w.Write([]byte("OK"))
-		fmt.Println(r.Body)
-
-	} else {
-		userName := r.FormValue("user")
-		userPass := r.FormValue("password")
-		CreateAccount(userName, userPass)
-
-		ts, err := template.ParseFiles("login/auth.html")
-		if err != nil {
-			log.Println("error parsing")
-			fmt.Fprintln(w, err)
-		}
-		ts.Execute(w, r)
-	}
+	fmt.Println("this handler if working")
+	fmt.Println(r.Body)
 }
 
 func Auth() {

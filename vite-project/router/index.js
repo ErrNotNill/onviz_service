@@ -2,10 +2,16 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../src/views/Home.vue'
 import About from '../src/views/About.vue'
 import Chat from '@/views/Chat.vue'
+import Team from '@/views/Team.vue'
+import Login from '@/views/Login.vue'
 
 const router = createRouter({
     history: createWebHistory(),
     routes: [
+        {
+            path: '/login',
+            component: Login
+        },
         {
             path: '/',
             component: Home
@@ -13,6 +19,10 @@ const router = createRouter({
         {
             path: '/about',
             component: About
+        },
+        {
+            path: '/team',
+            component: Team
         },
         {
             path: '/chat',

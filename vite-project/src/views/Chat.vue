@@ -2,12 +2,14 @@
   <main id="chat">
     <h1>Chat</h1>
     <p>This is chat page</p>
+
     <div class="sent-messages">
       <div :class="{ 'sent-message': sent, 'cancelled-message': !sent }">
-        <p> {{ message }}  </p>
-
+        <p v-for="receivedMsg in receivedMessages" :key="receivedMsg">{{ receivedMsg }}</p>
       </div>
     </div>
+
+
     <div class="chat-container">
       <form :action="sendMessage" @click.prevent="onSubmit">
       </form>
@@ -34,19 +36,23 @@ export default {
     return {
       message: '',
       socket: null,
-      rcvMessage: '',
+      receivedMessages: [], // Array to store received messages
       sent: false,
       error: false
     }
   },
+
+
   mounted() {
-    this.$nextTick(function (){
+    this.$nextTick(function () {
       this.socket = new WebSocket("ws://localhost:9090/chat")
       this.socket.onmessage = (msg) => {
-        this.rcvMessage = msg.data
+        this.receivedMessages.push(msg.data); // Push the received message into the array
       }
     });
   },
+
+
   methods: {
     sendMessage() {
       let msg = {
