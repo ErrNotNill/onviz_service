@@ -1,6 +1,9 @@
 package login
 
 import (
+	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"github.com/go-oauth2/oauth2/v4/errors"
@@ -8,16 +11,20 @@ import (
 	"github.com/go-oauth2/oauth2/v4/models"
 	"github.com/go-oauth2/oauth2/v4/server"
 	"github.com/go-oauth2/oauth2/v4/store"
+	"golang.org/x/oauth2"
 	"io"
 	"log"
 	"net/http"
 	"onviz/DB"
 )
 
-func CreateAccount(login, password string) {
+func CreateAccount(name, email, login, password string) {
 	fmt.Println("db connected")
-	result, err := DB.Db.Exec(`insert into Users (Login, Password ) values (?, ?)`,
-		login, password)
+	tokenData := email + password // Customize this according to your needs
+	sha256Hash := sha256.Sum256([]byte(tokenData))
+	token := hex.EncodeToString(sha256Hash[:])
+	result, err := DB.Db.Exec(`insert into Users (Name, Email, Login, Password, Token) values (?, ?,?,?,?)`,
+		name, email, login, password, token)
 	if err != nil {
 		fmt.Println("cant insert data to dbase")
 		panic(err)
@@ -26,10 +33,58 @@ func CreateAccount(login, password string) {
 	fmt.Println(result.RowsAffected())
 }
 
-type UserData struct {
+func GetAccount(email, password string) {
+	fmt.Println("db connected")
+	result, err := DB.Db.Query(`SELECT ID, Email, Password, Token FROM Users WHERE Email = ? AND Password = ?`, email, password)
+	if err != nil {
+		fmt.Println("cant insert data to dbase")
+		panic(err)
+	}
+	u := LoginUserData{}
+	for result.Next() {
+		err := result.Scan(&u.Email, &u.Password, &u.Token)
+		if err != nil {
+			fmt.Println("i cant scan this")
+			continue
+		}
+	}
+}
+
+type AuthUserData struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
+}
+type LoginUserData struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Token    string `json:"token"`
+}
+
+func LoginPage(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
+	var userData LoginUserData
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&userData); err != nil {
+		http.Error(w, "Failed to decode JSON data", http.StatusBadRequest)
+		return
+	}
+	tokenData := userData.Email + userData.Password // Customize this according to your needs
+	sha256Hash := sha256.Sum256([]byte(tokenData))
+	token := hex.EncodeToString(sha256Hash[:])
+	// Process user registration data (userData) as needed
+	fmt.Printf("Received registration data: %+v\n", userData)
+	// You can now handle the registration logic, such as storing the data in a database
+	// Send a response back to the client
+	response := map[string]string{"token": token}
+	responseJSON, _ := json.Marshal(response)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(responseJSON)
+	GetAccount(userData.Email, userData.Password)
 }
 
 func AuthPage(w http.ResponseWriter, r *http.Request) {
@@ -37,7 +92,7 @@ func AuthPage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
 	}
-	var userData UserData
+	var userData AuthUserData
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&userData); err != nil {
 		http.Error(w, "Failed to decode JSON data", http.StatusBadRequest)
@@ -50,6 +105,26 @@ func AuthPage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]interface{}{"message": "Registration successful"})
+	CreateAccount(userData.Username, userData.Email, userData.Email, userData.Password)
+}
+
+func ExchangeAuthorizationCodeForToken(code string) (string, string, error) {
+	conf := &oauth2.Config{
+		ClientID:     "your-client-id",
+		ClientSecret: "your-client-secret",
+		RedirectURL:  "your-redirect-uri",
+		Endpoint: oauth2.Endpoint{
+			TokenURL: "token-url",
+		},
+	}
+
+	ctx := context.Background()
+	token, err := conf.Exchange(ctx, code)
+	if err != nil {
+		return "", "", err
+	}
+
+	return token.AccessToken, token.RefreshToken, nil
 }
 
 func Auth() {

@@ -24,6 +24,7 @@ func Router() {
 		AllowedHeaders: []string{"Authorization", "Content-Type"},
 	})
 	http.Handle("/auth_page", c.Handler(http.HandlerFunc(login.AuthPage)))
+	http.Handle("/login_page", c.Handler(http.HandlerFunc(login.LoginPage)))
 
 	http.HandleFunc("/devices/:device_id", tuya2.GetDeviceNew)
 	http.HandleFunc("/yandex", yandex2.Alice)

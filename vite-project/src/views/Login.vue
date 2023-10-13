@@ -4,7 +4,7 @@
       <div class="form login">
         <span class="title">Onviz</span>
 
-        <form action="http://localhost:9090/auth_page" method="post">
+
           <div class="input-field">
             <input v-model="loginEmail" type="text" placeholder="Enter your email" required>
             <i class="uil uil-envelope icon"></i>
@@ -25,9 +25,9 @@
           </div>
 
           <div class="input-field button">
-            <input type="button" value="Login" @click="loginUser">
+            <input type="button" value="Login" @click="signinUser">
           </div>
-        </form>
+
 
         <div class="login-signup">
           <span class="text">Not a member?
@@ -97,62 +97,132 @@ function togglePasswordVisibility(passwordField) {
   field.type = field.type === 'password' ? 'text' : 'password';
 }
 
-function loginUser() {
-  // Implement login logic here
+function validateEmail(email) {
+  // Basic email format validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 }
 
-function signupUser() {
-  // Simulate a user registration process
-  if (signupPassword.value === signupPasswordConfirm.value) {
-    // Passwords match, proceed with registration
-    alert('Registration successful!');
+function validatePassword(password) {
+  // Password should contain at least 6 characters, a symbol, and both upper and lower case letters
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&(){}])[A-Za-z\d!@#$%^&(){}]{6,}$/;
+  return passwordRegex.test(password);
+}
 
-    // Create an object with the user's registration data
-    const userData = {
-      username: signupName.value,
-      email: signupEmail.value,
-      password: signupPassword.value,
-    };
-    console.log(userData);
-    // Define the URL of your server where you want to send the registration data
-    const registrationUrl = 'http://localhost:9090/auth_page'; // Replace with your server URL
+function signinUser() {
+  // Create an object with the user's login data
+  const loginData = {
+    email: loginEmail.value,
+    password: loginPassword.value,
+  };
 
-    // Send a POST request to the server
-    fetch(registrationUrl, {
-      mode: 'no-cors',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', // Specify the content type
-      },
-      body: JSON.stringify(userData), // Convert the data to JSON format
+  // Define the URL of your server where you want to send the login data
+  const loginUrl = 'http://localhost:9090/login_page'; // Replace with your server URL
+
+  // Send a POST request to the server
+  fetch(loginUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(loginData),
+  })
+    .then(response => {
+      if (response.status === 200) {
+        // Login successful, get the token
+        return response.text(); // Assuming the response is a SHA-256 token string
+      } else {
+        // Login failed, log response status and response data
+        console.error('Login failed. Status:', response.status);
+        return response.text().then(text => {
+          console.error('Response data:', text);
+          throw new Error('Login failed');
+        });
+      }
     })
-      .then(response => {
-        if (response.ok) {
-          // Registration successful
-          return response.json(); // Parse the response as JSON (if the server responds with data)
-        } else {
-          // Registration failed, log response status and response data
-          console.error('Registration failed. Status:', response.status);
-          return response.text().then(text => {
-            console.error('Response data:', text);
-            throw new Error('Registration failed');
-          });
-        }
-      })
+    .then(token => {
+      // Handle the response token
+      console.log('Received token:', token);
+      // Store the token in session storage
+      sessionStorage.setItem('token', token);
 
-      .then(data => {
-        // Handle the response data (if applicable)
-        console.log('Server response:', data);
-      })
-      .catch(error => {
-        // Handle errors, e.g., registration failure
-        console.error('Error:', error);
-        alert('Registration failed.');
-      });
-  } else {
-    // Passwords don't match
+      // Redirect to the desired URL
+      window.location.href = 'http://localhost:5173/'; // Replace with the URL you want to redirect to
+    })
+    .catch(error => {
+      // Handle errors, e.g., login failure
+      console.error('Error:', error);
+      alert('Login failed.');
+    });
+}
+
+
+function signupUser() {
+  // Client-side validation
+  if (signupPassword.value !== signupPasswordConfirm.value) {
     alert('Password confirmation failed.');
+    return;
   }
+
+  if (
+    signupName.value.length < 6 ||
+    !validateEmail(signupEmail.value) ||
+    !validatePassword(signupPassword.value)
+  ) {
+    alert('Invalid input. Please check your details.');
+    return;
+  }
+
+  // Passwords match, proceed with registration
+  alert('Registration successful!');
+
+  // Create an object with the user's registration data
+  const userData = {
+    username: signupName.value,
+    email: signupEmail.value,
+    password: signupPassword.value,
+  };
+  console.log(userData);
+  // Define the URL of your server where you want to send the registration data
+  const registrationUrl = 'http://localhost:9090/auth_page'; // Replace with your server URL
+
+  // Send a POST request to the server
+  fetch(registrationUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userData),
+  })
+    .then(response => {
+      if (response.status === 200) {
+        // Registration successful
+        return response.json();
+      } else {
+        // Registration failed, log response status and response data
+        console.error('Registration failed. Status:', response.status);
+        return response.text().then(text => {
+          console.error('Response data:', text);
+          throw new Error('Registration failed');
+        });
+      }
+    })
+
+    .then(data => {
+      // Handle the response data (if applicable)
+      console.log('Server response:', data);
+      if (data.message === 'Registration successful') {
+        // Handle a successful registration
+        alert('Registration successful!');
+      } else {
+        // Handle other responses from the server if needed
+      }
+    })
+    .catch(error => {
+      // Handle errors, e.g., registration failure
+      console.error('Error:', error);
+      alert('Registration failed.');
+    });
 }
 
 function switchToSignup() {
@@ -163,10 +233,6 @@ function switchToLogin() {
   isSignup.value = false;
 }
 </script>
-
-<style scoped>
-/* Add your CSS styles here */
-</style>
 
 
 <style scoped>
