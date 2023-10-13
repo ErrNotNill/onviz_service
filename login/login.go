@@ -1,6 +1,7 @@
 package login
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/go-oauth2/oauth2/v4/errors"
 	"github.com/go-oauth2/oauth2/v4/manage"
@@ -25,9 +26,30 @@ func CreateAccount(login, password string) {
 	fmt.Println(result.RowsAffected())
 }
 
+type UserData struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 func AuthPage(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("this handler if working")
-	fmt.Println(r.Body)
+	if r.Method != http.MethodPost {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
+	var userData UserData
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&userData); err != nil {
+		http.Error(w, "Failed to decode JSON data", http.StatusBadRequest)
+		return
+	}
+	// Process user registration data (userData) as needed
+	fmt.Printf("Received registration data: %+v\n", userData)
+	// You can now handle the registration logic, such as storing the data in a database
+	// Send a response back to the client
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]interface{}{"message": "Registration successful"})
 }
 
 func Auth() {

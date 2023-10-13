@@ -40,7 +40,7 @@
       <div class="form signup">
         <span class="title">Registration</span>
 
-        <form action="http://localhost:9090/auth_page" method="POST">
+
           <div class="input-field" name="username" id="username">
             <input v-model="signupName" type="text" placeholder="Enter your name" required>
             <i class="uil uil-user"></i>
@@ -69,7 +69,7 @@
           <div class="input-field button">
             <input type="button" value="Signup" @click="signupUser">
           </div>
-        </form>
+
 
         <div class="login-signup">
           <span class="text">Already a member?
@@ -107,13 +107,53 @@ function signupUser() {
     // Passwords match, proceed with registration
     alert('Registration successful!');
 
-    // Optionally, you can send the registration data to a server here.
+    // Create an object with the user's registration data
+    const userData = {
+      username: signupName.value,
+      email: signupEmail.value,
+      password: signupPassword.value,
+    };
+    console.log(userData);
+    // Define the URL of your server where you want to send the registration data
+    const registrationUrl = 'http://localhost:9090/auth_page'; // Replace with your server URL
+
+    // Send a POST request to the server
+    fetch(registrationUrl, {
+      mode: 'no-cors',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Specify the content type
+      },
+      body: JSON.stringify(userData), // Convert the data to JSON format
+    })
+      .then(response => {
+        if (response.ok) {
+          // Registration successful
+          return response.json(); // Parse the response as JSON (if the server responds with data)
+        } else {
+          // Registration failed, log response status and response data
+          console.error('Registration failed. Status:', response.status);
+          return response.text().then(text => {
+            console.error('Response data:', text);
+            throw new Error('Registration failed');
+          });
+        }
+      })
+
+      .then(data => {
+        // Handle the response data (if applicable)
+        console.log('Server response:', data);
+      })
+      .catch(error => {
+        // Handle errors, e.g., registration failure
+        console.error('Error:', error);
+        alert('Registration failed.');
+      });
   } else {
     // Passwords don't match
     alert('Password confirmation failed.');
   }
 }
-
 
 function switchToSignup() {
   isSignup.value = true;
