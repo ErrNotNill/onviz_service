@@ -50,6 +50,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.9 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rabbitmq/amqp091-go v1.8.1 // indirect
+	github.com/rs/cors v1.10.1 // indirect
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.3.0 // indirect
 	github.com/tidwall/btree v1.7.0 // indirect

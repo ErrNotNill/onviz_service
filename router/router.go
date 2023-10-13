@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/rs/cors"
 	"net/http"
 	"onviz/addons"
 	"onviz/bot_bitrix"
@@ -17,8 +18,12 @@ func Router() {
 	//http.HandleFunc("/authorize", tuya.GetDeviceNew)
 	//http.HandleFunc("/token", tuya.GetDeviceNew)
 	//http.Handle("/", http.FileServer(http.Dir("./chat/public")))
-
-	http.HandleFunc("/auth_page", login.AuthPage)
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"}, // Change this to the specific origin of your Vue.js app in a production environment.
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders: []string{"Authorization", "Content-Type"},
+	})
+	http.Handle("/auth_page", c.Handler(http.HandlerFunc(login.AuthPage)))
 
 	http.HandleFunc("/devices/:device_id", tuya2.GetDeviceNew)
 	http.HandleFunc("/yandex", yandex2.Alice)
