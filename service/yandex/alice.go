@@ -8,7 +8,7 @@ import (
 var respNse *alice.Kit
 
 func SimpleSkill() {
-	updates := alice.ListenForWebhook("https://onviz-api.ru/yandex")
+	updates := alice.ListenForWebhook("/hook")
 
 	if updates != nil {
 		respNse.Resp.Text("hello")
@@ -26,6 +26,9 @@ func SimpleSkill() {
 }
 
 func Alice(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("OK"))
 	respNse.Resp.Text("hello")
 	for {
