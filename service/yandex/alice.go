@@ -30,8 +30,8 @@ func Alice(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("OK"))
-	respNse.Resp.Text("hello")
+	/*respNse.Resp.Text("hello")
 	for {
 		SimpleSkill()
-	}
+	}*/
 }
