@@ -26,8 +26,10 @@ func Router() {
 	http.Handle("/auth_page", c.Handler(http.HandlerFunc(login.AuthPage)))
 	http.Handle("/login_page", c.Handler(http.HandlerFunc(login.LoginPage)))
 
-	http.HandleFunc("/devices/:device_id", tuya2.GetDeviceNew)
-	http.HandleFunc("/yandex/v1.0", yandex2.Alice)
+	//http.HandleFunc("/devices/:device_id", tuya2.GetDeviceNew)
+	http.HandleFunc("/yandex/v1.0", yandex2.CheckConnection)
+	http.HandleFunc("/yandex/v1.0/user/devices", tuya2.GetDeviceNew)
+
 	http.HandleFunc("/v1.0", yandex2.CheckConnectionYandex)
 	http.HandleFunc("/get_auth_token", login.GetAuthTokenYandex)
 	http.HandleFunc("/refresh_token", tuya2.RefreshToken)
