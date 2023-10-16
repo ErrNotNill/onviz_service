@@ -1,7 +1,10 @@
 package yandex
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/azzzak/alice"
+	"io"
 	"net/http"
 )
 
@@ -34,4 +37,11 @@ func Alice(w http.ResponseWriter, r *http.Request) {
 	for {
 		SimpleSkill()
 	}*/
+	var i interface{}
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println("Error reading body from server")
+	}
+	js := json.Unmarshal(body, i)
+	fmt.Println("body request: ", js)
 }
