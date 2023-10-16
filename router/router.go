@@ -30,6 +30,8 @@ func Router() {
 	http.HandleFunc("/yandex/v1.0", yandex2.CheckConnection)
 	http.HandleFunc("/yandex/v1.0/user/devices", tuya2.GetDeviceNew)
 	http.HandleFunc("/yandex/v1.0/user/unlink", tuya2.UnlinkUser)
+	http.HandleFunc("/yandex/v1.0/user/devices/query", tuya2.GetDevicesStatus)
+	http.HandleFunc("/yandex/v1.0/user/devices/action", tuya2.GetDevicesStatusChanged)
 
 	http.HandleFunc("/v1.0", yandex2.CheckConnectionYandex)
 	http.HandleFunc("/get_auth_token", login.GetAuthTokenYandex)

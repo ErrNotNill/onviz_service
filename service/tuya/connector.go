@@ -45,6 +45,32 @@ func watitSignal() {
 	}
 }
 
+func GetDevicesStatusChanged(w http.ResponseWriter, r *http.Request) {
+	var requestId int
+	if r.Method == "POST" {
+		w.WriteHeader(http.StatusOK)
+		bs, _ := io.ReadAll(r.Body)
+		log.Println("response:::", string(bs))
+		reqId := fmt.Sprintf(`{
+  "request_id": %v,
+}`, requestId)
+		w.Write([]byte(reqId))
+	}
+}
+
+func GetDevicesStatus(w http.ResponseWriter, r *http.Request) {
+	var requestId int
+	if r.Method == "POST" {
+		w.WriteHeader(http.StatusOK)
+		bs, _ := io.ReadAll(r.Body)
+		log.Println("response:::", string(bs))
+		reqId := fmt.Sprintf(`{
+  "request_id": %v,
+}`, requestId)
+		w.Write([]byte(reqId))
+	}
+}
+
 func UnlinkUser(w http.ResponseWriter, r *http.Request) {
 	var requestId int
 	if r.Method == "POST" {
