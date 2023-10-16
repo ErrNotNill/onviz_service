@@ -45,8 +45,20 @@ func watitSignal() {
 	}
 }
 
-func GetDeviceNew(w http.ResponseWriter, r *http.Request) {
+func UnlinkUser(w http.ResponseWriter, r *http.Request) {
+	var requestId int
+	if r.Method == "POST" {
+		w.WriteHeader(http.StatusOK)
+		bs, _ := io.ReadAll(r.Body)
+		log.Println("response:::", string(bs))
+		reqId := fmt.Sprintf(`{
+  "request_id": %v,
+}`, requestId)
+		w.Write([]byte(reqId))
+	}
+}
 
+func GetDeviceNew(w http.ResponseWriter, r *http.Request) {
 	resp := &GetDeviceResponse{}
 	// Initiate an API request
 	err := connector.MakeGetRequest(
