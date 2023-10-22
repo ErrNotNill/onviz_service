@@ -67,7 +67,7 @@ func TestChat(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("msg.Greeting", msg.Greeting)
 		status := cache.RDB.RPush(context.Background(), "chat_messages", msg.Greeting)
 
-		chatMessages, err := cache.RDB.LRange(context.Background(), "chat_messages", 0, -1).Result()
+		chatMessages, err := cache.RDB.LRange(context.Background(), "chat_messages", -1, -1).Result()
 		if err != nil {
 			panic(err)
 		}
