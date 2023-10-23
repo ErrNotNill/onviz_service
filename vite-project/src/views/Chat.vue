@@ -5,7 +5,7 @@
 
     <div class="sent-messages">
       <div :class="{ 'sent-message': sent, 'cancelled-message': !sent }">
-        <p v-for="receivedMsg in receivedMessages" :key="receivedMsg">{{ receivedMsg }}</p>
+        <p v-for="receivedMsg in receivedMessages" :key="sendMessage">{{ receivedMsg }}</p>
       </div>
     </div>
 
@@ -23,10 +23,10 @@
     </div>
 
     <!-- New block for sent messages -->
-    <div>
+<!--    <div>
       <h1> Request </h1>
-      <p> {{ rcvMessage }}</p>
-    </div>
+      <p> {{ receivedMsg }}</p>
+    </div>-->
   </main>
 </template>
 <script>

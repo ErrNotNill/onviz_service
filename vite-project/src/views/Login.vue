@@ -149,11 +149,7 @@ function signinUser() {
       // Redirect to the desired URL
       window.location.href = 'http://localhost:5173/'; // Replace with the URL you want to redirect to
     })
-    .catch(error => {
-      // Handle errors, e.g., login failure
-      console.error('Error:', error);
-      alert('Login failed.');
-    });
+
 }
 
 
@@ -173,16 +169,13 @@ function signupUser() {
     return;
   }
 
-  // Passwords match, proceed with registration
-  alert('Registration successful!');
-
   // Create an object with the user's registration data
   const userData = {
     username: signupName.value,
     email: signupEmail.value,
     password: signupPassword.value,
   };
-  console.log(userData);
+
   // Define the URL of your server where you want to send the registration data
   const registrationUrl = 'http://localhost:9090/auth_page'; // Replace with your server URL
 
@@ -199,7 +192,7 @@ function signupUser() {
         // Registration successful
         return response.json();
       } else {
-        // Registration failed, log response status and response data
+        // Log the error response for debugging
         console.error('Registration failed. Status:', response.status);
         return response.text().then(text => {
           console.error('Response data:', text);
@@ -207,7 +200,6 @@ function signupUser() {
         });
       }
     })
-
     .then(data => {
       // Handle the response data (if applicable)
       console.log('Server response:', data);
@@ -216,14 +208,20 @@ function signupUser() {
         alert('Registration successful!');
       } else {
         // Handle other responses from the server if needed
+        if (data.message === 'User exist') {
+          alert('User exists, please change the email address');
+        } else {
+          alert('Registration failed...');
+        }
       }
     })
     .catch(error => {
       // Handle errors, e.g., registration failure
       console.error('Error:', error);
-      alert('Registration failed.');
+      alert('Registration failed...');
     });
 }
+
 
 function switchToSignup() {
   isSignup.value = true;

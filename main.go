@@ -50,6 +50,7 @@ func main() {
 		Password: redisPass,
 		DB:       0,
 	})
+
 	ping := cache.RDB.Ping(context.Background())
 	fmt.Println("redis started", ping)
 	//cache.RDB.RPush(context.Background(), "chat_messages", messageType)

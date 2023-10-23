@@ -25,6 +25,8 @@ type Message struct {
 	Greeting string `json:"greeting"`
 }
 
+var clients = make(map[*websocket.Conn]*Client)
+
 func TestChat(w http.ResponseWriter, r *http.Request) {
 	upgrader.CheckOrigin = func(r *http.Request) bool {
 		return true
@@ -37,64 +39,64 @@ func TestChat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer ws.Close()
+
+	client := &Client{conn: ws}
+	clients[ws] = client
 	//cache.Clients[ws] = true
 	//ws.SetReadLimit(86400)
-	for {
-		//fmt.Println(r.Body)
-		//var msg cache.ChatMessage
-		var msg Message
+	chatMessages, err := cache.RDB.LRange(context.Background(), "chat_messages", -1, -1).Result()
+	if err != nil {
+		panic(err)
+	}
+	for _, message := range chatMessages {
+		err := ws.WriteMessage(websocket.TextMessage, []byte(message))
+		if err != nil {
+			log.Println("Failed to send chat history:", err)
+			break
+		}
+	}
 
+	for {
+		var msg Message
 		err = ws.ReadJSON(&msg)
 		if err != nil {
-			cache.RDB.RPush(context.Background(), "chat_messages", msg)
-			//	cache.ChatMessage{Message: msg.Greeting}
-			fmt.Println("i can't read message")
-			//delete(cache.Clients, ws)
+			// Handle disconnection or errors
+			delete(clients, ws)
 			break
 		}
 
-		fmt.Println("not errors,", "message:", msg)
-		//fmt.Println(msg.Greeting)
-		//cache.Broadcaster <- msg
-		//fmt.Println("msg: ", msg)
-		//fmt.Println(<-cache.Broadcaster)
-		messages := make([]Message, 0)
-		messages = append(messages, msg)
-		js, err := json.Marshal(&messages)
-		if err != nil {
-			fmt.Println("error marshalling messages")
-		}
-		fmt.Println("msg.Greeting", msg.Greeting)
-		status := cache.RDB.RPush(context.Background(), "chat_messages", msg.Greeting)
-
-		chatMessages, err := cache.RDB.LRange(context.Background(), "chat_messages", -1, -1).Result()
-		if err != nil {
-			panic(err)
-		}
-		//fmt.Fprintf(w, "%s", chatMessages)
-		byteSlice := []byte{}
-		for _, str := range chatMessages {
-			err = ws.WriteMessage(websocket.TextMessage, []byte(str))
-			byteSlice = append(byteSlice, []byte(str)...)
-		}
-		fmt.Println("chatMessages", chatMessages)
-		fmt.Println(status.Result())
-
-		fmt.Println("websocket.TextMessage, js", websocket.TextMessage, string(js))
-		if err != nil {
-			//todo correct redis adding
-			cache.RDB.Set(context.Background(), "chat_messages", msg, 0)
-			log.Println("write:", err)
-			break
-		}
-
+		// Broadcast the incoming message to all connected clients
+		broadcastMessage(msg)
 	}
+
 }
 
-func sendMessage(msg string) {
-	err := wsConn.WriteMessage(websocket.TextMessage, []byte(msg))
+func broadcastMessage(msg Message) {
+	// Store the message in the database or cache
+	status := cache.RDB.RPush(context.Background(), "chat_messages", msg.Greeting)
+
+	if status.Err() != nil {
+		// Handle the error, such as logging it or returning an error response.
+		log.Printf("Failed to push the message to Redis: %v", status.Err())
+		// You may also want to inform the client that their message was not saved.
+	} else {
+		// The message was successfully pushed to the Redis list.
+	}
+
+	// Convert the message to JSON
+	messages := []Message{msg}
+	js, err := json.Marshal(&messages)
 	if err != nil {
-		fmt.Println("msg: ", err)
+		fmt.Println("Error marshalling messages")
+		return
+	}
+
+	for client := range clients {
+		err := client.WriteMessage(websocket.TextMessage, js)
+		if err != nil {
+			// Handle disconnection or errors
+			delete(clients, client)
+		}
 	}
 }
 

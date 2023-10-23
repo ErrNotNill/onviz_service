@@ -18,29 +18,33 @@ import (
 	"onviz/DB"
 )
 
-func CreateAccount(name, email, login, password string) {
+func CreateAccount(name, email, password string) error {
 	fmt.Println("db connected")
 	tokenData := email + password // Customize this according to your needs
 	sha256Hash := sha256.Sum256([]byte(tokenData))
 	token := hex.EncodeToString(sha256Hash[:])
-	result, err := DB.Db.Exec(`insert into Users (Name, Email, Login, Password, Token) values (?, ?,?,?,?)`,
-		name, email, login, password, token)
+	result, err := DB.Db.Exec(`insert into Users (Name, Email, Password, Token) values (?,?,?,?)`,
+		name, email, password, token)
+
 	if err != nil {
 		fmt.Println("cant insert data to dbase")
-		panic(err)
+		//panic(err)
+		return err
 	}
 	fmt.Println("rows inserted")
 	fmt.Println(result.RowsAffected())
+	return nil
 }
 
-func GetAccount(email, password string) {
+func GetAccount(email, password string) error {
 	fmt.Println("db connected")
 	result, err := DB.Db.Query(`SELECT ID, Email, Password, Token FROM Users WHERE Email = ? AND Password = ?`, email, password)
 	if err != nil {
-		fmt.Println("cant insert data to dbase")
+		fmt.Println("cant get data from dbase")
 		panic(err)
+		return err
 	}
-	u := LoginUserData{}
+	u := UserData{}
 	for result.Next() {
 		err := result.Scan(&u.Email, &u.Password, &u.Token)
 		if err != nil {
@@ -48,25 +52,22 @@ func GetAccount(email, password string) {
 			continue
 		}
 	}
+	return nil
 }
 
-type AuthUserData struct {
+type UserData struct {
 	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-type LoginUserData struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 	Token    string `json:"token"`
 }
 
-func LoginPage(w http.ResponseWriter, r *http.Request) {
+func AuthPage(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
 	}
-	var userData LoginUserData
+	var userData UserData
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&userData); err != nil {
 		http.Error(w, "Failed to decode JSON data", http.StatusBadRequest)
@@ -78,21 +79,29 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	// Process user registration data (userData) as needed
 	fmt.Printf("Received registration data: %+v\n", userData)
 	// You can now handle the registration logic, such as storing the data in a database
+
+	// Handle registration error
+	if err := CreateAccount(userData.Username, userData.Email, userData.Password); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]interface{}{"message": "User exist"})
+		fmt.Println("Error creating, user exists")
+		return
+	}
+
 	// Send a response back to the client
 	response := map[string]string{"token": token}
 	responseJSON, _ := json.Marshal(response)
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusOK) // Set the response status once, indicating a successful response
 	w.Write(responseJSON)
-	GetAccount(userData.Email, userData.Password)
 }
 
-func AuthPage(w http.ResponseWriter, r *http.Request) {
+func LoginPage(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
 	}
-	var userData AuthUserData
+	var userData UserData
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&userData); err != nil {
 		http.Error(w, "Failed to decode JSON data", http.StatusBadRequest)
@@ -103,9 +112,14 @@ func AuthPage(w http.ResponseWriter, r *http.Request) {
 	// You can now handle the registration logic, such as storing the data in a database
 	// Send a response back to the client
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]interface{}{"message": "Registration successful"})
-	CreateAccount(userData.Username, userData.Email, userData.Email, userData.Password)
+
+	err := GetAccount(userData.Email, userData.Password)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	} else {
+		w.WriteHeader(http.StatusOK)
+	}
+
 }
 
 func ExchangeAuthorizationCodeForToken(code string) (string, string, error) {
