@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"io"
 	"net/http"
 	"os"
 )
@@ -16,6 +17,21 @@ type Data struct {
 }
 
 func BotBitrix(w http.ResponseWriter, r *http.Request) {
+	client := &http.Client{}
+
+	tokenURL := fmt.Sprintf(`https://onviz.bitrix24.ru/oauth/authorize/?
+	client_id=%s`,
+		BitrixClientId)
+
+	post, err := client.Post(tokenURL, "application/x-www-form-urlencoded", nil)
+	if err != nil {
+		fmt.Println("Failed to exchange authorization code for access token:", err)
+		return
+	}
+	body, err := io.ReadAll(post.Body)
+	fmt.Println("post.Body", post.Body)
+	json.Unmarshal(body, &post.Body)
+	fmt.Fprint(w, string(body))
 	//fs := http.FileServer(http.Dir(FSPATH))
 	//fs.ServeHTTP(w, r)
 	//serverUri := os.Getenv("SERVER_URL")
