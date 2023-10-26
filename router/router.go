@@ -52,7 +52,7 @@ func Router() {
 	http.HandleFunc("/leads_get", bitrix.GetLeadsAll)
 
 	http.HandleFunc("/bot", bot_bitrix.BotBitrix)
-	http.HandleFunc("/auth", bot_bitrix.CallbackHandler)
+	//http.HandleFunc("/auth", bot_bitrix.CallbackHandler)
 	http.HandleFunc("/redir", bot_bitrix.RedirectHandler)
 
 	http.HandleFunc("/auth_tuya", tuya2.AuthHandler)
