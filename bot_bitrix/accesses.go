@@ -12,11 +12,6 @@ const (
 	redirectURI = "https://onviz-api.ru/redir"
 )
 
-var (
-	BitrixClientId     = os.Getenv("BITRIX_CLIENT_ID")
-	BitrixClientSecret = os.Getenv("BITRIX_CLIENT_SECRET")
-)
-
 func RedirectHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(fmt.Sprintf("OK")))
@@ -30,7 +25,7 @@ func GetAccess(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, authURL, http.StatusFound)
 }
 
-func CallbackHandler(w http.ResponseWriter, r *http.Request) {
+/*func CallbackHandler(w http.ResponseWriter, r *http.Request) {
 	client := &http.Client{}
 
 	tokenURL := fmt.Sprintf(`https://onviz.bitrix24.ru/oauth/authorize/?
@@ -46,9 +41,11 @@ func CallbackHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("post.Body", post.Body)
 	json.Unmarshal(body, &post.Body)
 	fmt.Fprint(w, string(body))
-}
+}*/
 
 func NextStepAuth(w http.ResponseWriter, r *http.Request) {
+	BitrixClientId := os.Getenv("BITRIX_CLIENT_ID")
+	BitrixClientSecret := os.Getenv("BITRIX_CLIENT_SECRET")
 	client := &http.Client{}
 	code := r.URL.Query().Get("")
 	//url := fmt.Sprintf("https://api.cdek.ru/v2/oauth/token?grant_type=client_credentials&client_id=%s&client_secret=%s", client_id, client_secret)

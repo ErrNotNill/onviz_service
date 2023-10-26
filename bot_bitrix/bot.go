@@ -17,10 +17,11 @@ type Data struct {
 }
 
 func BotBitrix(w http.ResponseWriter, r *http.Request) {
+	BitrixClientId := os.Getenv("BITRIX_CLIENT_ID")
+
 	client := &http.Client{}
 
-	tokenURL := fmt.Sprintf(`https://onviz.bitrix24.ru/oauth/authorize/?
-	client_id=%s`,
+	tokenURL := fmt.Sprintf(`https://onviz.bitrix24.ru/oauth/authorize/?client_id=%s`,
 		BitrixClientId)
 
 	post, err := client.Post(tokenURL, "application/x-www-form-urlencoded", nil)
