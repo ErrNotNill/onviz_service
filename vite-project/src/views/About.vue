@@ -1,4 +1,5 @@
 <template>
+  <Sidebar />
   <main id="about-page">
     <h1>About</h1>
     <p>This is the about page</p>
@@ -22,7 +23,10 @@
 </template>
 
 <script>
+import Sidebar from '@/components/Sidebar.vue'
+
 export default {
+  components: { Sidebar },
   data() {
     return {
       showMenu: false,
@@ -30,25 +34,25 @@ export default {
         { name: 'Item 1', showSubmenu: false },
         { name: 'Item 2', showSubmenu: false },
         { name: 'Item 3', showSubmenu: false },
-        { name: 'Item 4', showSubmenu: false },
-      ],
-    };
+        { name: 'Item 4', showSubmenu: false }
+      ]
+    }
   },
   methods: {
     toggleMenu() {
-      this.showMenu = !this.showMenu;
+      this.showMenu = !this.showMenu
     },
     toggleMenuItem(item) {
       // Toggle the clicked item's submenu
-      item.showSubmenu = !item.showSubmenu;
+      item.showSubmenu = !item.showSubmenu
 
       // Close submenus for other items
       this.menuItems.forEach((otherItem) => {
         if (otherItem !== item) {
-          otherItem.showSubmenu = false;
+          otherItem.showSubmenu = false
         }
-      });
-    },
-  },
-};
+      })
+    }
+  }
+}
 </script>

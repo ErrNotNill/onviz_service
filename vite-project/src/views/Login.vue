@@ -1,9 +1,15 @@
 <template>
+  <div class="app">
+    <!-- Sidebar -->
+    <Sidebar v-if="showSidebar" />
+
+    <!-- Content -->
+    <router-view />
+  </div>
   <div class="container" :class="{ active: isSignup }">
     <div class="forms">
       <div class="form login">
         <span class="title">Onviz</span>
-
 
           <div class="input-field">
             <input v-model="loginEmail" type="text" placeholder="Enter your email" required>
@@ -82,7 +88,20 @@
 </template>
 
 <script setup>
+import Sidebar from '../components/Sidebar.vue';
 import { ref } from 'vue';
+import { onMounted } from 'vue';
+
+const showSidebar = ref(false); // Initially hide the Sidebar
+
+// Check if the user is signed in when the component is mounted
+onMounted(() => {
+  // Retrieve the login status from sessionStorage
+  const isSignedIn = sessionStorage.getItem('isSignedIn');
+  if (isSignedIn === 'true') {
+    showSidebar.value = true;
+  }
+});
 
 const isSignup = ref(false);
 const loginEmail = ref('');
@@ -124,15 +143,20 @@ function signinUser() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      //'Authorization': 'Bearer'
     },
     body: JSON.stringify(loginData),
   })
     .then(response => {
       if (response.status === 200) {
+        console.log(response.status)
         // Login successful, get the token
+        showSidebar.value = true;
         return response.text(); // Assuming the response is a SHA-256 token string
+
       } else {
         // Login failed, log response status and response data
+        alert('console.error')
         console.error('Login failed. Status:', response.status);
         return response.text().then(text => {
           console.error('Response data:', text);
@@ -146,10 +170,17 @@ function signinUser() {
       // Store the token in session storage
       sessionStorage.setItem('token', token);
 
-      // Redirect to the desired URL
-      window.location.href = 'http://localhost:5173/'; // Replace with the URL you want to redirect to
-    })
+      // Set showSidebar to true to display the Sidebar
 
+
+      // Redirect to the desired URL
+      //window.location.href = 'http://localhost:5173/leads'; // Replace with the URL you want to redirect to
+    })
+    .catch(error => {
+      // Handle errors, e.g., registration failure
+      console.error('Error:', error);
+      alert('Login failed...');
+    });
 }
 
 
@@ -190,6 +221,7 @@ function signupUser() {
     .then(response => {
       if (response.status === 200) {
         // Registration successful
+        showSidebar.value = false;
         return response.json();
       } else {
         // Log the error response for debugging

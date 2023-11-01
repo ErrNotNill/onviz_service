@@ -6,23 +6,19 @@ import Team from '@/views/Team.vue'
 import Login from '@/views/Login.vue'
 import Start from "@/views/Start.vue";
 import Leads from "@/views/Leads.vue";
+import StartPage from "@/views/StartPage.vue";
 
 const router = createRouter({
     history: createWebHistory(),
     routes: [
         {
             path: '/',
-            component: Start
+            component: Login
         },
         {
             path: '/leads',
-            component: Leads
+            component: Leads,
         },
-        {
-            path: '/login',
-            component: Login
-        },
-
         {
             path: '/about',
             component: About

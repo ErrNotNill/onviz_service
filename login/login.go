@@ -107,6 +107,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to decode JSON data", http.StatusBadRequest)
 		return
 	}
+
 	// Process user registration data (userData) as needed
 	fmt.Printf("Received registration data: %+v\n", userData)
 	// You can now handle the registration logic, such as storing the data in a database
@@ -116,10 +117,8 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	err := GetAccount(userData.Email, userData.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-	} else {
-		w.WriteHeader(http.StatusOK)
 	}
-
+	w.WriteHeader(http.StatusOK)
 }
 
 func ExchangeAuthorizationCodeForToken(code string) (string, string, error) {

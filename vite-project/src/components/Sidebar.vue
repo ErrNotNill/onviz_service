@@ -12,6 +12,7 @@
 
     <h3>Menu</h3>
     <div class="menu">
+
       <router-link to="/login" class="button">
         <span class="material-icons">start</span>
         <span class="text">Start</span>

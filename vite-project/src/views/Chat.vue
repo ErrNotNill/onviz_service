@@ -1,4 +1,5 @@
 <template>
+  <Sidebar />
   <main id="chat">
     <h1>Chat</h1>
     <p>This is chat page</p>
@@ -9,10 +10,8 @@
       </div>
     </div>
 
-
     <div class="chat-container">
-      <form :action="sendMessage" @click.prevent="onSubmit">
-      </form>
+      <form :action="sendMessage" @click.prevent="onSubmit"></form>
       <textarea rows="5" v-model="message"></textarea>
       <div class="button-block">
         <div class="button-group">
@@ -30,8 +29,11 @@
   </main>
 </template>
 <script>
+import Sidebar from '@/components/Sidebar.vue'
+
 export default {
   name: 'App',
+  components: { Sidebar },
   data() {
     return {
       message: '',
@@ -42,34 +44,32 @@ export default {
     }
   },
 
-
   mounted() {
     this.$nextTick(function () {
-      this.socket = new WebSocket("ws://localhost:9090/chat")
+      this.socket = new WebSocket('ws://localhost:9090/chat')
       this.socket.onmessage = (msg) => {
-        this.handleMessage(msg); // Push the received message into the array
+        this.handleMessage(msg) // Push the received message into the array
       }
-    });
+    })
   },
-
 
   methods: {
     handleMessage(msg) {
-      console.log('Received message:', msg.data);
+      console.log('Received message:', msg.data)
 
       try {
-        const messageData = JSON.parse(msg.data);
+        const messageData = JSON.parse(msg.data)
 
         if (Array.isArray(messageData) && messageData.length > 0 && messageData[0].greeting) {
-          this.receivedMessages.push(messageData[0].greeting);
+          this.receivedMessages.push(messageData[0].greeting)
         }
       } catch (error) {
-        console.error('Error parsing message:', error);
+        console.error('Error parsing message:', error)
       }
     },
     sendMessage() {
       let msg = {
-        "greeting": this.message
+        greeting: this.message
       }
       this.socket.send(JSON.stringify(msg))
       this.sent = true
@@ -81,8 +81,8 @@ export default {
     //  this.socket.disconnect()
     //  this.sent = false
     // },
-    cancelMessage(){
-      this.message = ""
+    cancelMessage() {
+      this.message = ''
       this.sent = false
     }
   }
@@ -101,17 +101,20 @@ export default {
 .sent-messages {
   width: 80%;
   max-width: 800px;
-  height: 90vh; /* Three times larger than main block */
+  height: 90vh;
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 20px;
   overflow-y: auto;
+  white-space: normal; /* Set to normal for text to wrap */
+  overflow-x: hidden; /* Hide horizontal overflow */
 }
 
 .sent-message {
-  color: green; /* Sent message color */
+  color: green;
   margin-bottom: 5px;
+  word-wrap: break-word; /* Allow text to wrap to the next line */
 }
 
 .cancelled-message {

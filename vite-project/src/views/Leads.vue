@@ -1,4 +1,8 @@
 <template>
+
+    <!-- Sidebar -->
+  <Sidebar />
+
   <main id="Home-page">
     <h1>Home</h1>
     <p>This is the home page</p>
@@ -17,7 +21,11 @@
       <ul class="table">
         <li v-for="item in jsonArray" :key="item.id" class="list-item">
           <div class="button-container">
-            <button @click="toggleMenu(item.ID) " class="table-button" :class="{ 'highlighted': item.name === 'Евгений' }">
+            <button
+              @click="toggleMenu(item.ID)"
+              class="table-button"
+              :class="{ highlighted: item.name === 'Евгений' }"
+            >
               {{ item.ID }}
             </button>
           </div>
@@ -28,58 +36,64 @@
           </div>
         </li>
       </ul>
+
     </div>
   </main>
+
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios'
+import Sidebar from '@/components/Sidebar.vue'
+
+
 
 export default {
+  components: { Sidebar },
   data() {
     return {
       jsonArray: [],
       activeItem: null,
-      selectedFilter: "all", // Default to "All"
-    };
+      selectedFilter: 'all', // Default to "All"
+      itemsPerPage: 50, // Number of items to show initially
+      itemsToShow: 50, // Number of items to show currently
+    }
   },
   created() {
     axios
-      .get("http://localhost:9090/leads_get")
+      .get('http://localhost:9090/leads_get')
       .then((response) => {
-        this.jsonArray = response.data; // Assign the JSON array to a data property
+        this.jsonArray = response.data // Assign the JSON array to a data property
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+        console.error('Error fetching data:', error)
+      })
   },
   computed: {
     filteredItems() {
       // Filter items based on the selected filter criteria
-      if (this.selectedFilter === "all") {
-        return this.jsonArray; // Return all items
+      if (this.selectedFilter === 'all') {
+        return this.jsonArray // Return all items
       } else {
-        return this.jsonArray.filter((item) => item.name === this.selectedFilter);
+        return this.jsonArray.filter((item) => item.name === this.selectedFilter)
       }
-    },
+    }
   },
   methods: {
     toggleMenu(ID) {
-      // Toggle the active item based on its ID
       this.activeItem = this.activeItem === ID ? null : ID;
     },
     applyFilter() {
-      // Apply the selected filter
-      if (this.selectedFilter === "Евгений") {
-        // Set the selected filter to "Евгений" to display all "Евгений" items
-        this.selectedFilter = "Евгений";
+      if (this.selectedFilter === 'Евгений') {
+        this.selectedFilter = 'Евгений';
       }
-      // You can update the displayed items here if needed
+    },
+    loadMore() {
+      this.itemsToShow += 10; // Increase the number of items to show
     },
   },
 };
 </script>
-
 
 <style>
 /* Style for the table button */
@@ -117,13 +131,11 @@ export default {
 /* Position the table on the left side */
 /* Position the table on the left side */
 .table-container {
-  text-align: center ;
+  text-align: center;
   width: 50%;
   margin: 0 auto;
 }
 .table li {
   float: left;
 }
-
 </style>
-
