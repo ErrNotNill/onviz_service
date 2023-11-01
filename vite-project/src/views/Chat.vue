@@ -23,10 +23,10 @@
     </div>
 
     <!-- New block for sent messages -->
-<!--    <div>
-      <h1> Request </h1>
-      <p> {{ receivedMsg }}</p>
-    </div>-->
+    <!--    <div>
+          <h1> Request </h1>
+          <p> {{ receivedMsg }}</p>
+        </div>-->
   </main>
 </template>
 <script>
@@ -47,13 +47,26 @@ export default {
     this.$nextTick(function () {
       this.socket = new WebSocket("ws://localhost:9090/chat")
       this.socket.onmessage = (msg) => {
-        this.receivedMessages.push(msg.data); // Push the received message into the array
+        this.handleMessage(msg); // Push the received message into the array
       }
     });
   },
 
 
   methods: {
+    handleMessage(msg) {
+      console.log('Received message:', msg.data);
+
+      try {
+        const messageData = JSON.parse(msg.data);
+
+        if (Array.isArray(messageData) && messageData.length > 0 && messageData[0].greeting) {
+          this.receivedMessages.push(messageData[0].greeting);
+        }
+      } catch (error) {
+        console.error('Error parsing message:', error);
+      }
+    },
     sendMessage() {
       let msg = {
         "greeting": this.message
@@ -64,10 +77,10 @@ export default {
     //socketError(){
     // this.socketError()
     //},
-   // quitFromChat(){
+    // quitFromChat(){
     //  this.socket.disconnect()
     //  this.sent = false
-   // },
+    // },
     cancelMessage(){
       this.message = ""
       this.sent = false
