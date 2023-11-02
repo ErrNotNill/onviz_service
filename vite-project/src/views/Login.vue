@@ -99,7 +99,7 @@ onMounted(() => {
   // Retrieve the login status from sessionStorage
   const isSignedIn = sessionStorage.getItem('isSignedIn');
   if (isSignedIn === 'true') {
-    showSidebar.value = true;
+    showSidebar.value = false;
   }
 });
 
@@ -151,7 +151,7 @@ function signinUser() {
       if (response.status === 200) {
         console.log(response.status)
         // Login successful, get the token
-        showSidebar.value = true;
+        showSidebar.value = false;
         return response.text(); // Assuming the response is a SHA-256 token string
 
       } else {

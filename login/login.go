@@ -38,24 +38,27 @@ func CreateAccount(name, email, password string) error {
 
 func GetAccount(email, password string) error {
 	fmt.Println("db connected")
-	result, err := DB.Db.Query(`SELECT ID, Email, Password, Token FROM Users WHERE Email = ? AND Password = ?`, email, password)
+	rows, err := DB.Db.Query(`SELECT Password, Email FROM Users WHERE Password = ? AND Email = ?`, password, email)
 	if err != nil {
-		fmt.Println("cant get data from dbase")
-		panic(err)
+		fmt.Println("cant get data from dbase:", err)
 		return err
 	}
-	u := UserData{}
-	for result.Next() {
-		err := result.Scan(&u.Email, &u.Password, &u.Token)
+	defer rows.Close()
+	p := UserData{}
+
+	for rows.Next() {
+		err := rows.Scan(&p.Email, &p.Password)
 		if err != nil {
-			fmt.Println("i cant scan this")
-			continue
+			fmt.Println("Error scanning data:", err)
+			return err
 		}
 	}
+	fmt.Println("products: ", p)
 	return nil
 }
 
 type UserData struct {
+	ID       int    `json:"id"`
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -97,28 +100,28 @@ func AuthPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
+
+	var userData UserData
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
 	}
-	var userData UserData
-	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&userData); err != nil {
-		http.Error(w, "Failed to decode JSON data", http.StatusBadRequest)
-		return
-	}
-
+	rdr, _ := io.ReadAll(r.Body)
+	err := json.Unmarshal(rdr, &userData)
+	fmt.Println("userData: ", userData)
 	// Process user registration data (userData) as needed
 	fmt.Printf("Received registration data: %+v\n", userData)
 	// You can now handle the registration logic, such as storing the data in a database
 	// Send a response back to the client
 	w.Header().Set("Content-Type", "application/json")
 
-	err := GetAccount(userData.Email, userData.Password)
+	err = GetAccount(userData.Email, userData.Password)
 	if err != nil {
+		fmt.Println("Failed to get account")
 		w.WriteHeader(http.StatusInternalServerError)
+	} else {
+		w.WriteHeader(http.StatusOK)
 	}
-	w.WriteHeader(http.StatusOK)
 }
 
 func ExchangeAuthorizationCodeForToken(code string) (string, string, error) {
