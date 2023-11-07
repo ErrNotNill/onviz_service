@@ -3,6 +3,7 @@ package login
 import (
 	"context"
 	"crypto/sha256"
+	"database/sql"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -36,25 +37,32 @@ func CreateAccount(name, email, password string) error {
 	return nil
 }
 
-func GetAccount(email, password string) error {
-	fmt.Println("db connected")
-	rows, err := DB.Db.Query(`SELECT Password, Email FROM Users WHERE Password = ? AND Email = ?`, password, email)
+func GetAccount(email, password string) UserData {
+
+	rows, err := DB.Db.Query(`SELECT Email, Password FROM Users WHERE Email = ? AND Password = ?`, email, password)
 	if err != nil {
 		fmt.Println("cant get data from dbase:", err)
-		return err
+		return UserData{}
 	}
 	defer rows.Close()
+
 	p := UserData{}
 
 	for rows.Next() {
 		err := rows.Scan(&p.Email, &p.Password)
 		if err != nil {
 			fmt.Println("Error scanning data:", err)
-			return err
+			return UserData{}
 		}
 	}
-	fmt.Println("products: ", p)
-	return nil
+	fmt.Println("Email is not nil>>>: ", p.Email)
+	if p.Email == "" {
+		fmt.Println("Email is>>>: ", p.Email)
+		return UserData{}
+	}
+	return p
+	//fmt.Println("products: ", p)
+
 }
 
 type UserData struct {
@@ -108,6 +116,9 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	}
 	rdr, _ := io.ReadAll(r.Body)
 	err := json.Unmarshal(rdr, &userData)
+	if err != nil {
+		log.Println("Error decoding JSON")
+	}
 	fmt.Println("userData: ", userData)
 	// Process user registration data (userData) as needed
 	fmt.Printf("Received registration data: %+v\n", userData)
@@ -115,13 +126,37 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	// Send a response back to the client
 	w.Header().Set("Content-Type", "application/json")
 
-	err = GetAccount(userData.Email, userData.Password)
-	if err != nil {
-		fmt.Println("Failed to get account")
-		w.WriteHeader(http.StatusInternalServerError)
-	} else {
-		w.WriteHeader(http.StatusOK)
+	fmt.Println("userData.Email", userData.Email)
+
+	if r.Body != nil && r.Method == "POST" && r.Header != nil {
+		// Check if the email exists
+		var dbEmail string
+		var dbPassword string
+		err := DB.Db.QueryRow("SELECT Email, Password FROM Users WHERE Email = ?", userData.Email).Scan(&dbEmail, &dbPassword)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				// Email doesn't exist in the database
+				w.WriteHeader(http.StatusBadRequest)
+				fmt.Println("Email not found in the database:", err)
+			} else {
+				// Some other error occurred
+				w.WriteHeader(http.StatusInternalServerError)
+				fmt.Println("Error querying the database:", err)
+			}
+		} else {
+			// Email exists in the database
+			// Now, check if the passwords match
+			if userData.Password != dbPassword {
+				// Passwords do not match
+				w.WriteHeader(http.StatusUnauthorized) // You can use 401 (Unauthorized) for this
+				fmt.Println("Passwords do not match")
+			} else {
+				// Passwords match
+				w.WriteHeader(http.StatusOK)
+			}
+		}
 	}
+
 }
 
 func ExchangeAuthorizationCodeForToken(code string) (string, string, error) {

@@ -6,6 +6,7 @@
     <!-- Content -->
     <router-view />
   </div>
+  <div class="center-form">
   <div class="container" :class="{ active: isSignup }">
     <div class="forms">
       <div class="form login">
@@ -85,6 +86,7 @@
       </div>
     </div>
   </div>
+  </div>
 </template>
 
 <script setup>
@@ -151,10 +153,15 @@ function signinUser() {
       if (response.status === 200) {
         console.log(response.status)
         // Login successful, get the token
-        showSidebar.value = false;
+        showSidebar.value = true;
         return response.text(); // Assuming the response is a SHA-256 token string
 
-      } else {
+      } else if (response.status === 400) {
+        return response.text();
+      } else if (response.status === 401) {
+        return response.text();
+      }
+      else {
         // Login failed, log response status and response data
         alert('console.error')
         console.error('Login failed. Status:', response.status);
@@ -445,5 +452,13 @@ body{
   margin-top: 30px;
   text-align: center;
 }
+
+.center-form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 </style>
 
