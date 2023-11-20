@@ -56,7 +56,9 @@ func main() {
 	//cache.RDB.RPush(context.Background(), "chat_messages", messageType)
 
 	fmt.Println("Server started")
+	fmt.Println("http://localhost:9090")
 	err = http.ListenAndServe(":9090", nil)
+
 	if err != nil {
 		fmt.Println("Server started with error")
 		return

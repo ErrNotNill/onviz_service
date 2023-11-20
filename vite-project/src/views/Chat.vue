@@ -68,6 +68,7 @@ export default {
       }
     },
     sendMessage() {
+      document.querySelector('button').addEventListener('touchstart', this.sendMessage);
       let msg = {
         greeting: this.message
       }
