@@ -11,15 +11,17 @@
     </div>
 
     <div class="chat-container">
-      <form :action="sendMessage" @click.prevent="onSubmit"></form>
-      <textarea rows="5" v-model="message"></textarea>
-      <div class="button-block">
-        <div class="button-group">
-          <input class="button send-button" type="submit" value="Send" @click="sendMessage" />
-          <button class="button cancel-button" @click="cancelMessage">Cancel</button>
+      <form @submit.prevent="sendMessage">
+        <textarea rows="5" v-model="message"></textarea>
+        <div class="button-block">
+          <div class="button-group">
+            <input class="button send-button" type="submit" value="Send" />
+            <button class="button cancel-button" @click="cancelMessage">Cancel</button>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
+
 
     <!-- New block for sent messages -->
     <!--    <div>
@@ -68,9 +70,8 @@ export default {
       }
     },
     sendMessage() {
-      document.querySelector('button').addEventListener('touchstart', this.sendMessage);
       let msg = {
-        greeting: this.message
+        greeting: this.message,
       }
       this.socket.send(JSON.stringify(msg))
       this.sent = true
