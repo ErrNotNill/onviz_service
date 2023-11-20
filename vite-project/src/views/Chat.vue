@@ -46,7 +46,7 @@ export default {
 
   mounted() {
     this.$nextTick(function () {
-      this.socket = new WebSocket('ws://45.141.79.120:5173/chat')
+      this.socket = new WebSocket('ws://localhost:9090/chat')
       this.socket.onmessage = (msg) => {
         this.handleMessage(msg) // Push the received message into the array
       }
