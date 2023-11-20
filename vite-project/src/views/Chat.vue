@@ -11,7 +11,7 @@
     </div>
 
     <div class="chat-container">
-      <form :action="sendMessage" @click.prevent="sendMessage"></form>
+      <form :action="sendMessage" @click.prevent="onSubmit"></form>
       <textarea rows="5" v-model="message"></textarea>
       <div class="button-block">
         <div class="button-group">
@@ -69,7 +69,7 @@ export default {
     },
     sendMessage() {
       let msg = {
-        greeting: this.message,
+        greeting: this.message
       }
       this.socket.send(JSON.stringify(msg))
       this.sent = true
