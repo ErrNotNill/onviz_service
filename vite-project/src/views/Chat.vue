@@ -11,17 +11,15 @@
     </div>
 
     <div class="chat-container">
-      <form @submit.prevent="sendMessage">
-        <textarea rows="5" v-model="message"></textarea>
-        <div class="button-block">
-          <div class="button-group">
-            <input class="button send-button" type="submit" value="Send" />
-            <button class="button cancel-button" @click="cancelMessage">Cancel</button>
-          </div>
+      <form :action="sendMessage" @click.prevent="sendMessage"></form>
+      <textarea rows="5" v-model="message"></textarea>
+      <div class="button-block">
+        <div class="button-group">
+          <input class="button send-button" type="submit" value="Send" @click="sendMessage" />
+          <button class="button cancel-button" @click="cancelMessage">Cancel</button>
         </div>
-      </form>
+      </div>
     </div>
-
 
     <!-- New block for sent messages -->
     <!--    <div>
