@@ -1,4 +1,4 @@
-package login
+package repository
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"github.com/go-oauth2/oauth2/v4/errors"
 	"github.com/go-oauth2/oauth2/v4/manage"
-	"github.com/go-oauth2/oauth2/v4/models"
+	models2 "github.com/go-oauth2/oauth2/v4/models"
 	"github.com/go-oauth2/oauth2/v4/server"
 	"github.com/go-oauth2/oauth2/v4/store"
 	"golang.org/x/oauth2"
@@ -17,6 +17,7 @@ import (
 	"log"
 	"net/http"
 	"onviz/DB"
+	"onviz/internal/user/models"
 )
 
 func CreateAccount(name, email, password string) error {
@@ -37,40 +38,32 @@ func CreateAccount(name, email, password string) error {
 	return nil
 }
 
-func GetAccount(email, password string) UserData {
+func GetAccount(email, password string) models.UserData {
 
 	rows, err := DB.Db.Query(`SELECT Email, Password FROM Users WHERE Email = ? AND Password = ?`, email, password)
 	if err != nil {
 		fmt.Println("cant get data from dbase:", err)
-		return UserData{}
+		return models.UserData{}
 	}
 	defer rows.Close()
 
-	p := UserData{}
+	p := models.UserData{}
 
 	for rows.Next() {
 		err := rows.Scan(&p.Email, &p.Password)
 		if err != nil {
 			fmt.Println("Error scanning data:", err)
-			return UserData{}
+			return models.UserData{}
 		}
 	}
 	fmt.Println("Email is not nil>>>: ", p.Email)
 	if p.Email == "" {
 		fmt.Println("Email is>>>: ", p.Email)
-		return UserData{}
+		return models.UserData{}
 	}
 	return p
 	//fmt.Println("products: ", p)
 
-}
-
-type UserData struct {
-	ID       int    `json:"id"`
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Token    string `json:"token"`
 }
 
 func AuthPage(w http.ResponseWriter, r *http.Request) {
@@ -78,7 +71,7 @@ func AuthPage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
 	}
-	var userData UserData
+	var userData models.UserData
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&userData); err != nil {
 		http.Error(w, "Failed to decode JSON data", http.StatusBadRequest)
@@ -109,7 +102,7 @@ func AuthPage(w http.ResponseWriter, r *http.Request) {
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
 
-	var userData UserData
+	var userData models.UserData
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
@@ -185,7 +178,7 @@ func Auth() {
 
 	// client memory store
 	clientStore := store.NewClientStore()
-	clientStore.Set("000000", &models.Client{
+	clientStore.Set("000000", &models2.Client{
 		ID:     "000000",
 		Secret: "999999",
 		Domain: "http://localhost:9090",

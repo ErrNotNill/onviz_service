@@ -19,16 +19,21 @@ func TheTuyaAllFunctions() {
 	myDeviceId := `706020145002916b779e`
 	GetToken()
 	GetDevice(myDeviceId)
-	DeviceControl(myDeviceId)
+	GetDeviceList()
+	GetDevicesFromUser()
+
+	LoginUser()
+
+	//DeviceControl(myDeviceId)
 	//GetDeviceWithConnector()
 	//GetUsers()
 	//RefreshToken()
 
-	project, err := GetDevicesInProject()
+	/*project, err := GetDevicesInProject()
 	if err != nil {
 		fmt.Println("Couldn't get devices in project: ", project)
 
-	}
+	}*/
 	//tuya.PolicyAction()
 
 	//tuya.GetUsers()

@@ -1,4 +1,4 @@
-package fstp
+package sftp
 
 import (
 	"bufio"

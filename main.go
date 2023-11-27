@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"onviz/DB"
 	"onviz/chat/cache"
-	"onviz/login"
+	"onviz/internal/repository"
 	"onviz/router"
 	"onviz/service/tuya"
 	"os"
@@ -19,7 +19,7 @@ import (
 func main() {
 	//queue.MqttInit()
 
-	login.Auth() //not used now
+	repository.Auth() //not used now
 
 	//load .env file
 	if err := godotenv.Load(".env"); err != nil {

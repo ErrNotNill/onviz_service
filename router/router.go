@@ -4,14 +4,13 @@ import (
 	"github.com/rs/cors"
 	"net/http"
 	"onviz/addons"
-	"onviz/bot_bitrix"
 	"onviz/chat"
-	"onviz/login"
-	"onviz/repository/bitrix"
+	repository2 "onviz/internal/repository"
 	"onviz/service/VK"
+	bot_bitrix2 "onviz/service/bitrix/bot_bitrix"
+	"onviz/service/bitrix/repository"
 	tuya2 "onviz/service/tuya"
 	yandex2 "onviz/service/yandex"
-	"onviz/tests"
 )
 
 func Router() {
@@ -23,8 +22,8 @@ func Router() {
 		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders: []string{"Authorization", "Content-Type"},
 	})
-	http.Handle("/auth_page", c.Handler(http.HandlerFunc(login.AuthPage)))
-	http.Handle("/login_page", c.Handler(http.HandlerFunc(login.LoginPage)))
+	http.Handle("/auth_page", c.Handler(http.HandlerFunc(repository2.AuthPage)))
+	http.Handle("/login_page", c.Handler(http.HandlerFunc(repository2.LoginPage)))
 
 	//http.HandleFunc("/devices/:device_id", tuya2.GetDeviceNew)
 	http.HandleFunc("/yandex/v1.0", yandex2.CheckConnection)
@@ -34,7 +33,7 @@ func Router() {
 	http.HandleFunc("/yandex/v1.0/user/devices/action", tuya2.GetDevicesStatusChanged)
 
 	http.HandleFunc("/v1.0", yandex2.CheckConnectionYandex)
-	http.HandleFunc("/get_auth_token", login.GetAuthTokenYandex)
+	http.HandleFunc("/get_auth_token", repository2.GetAuthTokenYandex)
 	http.HandleFunc("/refresh_token", tuya2.RefreshToken)
 
 	//http.HandleFunc("/", LEADS.TestStatus)
@@ -43,17 +42,15 @@ func Router() {
 	//http.HandleFunc("/getListOfLines", GetListOfLines)
 	http.HandleFunc("/callback", VK.CallBack)
 	//http.HandleFunc("/parse", testHandleFunc)
-	http.HandleFunc("/test", tests.NewTestHandleFunc)
-	http.HandleFunc("/check", tests.NewTestHandleFunc)
 
-	http.HandleFunc("/leads", bitrix.LeadsAdd)
-	http.HandleFunc("/leads_list", bitrix.GetLeads)
-	http.HandleFunc("/dealer_deal", bitrix.DealerDealAdded)
-	http.HandleFunc("/leads_get", bitrix.GetLeadsAll)
+	http.HandleFunc("/leads", repository.LeadsAdd)
+	http.HandleFunc("/leads_list", repository.GetLeads)
+	http.HandleFunc("/dealer_deal", repository.DealerDealAdded)
+	http.HandleFunc("/leads_get", repository.GetLeadsAll)
 
-	http.HandleFunc("/bot", bot_bitrix.BotBitrix)
+	http.HandleFunc("/bot", bot_bitrix2.BotBitrix)
 	//http.HandleFunc("/auth", bot_bitrix.CallbackHandler)
-	http.HandleFunc("/redir", bot_bitrix.RedirectHandler)
+	http.HandleFunc("/redir", bot_bitrix2.RedirectHandler)
 
 	http.HandleFunc("/auth_tuya", tuya2.AuthHandler)
 	http.HandleFunc("/get_token", tuya2.GetTokenHandler)

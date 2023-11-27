@@ -1,4 +1,4 @@
-package bitrix
+package repository
 
 import (
 	"fmt"

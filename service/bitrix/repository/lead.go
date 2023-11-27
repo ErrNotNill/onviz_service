@@ -1,4 +1,4 @@
-package bitrix
+package repository
 
 import (
 	"database/sql"
@@ -8,7 +8,7 @@ import (
 	"log"
 	"net/http"
 	"onviz/DB"
-	"onviz/models"
+	"onviz/service/bitrix/models"
 	"os"
 	"strconv"
 	"strings"

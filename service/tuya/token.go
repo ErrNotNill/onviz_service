@@ -49,14 +49,14 @@ func GetToken() {
 
 	log.Println("Token:", Token)
 	log.Println("Refresh Token:", RefreshTokenVal)
-	list, err := GetDevicesList()
+	/*list, err := GetDevicesList()
 	if err != nil {
 		fmt.Println("Error getting devices list")
 		return
 	}
 	for _, v := range list {
 		fmt.Println("Device:", v)
-	}
+	}*/
 }
 
 func buildHeader(req *http.Request, body []byte) {

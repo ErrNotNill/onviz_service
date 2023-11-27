@@ -62,6 +62,7 @@ func TestChat(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			// Handle disconnection or errors
 			delete(clients, ws)
+			client.conn.Close()
 			break
 		}
 

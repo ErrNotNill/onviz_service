@@ -17,10 +17,13 @@ import (
 	"time"
 )
 
-func GetDeviceList() {
+func GetDevicesFromUser() {
+	uid := "eu1692021092784Up9d0"
+	uri := fmt.Sprintf("/v1.0/users/%v/devices", uid)
+	fmt.Println("GetDevicesFromUser________________")
 	method := "GET"
 	body := []byte(``)
-	req, _ := http.NewRequest(method, Host+"/v1.2/iot-03/devices", bytes.NewReader(body))
+	req, _ := http.NewRequest(method, Host+uri, bytes.NewReader(body))
 
 	buildHeader(req, body)
 	resp, err := http.DefaultClient.Do(req)
@@ -31,12 +34,44 @@ func GetDeviceList() {
 	defer resp.Body.Close()
 	bs, _ := io.ReadAll(resp.Body)
 
-	var deviceInfo Device
-	err = json.Unmarshal(bs, &deviceInfo)
+	fmt.Println("bs_bs_bs_bs_GetDevicesFromUser:::::", string(bs))
+	var result ResponseDevices
+	err = json.Unmarshal(bs, &result)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
+	fmt.Println("result::GetDevicesFromUser:::", result)
+
+	for _, val := range result.Result {
+		fmt.Println("val.ID", val.ID)
+	}
+
+}
+
+func GetDeviceList() {
+	fmt.Println("GetDeviceList..........")
+	method := "GET"
+	body := []byte(``)
+	req, _ := http.NewRequest(method, Host+"/v1.2/iot-03/devices/", bytes.NewReader(body))
+
+	buildHeader(req, body)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	defer resp.Body.Close()
+	bs, _ := io.ReadAll(resp.Body)
+
+	fmt.Println("bs_bs_bs_bs_GetDevicesList:::::", string(bs))
+	var response Response
+	err = json.Unmarshal(bs, &response)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Println("result::GetDeviceList:::", response)
 	//fmt.Printf("Device ID: %s, Name: %s, Online: %v\n", deviceInfo.Result.ID, deviceInfo.Result.Name, deviceInfo.Result.Online)
 	//log.Println("resp devices:", string(bs))
 }
@@ -183,7 +218,7 @@ func generateSignature(accessID, path, secretKey string) string {
 	return signature
 }
 
-func GetDevicesList() ([]Device, error) {
+/*func GetDevicesList() ([]Device, error) {
 	client := &http.Client{}
 
 	req, err := http.NewRequest("GET", "https://openapi.tuyaeu.com/v1.0/devices", nil)
@@ -218,9 +253,9 @@ func GetDevicesList() ([]Device, error) {
 		return nil, fmt.Errorf("API request failed with status: %s", resp.Status)
 	}
 
-}
+}*/
 
-func GetDevicesInProject() ([]Device, error) {
+/*func GetDevicesInProject() ([]Device, error) {
 	//fmt.Println("Getting devices")
 	client := &http.Client{}
 
@@ -256,7 +291,7 @@ func GetDevicesInProject() ([]Device, error) {
 		return nil, fmt.Errorf("API request failed with status: %s", resp.Status)
 	}
 
-}
+}*/
 
 // GetDevice  Call OpenAPI (taking Gin framework for example)
 func GetDeviceWithConnector() {

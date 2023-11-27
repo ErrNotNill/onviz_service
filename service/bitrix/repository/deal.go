@@ -1,4 +1,4 @@
-package bitrix
+package repository
 
 import (
 	"database/sql"
@@ -7,7 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"onviz/models"
+	"onviz/service/bitrix/models"
 )
 
 func AddedDealToDB(Id, Title, Name, Phone, Email, DateCreate, SourceId, SourceDescription, AssignedByLead string) {
