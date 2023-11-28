@@ -4,8 +4,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/azzzak/alice"
+	"github.com/go-oauth2/oauth2/v4/errors"
+	"github.com/go-oauth2/oauth2/v4/manage"
+	"github.com/go-oauth2/oauth2/v4/models"
+	"github.com/go-oauth2/oauth2/v4/server"
+	"github.com/go-oauth2/oauth2/v4/store"
 	"io"
+	"log"
+	"math/rand"
 	"net/http"
+	"os"
+	"strconv"
 )
 
 var respNse *alice.Kit
@@ -26,6 +35,115 @@ func SimpleSkill() {
 			return resp.Text(req.OriginalUtterance())
 		})
 	}
+}
+
+func AuthUserFromYandexToken(w http.ResponseWriter, r *http.Request) {
+	// Set CORS headers
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("OK"))
+
+	// Read the request body
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println("Error reading body from server:", err)
+		// Handle the error appropriately
+		return
+	}
+
+	// Unmarshal JSON
+	var requestData map[string]interface{}
+	err = json.Unmarshal(body, &requestData)
+	if err != nil {
+		fmt.Println("Error unmarshalling JSON:", err)
+		// Handle the error appropriately
+		return
+	}
+	fmt.Println("Body request:", requestData)
+
+	// Your custom client ID and secret
+	clientId := os.Getenv("TUYA_CLIENT_ID")
+	clientSecret := os.Getenv("TUYA_SECRET_KEY")
+
+	// Create a client store and set your custom client
+	clientStore := store.NewClientStore()
+	clientStore.Set(clientId, &models.Client{
+		ID:     clientId,
+		Secret: clientSecret,
+		// Set other client properties as needed
+	})
+
+	// Create a token manager
+	manager := manage.NewDefaultManager()
+	manager.MustTokenStorage(store.NewMemoryTokenStore())
+	manager.MapClientStorage(clientStore)
+
+	// Create an OAuth2 server
+	srv := server.NewDefaultServer(manager)
+	srv.SetAllowGetAccessRequest(true)
+	srv.SetClientInfoHandler(server.ClientFormHandler)
+
+	// Set internal error handler
+	srv.SetInternalErrorHandler(func(err error) (re *errors.Response) {
+		log.Println("Internal Error:", err.Error())
+		return
+	})
+
+	// Set response error handler
+	srv.SetResponseErrorHandler(func(re *errors.Response) {
+		log.Println("Response Error:", re.Error.Error())
+	})
+
+	// Perform other OAuth2 server configurations as needed
+
+	// Use the OAuth2 server for authentication
+	// ...
+
+	// Handle other logic or return responses as needed
+}
+
+func AuthUserFomYandex(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("OK"))
+	/*respNse.Resp.Text("hello")
+	for {
+		SimpleSkill()
+	}*/
+
+	manager := manage.NewDefaultManager()
+	// token memory store
+	manager.MustTokenStorage(store.NewMemoryTokenStore())
+
+	// client memory store
+	clientStore := store.NewClientStore()
+
+	clientId := os.Getenv("TUYA_CLIENT_ID")
+	clientSecret := os.Getenv("TUYA_SECRET_KEY")
+
+	idGen := strconv.Itoa(rand.Intn(123456))
+	clientStore.Set(idGen, &models.Client{
+		ID:     clientId,
+		Secret: clientSecret,
+		Domain: "http://localhost:9090/yandex/authorize",
+	})
+	manager.MapClientStorage(clientStore)
+
+	srv := server.NewDefaultServer(manager)
+	srv.SetAllowGetAccessRequest(true)
+	srv.SetClientInfoHandler(server.ClientFormHandler)
+
+	srv.SetInternalErrorHandler(func(err error) (re *errors.Response) {
+		log.Println("Internal Error:", err.Error())
+		return
+	})
+	srv.SetResponseErrorHandler(func(re *errors.Response) {
+		log.Println("Response Error:", re.Error.Error())
+	})
+	fmt.Println("token request: ", manager)
 }
 
 func CheckConnection(w http.ResponseWriter, r *http.Request) {

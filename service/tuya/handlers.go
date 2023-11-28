@@ -23,6 +23,7 @@ func TheTuyaAllFunctions() {
 	GetDevicesFromUser()
 
 	LoginUser()
+	GetActives()
 
 	//DeviceControl(myDeviceId)
 	//GetDeviceWithConnector()

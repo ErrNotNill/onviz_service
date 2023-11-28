@@ -12,28 +12,12 @@ import (
 	"strings"
 )
 
-func LoginUser() {
+func GetActives() {
 
-	userName := "onvizbitrix@gmail.com"
-	userPass := "htZHtFxG5728"
+	uri := fmt.Sprintf("/v1.0/iot-03/users/assets")
 
-	uri := fmt.Sprintf("/v1.0/iot-03/users/login")
-
-	method := "POST"
-	encryptedPassword := encryptPassword(userPass)
-
-	fmt.Println("encryptedPassword", encryptedPassword)
-	credentials := Credentials{
-		Username: userName,
-		Password: encryptedPassword,
-	}
-	fmt.Println("credentials", credentials)
-	// Marshal the struct into a JSON string
-	body, err := json.Marshal(credentials)
-	if err != nil {
-		fmt.Println("Error marshaling JSON:", err)
-		return
-	}
+	method := "GET"
+	body := []byte(``)
 
 	req, _ := http.NewRequest(method, Host+uri, bytes.NewReader(body))
 
@@ -45,6 +29,52 @@ func LoginUser() {
 	}
 	defer resp.Body.Close()
 	bs, _ := io.ReadAll(resp.Body)
+
+	fmt.Println("bs_bs_bs: ", string(bs))
+
+	var result LoginResponse
+	err = json.Unmarshal(bs, &result)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Println("result::LoginResponse:::", result)
+
+}
+
+func SchemaUser() {
+	//p1683791449319ma4w9u
+	//https://api.cakes.com/v1.0/apps/{schema}/users?page_no=&page_size=&access_token=&sign=&t=
+}
+
+func LoginUser() {
+
+	userName := ""
+	userPass := ""
+
+	uri := fmt.Sprintf("/v1.0/iot-03/users/login")
+
+	method := "POST"
+	encryptedPassword := encryptPassword(userPass)
+	cnvStr := fmt.Sprintf("{\n  \"username\": \"%v\",\n  \"password\": \"%v\"\n}", userName, encryptedPassword)
+
+	fmt.Println("cnvStr: ", cnvStr)
+	fmt.Println("encryptedPassword", encryptedPassword)
+
+	body := []byte(cnvStr)
+
+	req, _ := http.NewRequest(method, Host+uri, bytes.NewReader(body))
+
+	buildHeader(req, body)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	defer resp.Body.Close()
+	bs, _ := io.ReadAll(resp.Body)
+
+	fmt.Println("bs_bs_LoginUser_bs_bs : ", string(bs))
 
 	var result LoginResponse
 	err = json.Unmarshal(bs, &result)

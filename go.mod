@@ -17,8 +17,8 @@ require (
 	github.com/redis/go-redis/v9 v9.0.5
 	github.com/rs/cors v1.10.1
 	github.com/tuya/tuya-connector-go v1.0.5
-	golang.org/x/crypto v0.15.0
-	golang.org/x/oauth2 v0.14.0
+	golang.org/x/crypto v0.16.0
+	golang.org/x/oauth2 v0.15.0
 	golang.org/x/tour v0.1.0
 	google.golang.org/protobuf v1.31.0
 )
@@ -67,10 +67,10 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	golang.org/x/arch v0.4.0 // indirect
-	golang.org/x/net v0.18.0 // indirect
+	golang.org/x/net v0.19.0 // indirect
 	golang.org/x/sync v0.3.0 // indirect
-	golang.org/x/sys v0.14.0 // indirect
-	golang.org/x/term v0.14.0 // indirect
+	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/term v0.15.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
