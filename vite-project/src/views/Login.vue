@@ -6,6 +6,8 @@
     <!-- Content -->
     <router-view />
   </div>
+
+
   <div class="center-form">
   <div class="container" :class="{ active: isSignup }">
     <div class="forms">
@@ -90,6 +92,8 @@
 </template>
 
 <script setup>
+
+
 import Sidebar from '../components/Sidebar.vue';
 import { ref } from 'vue';
 import { onMounted } from 'vue';
@@ -112,6 +116,35 @@ const signupName = ref('');
 const signupEmail = ref('');
 const signupPassword = ref('');
 const signupPasswordConfirm = ref('');
+const tokenEndpoint = 'http://localhost:9090/yandex/token';
+// Replace these with your actual client credentials and user credentials
+const clientId = 'your-client-id';
+const clientSecret = 'your-client-secret';
+const username = 'user-username';
+const password = 'user-password';
+
+// Prepare the token request
+const formData = new URLSearchParams();
+formData.append('grant_type', 'password');
+formData.append('client_id', clientId);
+formData.append('client_secret', clientSecret);
+formData.append('username', username);
+formData.append('password', password);
+fetch(tokenEndpoint, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+  },
+  body: formData,
+})
+  .then(response => response.json())
+  .then(data => {
+    console.log('Token response:', data);
+    // Handle the token response as needed
+  })
+  .catch(error => {
+    console.error('Token request failed:', error);
+  });
 
 function togglePasswordVisibility(passwordField) {
   const field = eval(passwordField);
@@ -153,11 +186,12 @@ function signinUser() {
       if (response.status === 200) {
         console.log(response.status)
         // Login successful, get the token
-        showSidebar.value = true;
+        //showSidebar.value = true;
+        window.location.href = "http://localhost:9090/yandex/authorize"
         return response.text(); // Assuming the response is a SHA-256 token string
 
       } else if (response.status === 400) {
-        return response.text();
+      //  return response.text();
       } else if (response.status === 401) {
         return response.text();
       }
@@ -270,7 +304,6 @@ function switchToLogin() {
   isSignup.value = false;
 }
 </script>
-
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');

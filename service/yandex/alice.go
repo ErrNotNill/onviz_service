@@ -107,29 +107,25 @@ func AuthUserFomYandex(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("OK"))
-	/*respNse.Resp.Text("hello")
-	for {
-		SimpleSkill()
-	}*/
-
 	manager := manage.NewDefaultManager()
-	// token memory store
 	manager.MustTokenStorage(store.NewMemoryTokenStore())
 
-	// client memory store
 	clientStore := store.NewClientStore()
 
-	clientId := os.Getenv("TUYA_CLIENT_ID")
+	clientID := os.Getenv("TUYA_CLIENT_ID")
 	clientSecret := os.Getenv("TUYA_SECRET_KEY")
 
-	idGen := strconv.Itoa(rand.Intn(123456))
-	clientStore.Set(idGen, &models.Client{
-		ID:     clientId,
+	idGen := strconv.Itoa(rand.Intn(999999))
+	err := clientStore.Set(idGen, &models.Client{
+		ID:     clientID,
 		Secret: clientSecret,
 		Domain: "http://localhost:9090/yandex/authorize",
 	})
+	if err != nil {
+		log.Println("Error setting client")
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 	manager.MapClientStorage(clientStore)
 
 	srv := server.NewDefaultServer(manager)
@@ -142,8 +138,15 @@ func AuthUserFomYandex(w http.ResponseWriter, r *http.Request) {
 	})
 	srv.SetResponseErrorHandler(func(re *errors.Response) {
 		log.Println("Response Error:", re.Error.Error())
+		http.Error(w, re.Error.Error(), re.StatusCode)
+		return
 	})
-	fmt.Println("token request: ", manager)
+
+	err = srv.HandleTokenRequest(w, r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 }
 
 func CheckConnection(w http.ResponseWriter, r *http.Request) {
