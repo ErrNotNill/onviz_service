@@ -1,4 +1,4 @@
-package tuya
+package service
 
 import (
 	"bytes"
@@ -20,7 +20,28 @@ func TheTuyaAllFunctions() {
 	GetToken()
 	GetDevice(myDeviceId)
 	GetDeviceList()
-	GetDevicesFromUser()
+	userEmail := "winni3112@gmail.com"
+	userEmail = "standarttechnology8891@gmail.com"
+	userEmail = "vasya_57@mail.ru"
+	userEmail = "zdoralex@inbox.ru"
+	userEmail = "iln2005@yandex.ru"
+	userEmail = "a9022798377@mail.ru"
+	userEmail = "pavelrogoznikov@bk.ru"
+	userEmail = "syncop@mail.ru"
+	userEmail = "dorovskiy2@yandex.ru"
+	userEmail = "89658088878@yandex.ru"
+	userEmail = "barkov-sergey@yandex.ru"
+	userEmail = "cnnmm29@gmail.com"
+	userEmail = "victoriyafesenko@yandex.ru"
+	userEmail = "kotchergin50@gmail.com"
+	userEmail = "seniorleytan-96@yandex.ru"
+	userEmail = "garibyan2006@mail.ru"
+	userEmail = "shahinyan.artur@yandex.ru"
+	userEmail = "kamera214@mail.ru"
+	userEmail = "pasl@inbox.ru"
+	userEmail = "sprokorina@mail.ru"
+	GetUsersInfo()
+	GetDevicesFromUser(userEmail)
 
 	LoginUser()
 	GetActives()
@@ -117,7 +138,7 @@ func GetTokenHandler(w http.ResponseWriter, r *http.Request) {
 	body := []byte(``)
 	req, _ := http.NewRequest(method, Host+"/v1.0/token?grant_type=1", bytes.NewReader(body))
 
-	buildHeader(req, body)
+	BuildHeader(req, body)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println(err)

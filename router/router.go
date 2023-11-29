@@ -9,7 +9,7 @@ import (
 	"onviz/service/VK"
 	bot_bitrix2 "onviz/service/bitrix/bot_bitrix"
 	"onviz/service/bitrix/repository"
-	tuya2 "onviz/service/tuya"
+	"onviz/service/tuya/service"
 	yandex2 "onviz/service/yandex"
 )
 
@@ -30,14 +30,14 @@ func Router() {
 	http.HandleFunc("/yandex/authorize", yandex2.AuthUserFomYandex)
 	http.HandleFunc("/yandex/token", yandex2.AuthUserFromYandexToken)
 
-	http.HandleFunc("/yandex/v1.0/user/devices", tuya2.GetDeviceNew)
-	http.HandleFunc("/yandex/v1.0/user/unlink", tuya2.UnlinkUser)
-	http.HandleFunc("/yandex/v1.0/user/devices/query", tuya2.GetDevicesStatus)
-	http.HandleFunc("/yandex/v1.0/user/devices/action", tuya2.GetDevicesStatusChanged)
+	http.HandleFunc("/yandex/v1.0/user/devices", service.GetDeviceNew)
+	http.HandleFunc("/yandex/v1.0/user/unlink", service.UnlinkUser)
+	http.HandleFunc("/yandex/v1.0/user/devices/query", service.GetDevicesStatus)
+	http.HandleFunc("/yandex/v1.0/user/devices/action", service.GetDevicesStatusChanged)
 
 	http.HandleFunc("/v1.0", yandex2.CheckConnectionYandex)
 	http.HandleFunc("/get_auth_token", repository2.GetAuthTokenYandex)
-	http.HandleFunc("/refresh_token", tuya2.RefreshToken)
+	http.HandleFunc("/refresh_token", service.RefreshToken)
 
 	//http.HandleFunc("/", LEADS.TestStatus)
 	http.HandleFunc("/chat", chat.TestChat)
@@ -55,8 +55,8 @@ func Router() {
 	//http.HandleFunc("/auth", bot_bitrix.CallbackHandler)
 	http.HandleFunc("/redir", bot_bitrix2.RedirectHandler)
 
-	http.HandleFunc("/auth_tuya", tuya2.AuthHandler)
-	http.HandleFunc("/get_token", tuya2.GetTokenHandler)
+	http.HandleFunc("/auth_tuya", service.AuthHandler)
+	http.HandleFunc("/get_token", service.GetTokenHandler)
 	//http.HandleFunc("/refresh_token", tuya.RefreshTokenHandler)
 
 	http.HandleFunc("/text_collect", chat.GetTextCollectHandler)

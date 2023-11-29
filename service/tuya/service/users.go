@@ -1,4 +1,4 @@
-package tuya
+package service
 
 import (
 	"bytes"
@@ -17,7 +17,7 @@ func GetInfoAboutUserTuya() {
 	var uid = ""
 	uri := fmt.Sprintf("/v1.0/users/%v/infos", uid)
 	req, _ := http.NewRequest(method, Host+uri, bytes.NewReader(body))
-	buildHeader(req, body)
+	BuildHeader(req, body)
 
 	req.Header.Add("client_id", ClientID)
 	clientSecret := os.Getenv("TUYA_SECRET_KEY")
@@ -33,7 +33,7 @@ func GetInfoAboutUserTuya() {
 	}
 
 	fmt.Println("i:interface::: ", i)
-	buildHeader(req, body)
+	BuildHeader(req, body)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println(err)

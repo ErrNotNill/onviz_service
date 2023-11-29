@@ -1,4 +1,4 @@
-package tuya
+package service
 
 import (
 	"bytes"
@@ -17,15 +17,58 @@ import (
 	"time"
 )
 
-func GetDevicesFromUser() {
+func GetUsersInfo() {
+	appKey := os.Getenv("TUYA_APP_KEY")
+	uri := fmt.Sprintf("/v1.0/apps/%v/users?page_no=6&page_size=200&access_token=%v&sign=&t=", appKey, AccessToken)
+
+	method := "GET"
+	body := []byte(``)
+	req, err := http.NewRequest(method, Host+uri, bytes.NewReader(body))
+	if err != nil {
+		log.Println("Error creating request:", err)
+		return
+	}
+
+	BuildHeader(req, body)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println("Error sending request:", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	bs, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("Error reading response body:", err)
+		return
+	}
+
+	fmt.Println("Response body:", string(bs))
+
+	var users TuyaUsers
+	err = json.Unmarshal(bs, &users)
+	if err != nil {
+		log.Println("Error unmarshalling response:", err)
+		return
+	}
+	var i int
+	for i = range users.Result.List {
+		i++
+	}
+	fmt.Println("RESULT: i: ", i)
+	TransactionTuyaUsersToDb(users)
+}
+
+func GetDevicesFromUser(userEmail string) {
+	//uid := GetUidFromTuyaUsersByEmail(userEmail)
 	uid := "eu1692021092784Up9d0"
+	fmt.Println(uid, "uid_uid_uid_uid")
 	uri := fmt.Sprintf("/v1.0/users/%v/devices", uid)
-	fmt.Println("GetDevicesFromUser________________")
 	method := "GET"
 	body := []byte(``)
 	req, _ := http.NewRequest(method, Host+uri, bytes.NewReader(body))
 
-	buildHeader(req, body)
+	BuildHeader(req, body)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println(err)
@@ -41,21 +84,47 @@ func GetDevicesFromUser() {
 		fmt.Println("Error:", err)
 		return
 	}
-	fmt.Println("result::GetDevicesFromUser:::", result)
+	//fmt.Println("result::GetDevicesFromUser:::", result)
+
+	//TransactionDeviceToDb(result)
 
 	for _, val := range result.Result {
 		fmt.Println("val.ID", val.ID)
+		fmt.Println("val.UID", val.UID)
+		fmt.Println("val.CreateTime", val.CreateTime)
+		fmt.Println("val.UpdateTime", val.UpdateTime)
+		fmt.Println("val.Name", val.Name)
+		fmt.Println("val.Status", val.Status)
+		for _, status := range val.Status {
+			fmt.Println("status.Code", status.Code)
+			fmt.Println("status.Value", status.Value)
+		}
+		//fmt.Printf("val.Status type: %T", val.Status)
+		fmt.Println("val.ActiveTime", val.ActiveTime)
+		fmt.Println("val.BizType", val.BizType)
+		fmt.Println("val.Category", val.Category)
+		fmt.Println("val.Icon", val.Icon)
+		fmt.Println("val.IP", val.IP)
+		fmt.Println("val.LocalKey", val.LocalKey)
+		fmt.Println("val.Online", val.Online)
+		fmt.Println("val.OwnerID", val.OwnerID)
+		fmt.Println("val.ProductID", val.ProductID)
+		fmt.Println("val.ProductName", val.ProductName)
+		fmt.Println("val.Sub", val.Sub)
+		fmt.Println("val.TimeZone", val.TimeZone)
+		fmt.Println("val.UUID", val.UUID)
 	}
 
 }
 
+// todo fix this func, cause Response is wrong structure pointer
 func GetDeviceList() {
 	fmt.Println("GetDeviceList..........")
 	method := "GET"
 	body := []byte(``)
 	req, _ := http.NewRequest(method, Host+"/v1.2/iot-03/devices/", bytes.NewReader(body))
 
-	buildHeader(req, body)
+	BuildHeader(req, body)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println(err)
@@ -98,7 +167,7 @@ func DeviceControl(deviceId string) {
 	uriDevice := fmt.Sprintf("/v1.0/devices/%s/commands", deviceId)
 	req, _ := http.NewRequest(method, Host+uriDevice, bytes.NewReader(body))
 	fmt.Println("req STRUCTURE:::", req)
-	buildHeader(req, body)
+	BuildHeader(req, body)
 
 	req.Header.Add("client_id", ClientID)
 	clientSecret := os.Getenv("TUYA_SECRET_KEY")
@@ -129,7 +198,7 @@ func GetDevice(deviceId string) {
 	method := "GET"
 	body := []byte(``)
 	req, _ := http.NewRequest(method, Host+"/v1.0/devices/"+deviceId, bytes.NewReader(body))
-	buildHeader(req, body)
+	BuildHeader(req, body)
 
 	req.Header.Add("client_id", ClientID)
 	clientSecret := os.Getenv("TUYA_SECRET_KEY")
@@ -144,7 +213,7 @@ func GetDevice(deviceId string) {
 		//return
 	}
 	fmt.Println("i:interface::: ", i)
-	buildHeader(req, body)
+	BuildHeader(req, body)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println(err)

@@ -1,4 +1,4 @@
-package tuya
+package service
 
 import (
 	"bytes"
@@ -21,7 +21,7 @@ func GetActives() {
 
 	req, _ := http.NewRequest(method, Host+uri, bytes.NewReader(body))
 
-	buildHeader(req, body)
+	BuildHeader(req, body)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println(err)
@@ -49,8 +49,8 @@ func SchemaUser() {
 
 func LoginUser() {
 
-	userName := ""
-	userPass := ""
+	userName := "onvizbitrix@gmail.com"
+	userPass := "htZHtFxG5728"
 
 	uri := fmt.Sprintf("/v1.0/iot-03/users/login")
 
@@ -65,12 +65,13 @@ func LoginUser() {
 
 	req, _ := http.NewRequest(method, Host+uri, bytes.NewReader(body))
 
-	buildHeader(req, body)
+	BuildHeader(req, body)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println(err)
 		return
 	}
+
 	defer resp.Body.Close()
 	bs, _ := io.ReadAll(resp.Body)
 

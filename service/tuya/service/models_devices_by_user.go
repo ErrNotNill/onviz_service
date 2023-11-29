@@ -1,4 +1,4 @@
-package tuya
+package service
 
 type StatusItem struct {
 	Code  string      `json:"code"`

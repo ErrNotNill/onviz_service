@@ -213,7 +213,7 @@ func Auth() {
 func GetAuthTokenYandex(w http.ResponseWriter, r *http.Request) {
 	//http://localhost:9096/token?grant_type=client_credentials&client_id=000000&client_secret=999999&scope=read
 	method := "GET"
-	clientID := r.FormValue("client_id")
+	clientID := models.UserData{}
 	clientSecret := r.FormValue("client_secret")
 	uri := fmt.Sprintf("http://localhost:9090/token?grant_type=client_credentials&client_id=%s&client_secret=%s&scope=read", clientID, clientSecret)
 	//body := []byte(``)

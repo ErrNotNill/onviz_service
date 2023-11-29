@@ -1,4 +1,4 @@
-package tuya
+package service
 
 import (
 	"bytes"
@@ -22,7 +22,7 @@ func GetToken() {
 	body := []byte(``)
 	req, _ := http.NewRequest(method, Host+"/v1.0/token?grant_type=1", bytes.NewReader(body))
 
-	buildHeader(req, body)
+	BuildHeader(req, body)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println(err)
@@ -59,7 +59,7 @@ func GetToken() {
 	}*/
 }
 
-func buildHeader(req *http.Request, body []byte) {
+func BuildHeader(req *http.Request, body []byte) {
 	ClientID = os.Getenv("TUYA_CLIENT_ID")
 	req.Header.Set("client_id", ClientID)
 	req.Header.Set("sign_method", "HMAC-SHA256")

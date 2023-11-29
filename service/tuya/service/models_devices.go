@@ -1,4 +1,4 @@
-package tuya
+package service
 
 type Result struct {
 	LastRowKey string `json:"last_row_key"`

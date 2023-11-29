@@ -1,4 +1,4 @@
-package tuya
+package service
 
 import "os"
 

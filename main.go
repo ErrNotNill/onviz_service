@@ -12,7 +12,7 @@ import (
 	"onviz/chat/cache"
 	"onviz/internal/repository"
 	"onviz/router"
-	"onviz/service/tuya"
+	"onviz/service/tuya/service"
 	"os"
 )
 
@@ -32,9 +32,6 @@ func main() {
 	router.Router()
 	fmt.Println("Starting")
 
-	//init Tuya api
-	tuya.TheTuyaAllFunctions()
-
 	//init mysql
 	urlMysql := os.Getenv("URL_MYSQL")
 	err := DB.InitDB(urlMysql)
@@ -44,6 +41,8 @@ func main() {
 	} else {
 		fmt.Println("db init accepted")
 	}
+	//init Tuya api
+	service.TheTuyaAllFunctions()
 
 	redisAddr := os.Getenv("REDIS_ADDR")
 	redisPass := os.Getenv("REDIS_PASS")
