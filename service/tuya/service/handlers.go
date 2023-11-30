@@ -40,8 +40,14 @@ func TheTuyaAllFunctions() {
 	userEmail = "kamera214@mail.ru"
 	userEmail = "pasl@inbox.ru"
 	userEmail = "sprokorina@mail.ru"
+
+	GetInfoAboutUser()
+	fmt.Println("SYNCHRONIZE USER STARTED.............................")
+	SynchronizeUser()
+
 	GetUsersInfo()
 	GetDevicesFromUser(userEmail)
+	GetInfoAboutUserTuya()
 
 	LoginUser()
 	GetActives()

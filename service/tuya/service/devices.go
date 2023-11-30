@@ -17,6 +17,84 @@ import (
 	"time"
 )
 
+func SynchronizeUser() {
+	schema := os.Getenv("TUYA_APP_KEY")
+	fmt.Println("SCHEMA SCHEMA: ", schema)
+	uri := fmt.Sprintf("/v1.0/apps/%v/user", schema)
+	pass := encryptPassword("htZHtFxG5728")
+
+	userInfo := fmt.Sprintf(`{
+      "country_code":"7",
+      "username":"standarttechnology8891@gmail.com",
+      "password":"%v",
+      "username_type":2,
+      "time_zone_id": "Europe/Volgograd"
+}`, pass)
+
+	method := "POST"
+	body := []byte(userInfo)
+	req, err := http.NewRequest(method, Host+uri, bytes.NewReader(body))
+	if err != nil {
+		log.Println("Error creating request:", err)
+		return
+	}
+
+	BuildHeader(req, body)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println("Error sending request:", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	bs, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("Error reading response body:", err)
+		return
+	}
+
+	fmt.Println("Response body ___ SynchronizeUser ___:", string(bs))
+
+}
+
+func GetInfoAboutUser() {
+	uid := "eu1676886479349LEc2f"
+	uid = "eu1678182453992SotFy"
+	uri := fmt.Sprintf("/v1.0/users/%v/infos", uid)
+
+	method := "GET"
+	body := []byte(``)
+	req, err := http.NewRequest(method, Host+uri, bytes.NewReader(body))
+	if err != nil {
+		log.Println("Error creating request:", err)
+		return
+	}
+
+	BuildHeader(req, body)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println("Error sending request:", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	bs, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("Error reading response body:", err)
+		return
+	}
+
+	fmt.Println("Response body ___ GetInfoAboutUser ___:", string(bs))
+
+	var users TuyaUsers
+	err = json.Unmarshal(bs, &users)
+	if err != nil {
+		log.Println("Error unmarshalling response:", err)
+		return
+	}
+
+}
+
 func GetUsersInfo() {
 	appKey := os.Getenv("TUYA_APP_KEY")
 	uri := fmt.Sprintf("/v1.0/apps/%v/users?page_no=6&page_size=200&access_token=%v&sign=&t=", appKey, AccessToken)

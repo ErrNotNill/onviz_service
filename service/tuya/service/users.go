@@ -12,6 +12,7 @@ import (
 
 func GetInfoAboutUserTuya() {
 	// /v2.0/apps/{schema}/users
+
 	method := "GET"
 	body := []byte(``)
 	var uid = ""
