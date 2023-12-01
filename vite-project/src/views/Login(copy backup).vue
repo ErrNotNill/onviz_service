@@ -134,12 +134,25 @@
             <i class="uil uil-eye-slash showHidePw" @click="togglePasswordVisibility('loginPassword')"></i>
           </div>
 
+          <div class="checkbox-text">
+            <div class="checkbox-content">
+              <input type="checkbox" id="logCheck">
+              <label for="logCheck" class="text">Remember me</label>
+            </div>
+
+            <a href="#" class="text">Forgot password?</a>
+          </div>
 
           <div class="input-field button">
             <input type="button" value="Login" @click="signinUser">
           </div>
 
 
+        <div class="login-signup">
+          <span class="text">Not a member?
+            <a href="#" class="text signup-link" @click="switchToSignup">Signup Now</a>
+          </span>
+        </div>
       </div>
 
       <!-- Registration Form -->

@@ -28,7 +28,7 @@ func SynchronizeUser() {
       "username":"standarttechnology8891@gmail.com",
       "password":"%v",
       "username_type":2,
-      "time_zone_id": "Europe/Volgograd"
+      "time_zone_id": ""
 }`, pass)
 
 	method := "POST"
