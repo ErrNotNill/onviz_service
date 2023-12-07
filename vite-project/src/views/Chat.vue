@@ -46,7 +46,7 @@ export default {
 
   mounted() {
     this.$nextTick(function () {
-      this.socket = new WebSocket('ws://localhost:9090/chat')
+      this.socket = new WebSocket('ws://onviz-api.ru/chat')
       this.socket.onmessage = (msg) => {
         this.handleMessage(msg) // Push the received message into the array
       }
