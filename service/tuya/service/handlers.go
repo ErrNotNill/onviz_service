@@ -20,7 +20,7 @@ func TheTuyaAllFunctions() {
 	GetToken()
 	GetDevice(myDeviceId)
 	GetDeviceList()
-	userEmail := "winni3112@gmail.com"
+	/*userEmail := "winni3112@gmail.com"
 	userEmail = "standarttechnology8891@gmail.com"
 	userEmail = "vasya_57@mail.ru"
 	userEmail = "zdoralex@inbox.ru"
@@ -39,19 +39,24 @@ func TheTuyaAllFunctions() {
 	userEmail = "shahinyan.artur@yandex.ru"
 	userEmail = "kamera214@mail.ru"
 	userEmail = "pasl@inbox.ru"
-	userEmail = "sprokorina@mail.ru"
+	userEmail = "sprokorina@mail.ru"*/
 
 	GetInfoAboutUser()
 	fmt.Println("SYNCHRONIZE USER STARTED.............................")
-	SynchronizeUser()
 
-	GetUsersInfo()
+	/*countryCode := "7"
+	username := "standarttechnology8891@gmail.com"
+	password := "htZHtFxG5728"
+
+	SynchronizeUser(countryCode, username, password)*/
+
+	/*GetUsersInfo()
 	GetDevicesFromUser(userEmail)
 	GetInfoAboutUserTuya()
 
 	LoginUser()
 	GetActives()
-
+	*/
 	//DeviceControl(myDeviceId)
 	//GetDeviceWithConnector()
 	//GetUsers()

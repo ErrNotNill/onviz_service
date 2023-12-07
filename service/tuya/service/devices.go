@@ -17,43 +17,58 @@ import (
 	"time"
 )
 
-func SynchronizeUser() {
+var UserUID string
+
+func SynchronizeUser(countryCode string, username string, password string) string {
 	schema := os.Getenv("TUYA_APP_KEY")
 	fmt.Println("SCHEMA SCHEMA: ", schema)
 	uri := fmt.Sprintf("/v1.0/apps/%v/user", schema)
-	pass := encryptPassword("htZHtFxG5728")
+	pass := encryptPassword(password)
 
 	userInfo := fmt.Sprintf(`{
-      "country_code":"7",
-      "username":"standarttechnology8891@gmail.com",
+      "country_code":"%v",
+      "username":"%v",
       "password":"%v",
       "username_type":2,
       "time_zone_id": ""
-}`, pass)
+}`, countryCode, username, pass)
 
 	method := "POST"
 	body := []byte(userInfo)
 	req, err := http.NewRequest(method, Host+uri, bytes.NewReader(body))
 	if err != nil {
 		log.Println("Error creating request:", err)
-		return
+		return ""
 	}
 
 	BuildHeader(req, body)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println("Error sending request:", err)
-		return
+		return ""
 	}
 	defer resp.Body.Close()
 
 	bs, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Println("Error reading response body:", err)
-		return
+		return ""
 	}
 
 	fmt.Println("Response body ___ SynchronizeUser ___:", string(bs))
+	var result SynchronizeResult
+	err = json.Unmarshal(bs, &result)
+	if err != nil {
+		log.Println("Error unmarshalling response:", err)
+		return ""
+	}
+	UserUID = result.Result.UID
+	fmt.Println("result: result: UID: ", result.Result.UID)
+	fmt.Println("result: result: T: ", result.T)
+	fmt.Println("result: result: TID: ", result.TID)
+	fmt.Println("result: result: Success: ", result.Success)
+
+	return result.Result.UID
 
 }
 
@@ -97,7 +112,7 @@ func GetInfoAboutUser() {
 
 func GetUsersInfo() {
 	appKey := os.Getenv("TUYA_APP_KEY")
-	uri := fmt.Sprintf("/v1.0/apps/%v/users?page_no=6&page_size=200&access_token=%v&sign=&t=", appKey, AccessToken)
+	uri := fmt.Sprintf("/v1.0/apps/%v/users?page_no=5&page_size=500&access_token=%v&sign=&t=", appKey, AccessToken)
 
 	method := "GET"
 	body := []byte(``)
@@ -121,7 +136,7 @@ func GetUsersInfo() {
 		return
 	}
 
-	fmt.Println("Response body:", string(bs))
+	fmt.Println("Response body BS:", string(bs))
 
 	var users TuyaUsers
 	err = json.Unmarshal(bs, &users)
@@ -130,16 +145,22 @@ func GetUsersInfo() {
 		return
 	}
 	var i int
-	for i = range users.Result.List {
+	var k int
+	for i, v := range users.Result.List {
+		for k = range v.Email {
+			k++
+		}
 		i++
 	}
+	fmt.Println("TUYA USERS >>>>>", users)
 	fmt.Println("RESULT: i: ", i)
+	fmt.Println("RESULT: k: ", k)
 	TransactionTuyaUsersToDb(users)
 }
 
-func GetDevicesFromUser(userEmail string) {
+func GetDevicesFromUser(uid string) {
 	//uid := GetUidFromTuyaUsersByEmail(userEmail)
-	uid := "eu1692021092784Up9d0"
+
 	fmt.Println(uid, "uid_uid_uid_uid")
 	uri := fmt.Sprintf("/v1.0/users/%v/devices", uid)
 	method := "GET"

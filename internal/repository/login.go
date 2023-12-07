@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"crypto/sha256"
-	"database/sql"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -18,6 +17,7 @@ import (
 	"net/http"
 	"onviz/DB"
 	"onviz/internal/user/models"
+	"onviz/service/tuya/service"
 )
 
 func CreateAccount(name, email, password string) error {
@@ -120,8 +120,19 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	fmt.Println("userData.Email", userData.Email)
+	fmt.Println("userData.Country", userData.Country)
 
-	if r.Body != nil && r.Method == "POST" && r.Header != nil {
+	countryCode := service.GetCountryCodeFromDbase(userData.Country)
+
+	fmt.Printf("countryCode : %v, userData.Email : %v, userData.Password : %v", countryCode, userData.Email, userData.Password)
+
+	uid := service.SynchronizeUser(countryCode, userData.Email, userData.Password)
+	if uid != "" {
+		fmt.Println("UID_UID_UID:::", uid)
+	}
+	service.GetDevicesFromUser(uid)
+
+	/*if r.Body != nil && r.Method == "POST" && r.Header != nil {
 		// Check if the email exists
 		var dbEmail string
 		var dbPassword string
@@ -148,7 +159,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusOK)
 			}
 		}
-	}
+	}*/
 
 }
 

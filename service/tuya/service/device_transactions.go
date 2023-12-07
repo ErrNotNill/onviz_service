@@ -69,10 +69,14 @@ func TransactionTuyaUsersToDb(users TuyaUsers) {
 
 	statusItemStmt, err := tx.Prepare(`INSERT IGNORE INTO TuyaUsers (
     create_time, email, mobile, uid, update_time, username
-) VALUES (?, ?, ?, ?, ?, ?);`)
+) VALUES (?, ?, ?, ?, ?, ?)`)
 	if err != nil {
 		log.Println("Failed to prepare transaction:", err)
-		tx.Rollback()
+		err := tx.Rollback()
+		if err != nil {
+			log.Println("Failed to rollback transaction:", err)
+			return
+		}
 		return
 	}
 	defer statusItemStmt.Close()
@@ -84,7 +88,11 @@ func TransactionTuyaUsersToDb(users TuyaUsers) {
 		)
 		if err != nil {
 			log.Println("Failed to insert into TuyaUsers:", err)
-			tx.Rollback()
+			err := tx.Rollback()
+			if err != nil {
+				log.Println("Failed to rollback transaction:", err)
+				return
+			}
 			return
 		}
 	}
@@ -93,8 +101,29 @@ func TransactionTuyaUsersToDb(users TuyaUsers) {
 	err = tx.Commit()
 	if err != nil {
 		log.Println("Failed to commit transaction:", err)
-		tx.Rollback()
+		err := tx.Rollback()
+		if err != nil {
+			log.Println("Failed to rollback transaction:", err)
+			return
+		}
 		return
 	}
 	fmt.Println("TRANSACTION WAS ENDED")
+}
+
+func GetCountryCodeFromDbase(country string) string {
+	rows, err := DB.Db.Query(`SELECT Code from CountryCodes where Country = ?`, country)
+	if err != nil {
+		fmt.Println("cant get data from dbase:", err)
+	}
+	defer rows.Close()
+
+	var code string
+	for rows.Next() {
+		err := rows.Scan(&code)
+		if err != nil {
+			fmt.Println("Error scanning data:", err)
+		}
+	}
+	return code
 }

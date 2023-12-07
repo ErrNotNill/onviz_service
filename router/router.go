@@ -26,8 +26,11 @@ func Router() {
 	http.Handle("/login_page", c.Handler(http.HandlerFunc(repository2.LoginPage)))
 
 	//http.HandleFunc("/devices/:device_id", tuya2.GetDeviceNew)
-	http.HandleFunc("/yandex/v1.0", yandex2.CheckConnection)
-	http.HandleFunc("/yandex/authorize", yandex2.AuthUserFomYandex)
+	http.HandleFunc("/v1.0/", yandex2.CheckConnection)
+	http.HandleFunc("/v1.0/user/devices", yandex2.CheckConnection) //todo get user devices GET
+	//http.HandleFunc("/v1.0/user/devices/query", yandex2.InfoAboutDevicesState) //todo info about state devices POST
+	//http.HandleFunc("/v1.0/user/devices/action", yandex2.ChangeDevicesState)   //todo change state of devices POST
+
 	http.HandleFunc("/yandex/token", yandex2.AuthUserFromYandexToken)
 
 	http.HandleFunc("/yandex/v1.0/user/devices", service.GetDeviceNew)

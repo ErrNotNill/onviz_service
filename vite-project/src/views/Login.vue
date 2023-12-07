@@ -9,122 +9,122 @@
 
 
   <div class="center-form">
-  <div class="container" :class="{ active: isSignup }">
-    <div class="forms">
-      <div class="form login">
-        <span class="title">Onviz</span>
-        <div class="input-field-country">
-        <select name="country" id="country-select">
-          <option value="" disabled selected>Выберите страну</option>
-          <option value="Russia">Россия</option>
-          <option value="Australia">Австралия</option>
-          <option value="Austria">Австрия</option>
-          <option value="Azerbaijan">Азербайджан</option>
-          <option value="Anguilla">Ангилья</option>
-          <option value="Argentina">Аргентина</option>
-          <option value="Armenia">Армения</option>
-          <option value="Arulko">Арулько</option>
-          <option value="Belarus">Беларусь</option>
-          <option value="Belize">Белиз</option>
-          <option value="Belgium">Бельгия</option>
-          <option value="Bermuda">Бермуды</option>
-          <option value="Bulgaria">Болгария</option>
-          <option value="Brazil">Бразилия</option>
-          <option value="UK">Великобритания</option>
-          <option value="Hungary">Венгрия</option>
-          <option value="Vietnam">Вьетнам</option>
-          <option value="Haiti">Гаити</option>
-          <option value="Guadeloupe">Гваделупа</option>
-          <option value="Germany">Германия</option>
-          <option value="Netherlands">Голландия</option>
-          <option value="Honduras">Гондурас</option>
-          <option value="HongKong">Гонконг</option>
-          <option value="Greece">Греция</option>
-          <option value="Georgia">Грузия</option>
-          <option value="Denmark">Дания</option>
-          <option value="DominicanRepublic">Доминиканская республика</option>
-          <option value="Egypt">Египет</option>
-          <option value="Israel">Израиль</option>
-          <option value="India">Индия</option>
-          <option value="Indonesia">Индонезия</option>
-          <option value="Jordan">Иордания</option>
-          <option value="Iraq">Ирак</option>
-          <option value="Iran">Иран</option>
-          <option value="Ireland">Ирландия</option>
-          <option value="Spain">Испания</option>
-          <option value="Italy">Италия</option>
-          <option value="Kazakhstan">Казахстан</option>
-          <option value="Cameroon">Камерун</option>
-          <option value="Canada">Канада</option>
-          <option value="Caribbean">Карибы</option>
-          <option value="Cyprus">Кипр</option>
-          <option value="Kyrgyzstan">Киргизстан</option>
-          <option value="China">Китай</option>
-          <option value="Korea">Корея</option>
-          <option value="CostaRica">Коста-Рика</option>
-          <option value="Cuba">Куба</option>
-          <option value="Kuwait">Кувейт</option>
-          <option value="Latvia">Латвия</option>
-          <option value="Lebanon">Ливан</option>
-          <option value="Libya">Ливан</option>
-          <option value="Lithuania">Литва</option>
-          <option value="Luxembourg">Люксембург</option>
-          <option value="Macedonia">Македония</option>
-          <option value="Malaysia">Малайзия</option>
-          <option value="Malta">Мальта</option>
-          <option value="Mexico">Мексика</option>
-          <option value="Mozambique">Мозамбик</option>
-          <option value="Moldova">Молдова</option>
-          <option value="Monaco">Монако</option>
-          <option value="Mongolia">Монголия</option>
-          <option value="Morocco">Морокко</option>
-          <option value="Netherlands">Нидерланды</option>
-          <option value="NewZealand">Новая Зеландия</option>
-          <option value="Norway">Норвегия</option>
-          <option value="UAE">О.А.Э.</option>
-          <option value="IsleOfMan">Остров Мэн</option>
-          <option value="Pakistan">Пакистан</option>
-          <option value="Peru">Перу</option>
-          <option value="Poland">Польша</option>
-          <option value="Portugal">Португалия</option>
-          <option value="Reunion">Реюньон</option>
-          <option value="Romania">Румыния</option>
-          <option value="USA">США</option>
-          <option value="ElSalvador">Сальвадор</option>
-          <option value="Singapore">Сингапур</option>
-          <option value="Syria">Сирия</option>
-          <option value="Slovakia">Словакия</option>
-          <option value="Slovenia">Словения</option>
-          <option value="Suriname">Суринам</option>
-          <option value="Tajikistan">Таджикистан</option>
-          <option value="Taiwan">Тайвань</option>
-          <option value="Thailand">Тайланд</option>
-          <option value="Tunisia">Тунис</option>
-          <option value="Turkmenistan">Туркменистан</option>
-          <option value="Turkmenistan">Туркмения</option>
-          <option value="TurksAndCaicos">Туркс и Кейкос</option>
-          <option value="Turkey">Турция</option>
-          <option value="Uganda">Уганда</option>
-          <option value="Uzbekistan">Узбекистан</option>
-          <option value="Ukraine">Украина</option>
-          <option value="Finland">Финляндия</option>
-          <option value="France">Франция</option>
-          <option value="Croatia">Хорватия</option>
-          <option value="CzechRepublic">Чехия</option>
-          <option value="Chile">Чили</option>
-          <option value="Switzerland">Швейцария</option>
-          <option value="Sweden">Швеция</option>
-          <option value="Ecuador">Эквадор</option>
-          <option value="Estonia">Эстония</option>
-          <option value="SouthAfrica">ЮАР</option>
-          <option value="Yugoslavia">Югославия</option>
-          <option value="SouthKorea">Южная Корея</option>
-          <option value="Jamaica">Ямайка</option>
-          <option value="Japan">Япония</option>
-        </select>
-        </div>
+    <div class="container" :class="{ active: isSignup }">
+      <div class="forms">
+        <div class="form login">
+          <span class="title">Onviz</span>
+          <div class="input-field-country">
+            <select v-model="selectedCountry" name="country" id="country-select">
+              <option value="" disabled selected>Выберите страну</option>
+              <option value="Russia">Россия</option>
+              <option value="Australia">Австралия</option>
+              <option value="Austria">Австрия</option>
+              <option value="Azerbaijan">Азербайджан</option>
+              <option value="Anguilla">Ангилья</option>
+              <option value="Argentina">Аргентина</option>
+              <option value="Armenia">Армения</option>
+              <option value="Arulko">Арулько</option>
+              <option value="Belarus">Беларусь</option>
+              <option value="Belize">Белиз</option>
+              <option value="Belgium">Бельгия</option>
+              <option value="Bermuda">Бермуды</option>
+              <option value="Bulgaria">Болгария</option>
+              <option value="Brazil">Бразилия</option>
+              <option value="UK">Великобритания</option>
+              <option value="Hungary">Венгрия</option>
+              <option value="Vietnam">Вьетнам</option>
+              <option value="Haiti">Гаити</option>
+              <option value="Guadeloupe">Гваделупа</option>
+              <option value="Germany">Германия</option>
+              <option value="Netherlands">Голландия</option>
+              <option value="Honduras">Гондурас</option>
+              <option value="HongKong">Гонконг</option>
+              <option value="Greece">Греция</option>
+              <option value="Georgia">Грузия</option>
+              <option value="Denmark">Дания</option>
+              <option value="DominicanRepublic">Доминиканская республика</option>
+              <option value="Egypt">Египет</option>
+              <option value="Israel">Израиль</option>
+              <option value="India">Индия</option>
+              <option value="Indonesia">Индонезия</option>
+              <option value="Jordan">Иордания</option>
+              <option value="Iraq">Ирак</option>
+              <option value="Iran">Иран</option>
+              <option value="Ireland">Ирландия</option>
+              <option value="Spain">Испания</option>
+              <option value="Italy">Италия</option>
+              <option value="Kazakhstan">Казахстан</option>
+              <option value="Cameroon">Камерун</option>
+              <option value="Canada">Канада</option>
+              <option value="Caribbean">Карибы</option>
+              <option value="Cyprus">Кипр</option>
+              <option value="Kyrgyzstan">Киргизстан</option>
+              <option value="China">Китай</option>
+              <option value="Korea">Корея</option>
+              <option value="CostaRica">Коста-Рика</option>
+              <option value="Cuba">Куба</option>
+              <option value="Kuwait">Кувейт</option>
+              <option value="Latvia">Латвия</option>
+              <option value="Lebanon">Ливан</option>
+              <option value="Libya">Ливан</option>
+              <option value="Lithuania">Литва</option>
+              <option value="Luxembourg">Люксембург</option>
+              <option value="Macedonia">Македония</option>
+              <option value="Malaysia">Малайзия</option>
+              <option value="Malta">Мальта</option>
+              <option value="Mexico">Мексика</option>
+              <option value="Mozambique">Мозамбик</option>
+              <option value="Moldova">Молдова</option>
+              <option value="Monaco">Монако</option>
+              <option value="Mongolia">Монголия</option>
+              <option value="Morocco">Морокко</option>
+              <option value="Netherlands">Нидерланды</option>
+              <option value="NewZealand">Новая Зеландия</option>
+              <option value="Norway">Норвегия</option>
+              <option value="UAE">О.А.Э.</option>
+              <option value="IsleOfMan">Остров Мэн</option>
+              <option value="Pakistan">Пакистан</option>
+              <option value="Peru">Перу</option>
+              <option value="Poland">Польша</option>
+              <option value="Portugal">Португалия</option>
+              <option value="Reunion">Реюньон</option>
+              <option value="Romania">Румыния</option>
+              <option value="USA">США</option>
+              <option value="ElSalvador">Сальвадор</option>
+              <option value="Singapore">Сингапур</option>
+              <option value="Syria">Сирия</option>
+              <option value="Slovakia">Словакия</option>
+              <option value="Slovenia">Словения</option>
+              <option value="Suriname">Суринам</option>
+              <option value="Tajikistan">Таджикистан</option>
+              <option value="Taiwan">Тайвань</option>
+              <option value="Thailand">Тайланд</option>
+              <option value="Tunisia">Тунис</option>
+              <option value="Turkmenistan">Туркменистан</option>
+              <option value="Turkmenistan">Туркмения</option>
+              <option value="TurksAndCaicos">Туркс и Кейкос</option>
+              <option value="Turkey">Турция</option>
+              <option value="Uganda">Уганда</option>
+              <option value="Uzbekistan">Узбекистан</option>
+              <option value="Ukraine">Украина</option>
+              <option value="Finland">Финляндия</option>
+              <option value="France">Франция</option>
+              <option value="Croatia">Хорватия</option>
+              <option value="CzechRepublic">Чехия</option>
+              <option value="Chile">Чили</option>
+              <option value="Switzerland">Швейцария</option>
+              <option value="Sweden">Швеция</option>
+              <option value="Ecuador">Эквадор</option>
+              <option value="Estonia">Эстония</option>
+              <option value="SouthAfrica">ЮАР</option>
+              <option value="Yugoslavia">Югославия</option>
+              <option value="SouthKorea">Южная Корея</option>
+              <option value="Jamaica">Ямайка</option>
+              <option value="Japan">Япония</option>
+            </select>
+          </div>
 
-        <div class="input-field">
+          <div class="input-field">
             <input v-model="loginEmail" type="text" placeholder="Enter your email" required>
             <i class="uil uil-envelope icon"></i>
           </div>
@@ -140,11 +140,11 @@
           </div>
 
 
-      </div>
+        </div>
 
-      <!-- Registration Form -->
-      <div class="form signup">
-        <span class="title">Registration</span>
+        <!-- Registration Form -->
+        <div class="form signup">
+          <span class="title">Registration</span>
 
 
           <div class="input-field" name="username" id="username">
@@ -177,14 +177,14 @@
           </div>
 
 
-        <div class="login-signup">
+          <div class="login-signup">
           <span class="text">Already a member?
             <a href="#" class="text login-link" @click="switchToLogin">Login Now</a>
           </span>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -206,6 +206,7 @@ onMounted(() => {
   }
 });
 
+const selectedCountry = ref('');
 const isSignup = ref(false);
 const loginEmail = ref('');
 const loginPassword = ref('');
@@ -262,9 +263,15 @@ function validatePassword(password) {
 
 function signinUser() {
   // Create an object with the user's login data
+  if (!selectedCountry.value) {
+    alert('Please select a country');
+    return;
+  }
+
   const loginData = {
     email: loginEmail.value,
     password: loginPassword.value,
+    country: selectedCountry.value, // Include selected country in login data
   };
 
   // Define the URL of your server where you want to send the login data
@@ -288,7 +295,7 @@ function signinUser() {
         return response.text(); // Assuming the response is a SHA-256 token string
 
       } else if (response.status === 400) {
-      //  return response.text();
+        //  return response.text();
       } else if (response.status === 401) {
         return response.text();
       }
