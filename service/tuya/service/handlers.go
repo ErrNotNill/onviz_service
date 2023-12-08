@@ -41,6 +41,7 @@ func TheTuyaAllFunctions() {
 	userEmail = "pasl@inbox.ru"
 	userEmail = "sprokorina@mail.ru"*/
 
+	LoginUser()
 	GetInfoAboutUser()
 	fmt.Println("SYNCHRONIZE USER STARTED.............................")
 

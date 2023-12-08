@@ -49,19 +49,23 @@ func SchemaUser() {
 
 func LoginUser() {
 
-	userName := "onvizbitrix@gmail.com"
+	userName := "commongoverygoodguy@gmail.com"
 	userPass := "htZHtFxG5728"
 
 	uri := fmt.Sprintf("/v1.0/iot-03/users/login")
 
 	method := "POST"
 	encryptedPassword := encryptPassword(userPass)
-	cnvStr := fmt.Sprintf("{\n  \"username\": \"%v\",\n  \"password\": \"%v\"\n}", userName, encryptedPassword)
 
-	fmt.Println("cnvStr: ", cnvStr)
+	b := fmt.Sprintf(`{
+  "username": "%v",
+  "password": "%v"
+}`, userName, encryptedPassword)
+
+	fmt.Println("b_b_b_b__b_b_b_b_b: ", b)
 	fmt.Println("encryptedPassword", encryptedPassword)
 
-	body := []byte(cnvStr)
+	body := []byte(b)
 
 	req, _ := http.NewRequest(method, Host+uri, bytes.NewReader(body))
 

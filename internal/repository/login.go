@@ -160,7 +160,6 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}*/
-
 }
 
 func ExchangeAuthorizationCodeForToken(code string) (string, string, error) {
