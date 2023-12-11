@@ -41,6 +41,7 @@ func main() {
 	} else {
 		fmt.Println("db init accepted")
 	}
+
 	//init Tuya api
 	service.TheTuyaAllFunctions()
 

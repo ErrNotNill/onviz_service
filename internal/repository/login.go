@@ -112,6 +112,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("Error decoding JSON")
 	}
+
 	fmt.Println("userData: ", userData)
 	// Process user registration data (userData) as needed
 	fmt.Printf("Received registration data: %+v\n", userData)
@@ -126,11 +127,19 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Printf("countryCode : %v, userData.Email : %v, userData.Password : %v", countryCode, userData.Email, userData.Password)
 
-	uid := service.SynchronizeUser(countryCode, userData.Email, userData.Password)
+	if userData.Email != "" {
+		uid := GetUserFromDbase(userData.Email)
+		service.GetDevicesFromUser(uid)
+		fmt.Println("uid_uid_uid::::", uid)
+	} else {
+		w.WriteHeader(http.StatusBadRequest)
+	}
+
+	/*uid := service.SynchronizeUser(countryCode, userData.Email, userData.Password)
 	if uid != "" {
 		fmt.Println("UID_UID_UID:::", uid)
 	}
-	service.GetDevicesFromUser(uid)
+	*/
 
 	/*if r.Body != nil && r.Method == "POST" && r.Header != nil {
 		// Check if the email exists
@@ -160,6 +169,34 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}*/
+}
+
+func GetUserFromDbase(email string) string {
+
+	rows, err := DB.Db.Query(`SELECT uid FROM TuyaUsers WHERE Email = ?`, email)
+	if err != nil {
+		fmt.Println("cant get data from dbase:", err)
+		return ""
+	}
+	defer rows.Close()
+
+	var uid string
+
+	for rows.Next() {
+		err := rows.Scan(&uid)
+		if err != nil {
+			fmt.Println("Error scanning data:", err)
+			return ""
+		}
+	}
+	fmt.Println("Email is not nil>>>: ", uid)
+	if uid == "" {
+		fmt.Println("Email is nil?>>>: ", uid)
+		return ""
+	}
+	return uid
+	//fmt.Println("products: ", p)
+
 }
 
 func ExchangeAuthorizationCodeForToken(code string) (string, string, error) {
