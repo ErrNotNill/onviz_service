@@ -52,7 +52,7 @@ func Router() {
 	http.HandleFunc("/leads", repository.LeadsAdd)
 	http.HandleFunc("/leads_list", repository.GetLeads)
 	http.HandleFunc("/dealer_deal", repository.DealerDealAdded)
-	http.HandleFunc("/leads_get", repository.GetLeadsAll)
+	http.HandleFunc("/api/leads_get", repository.GetLeadsAll)
 
 	http.HandleFunc("/bot", bot_bitrix2.BotBitrix)
 	//http.HandleFunc("/auth", bot_bitrix.CallbackHandler)
