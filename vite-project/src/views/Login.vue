@@ -214,7 +214,7 @@ const signupName = ref('');
 const signupEmail = ref('');
 const signupPassword = ref('');
 const signupPasswordConfirm = ref('');
-const tokenEndpoint = 'http://localhost:9090/api/yandex/token';
+const tokenEndpoint = 'https://onviz-api.ru/api/yandex/token';
 // Replace these with your actual client credentials and user credentials
 const clientId = 'your-client-id';
 const clientSecret = 'your-client-secret';
@@ -275,7 +275,7 @@ function signinUser() {
   };
 
   // Define the URL of your server where you want to send the login data
-  const loginUrl = 'http://localhost:9090/api/login_page'; // Replace with your server URL
+  const loginUrl = 'https://onviz-api.ru/api/login_page'; // Replace with your server URL
 
   // Send a POST request to the server
   fetch(loginUrl, {
@@ -291,7 +291,7 @@ function signinUser() {
         console.log(response.status)
         // Login successful, get the token
         //showSidebar.value = true;
-        window.location.href = "http://localhost:9090/api/yandex/authorize"
+        window.location.href = "https://onviz-api.ru/api/yandex/authorize"
         return response.text(); // Assuming the response is a SHA-256 token string
 
       } else if (response.status === 400) {
@@ -353,7 +353,7 @@ function signupUser() {
   };
 
   // Define the URL of your server where you want to send the registration data
-  const registrationUrl = 'http://localhost:9090/api/auth_page'; // Replace with your server URL
+  const registrationUrl = 'https://onviz-api.ru/api/auth_page'; // Replace with your server URL
 
   // Send a POST request to the server
   fetch(registrationUrl, {
