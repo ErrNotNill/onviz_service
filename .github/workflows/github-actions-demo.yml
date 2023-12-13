@@ -13,9 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Debug Known Hosts
-        run: cat ~/.ssh/known_hosts
-
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
         with:
