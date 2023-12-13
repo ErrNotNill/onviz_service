@@ -16,8 +16,8 @@ jobs:
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ 45.141.79.120 }}
-          username: ${{ root }}
-          password: ${{ AA1379657aa }}
+          host: 45.141.79.120
+          username: root
+          password: AA1379657aa
           script: |
-            scp -r ./* ${{ root }}@${{ 45.141.79.120 }}:project/onviz_service/
+            scp -r ./* root@45.141.79.120:project/onviz_service/
