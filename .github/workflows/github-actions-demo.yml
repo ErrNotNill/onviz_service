@@ -20,4 +20,4 @@ jobs:
           username: ${{ root }}
           password: ${{ AA1379657aa }}
           script: |
-            scp -r ./* ${{ root }}@${{ 45.141.79.120 }}:project/bitrix/
+            scp -r ./* ${{ root }}@${{ 45.141.79.120 }}:project/onviz_service/
