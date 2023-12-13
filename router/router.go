@@ -13,6 +13,8 @@ import (
 	yandex2 "onviz/service/yandex"
 )
 
+//todo endpoints for yandex
+
 func Router() {
 	//http.HandleFunc("/authorize", tuya.GetDeviceNew)
 	//http.HandleFunc("/token", tuya.GetDeviceNew)
