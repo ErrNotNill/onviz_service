@@ -14,8 +14,6 @@ import (
 	"strconv"
 )
 
-var VkBitrixWebhookUrl = os.Getenv("VK_BITRIX_LEAD_ADD_WEBHOOK")
-
 var Token = os.Getenv("VK_TOKEN")
 
 var newUserId int
@@ -34,6 +32,7 @@ type Fields struct {
 func CallBack(w http.ResponseWriter, r *http.Request) {
 	var SecretKey = os.Getenv("VK_SECRET_KEY")
 	var ConfirmationToken = os.Getenv("VK_CONFIRM_TOKEN")
+	var VkBitrixWebhookUrl = os.Getenv("VK_BITRIX_LEAD_ADD_WEBHOOK")
 
 	cb := callback.NewCallback()
 	fmt.Println("Callback service started")
