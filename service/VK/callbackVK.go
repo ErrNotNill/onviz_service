@@ -72,7 +72,7 @@ func CallBack(w http.ResponseWriter, r *http.Request) {
 		bytesSlice := []byte(obj.Text)
 		bytesRune := bytes.Runes(bytesSlice)
 
-		if is_words == true && len(bytesRune) > 1 && obj.Text != "" {
+		if is_words == true && len(bytesRune) > 1 && obj.Text != "" && obj.FromID != 628998745 && obj.FromID != 629352947 && obj.FromID != 642491603 {
 			fmt.Println(obj.FromID)
 			_, err = http.Post(VkBitrixWebhookUrl, "application/json", r)
 			if err != nil {
