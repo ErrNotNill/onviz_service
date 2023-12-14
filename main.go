@@ -14,6 +14,7 @@ import (
 	"onviz/router"
 	"onviz/service/tuya/service"
 	"os"
+	"path/filepath"
 )
 
 func main() {
@@ -22,7 +23,7 @@ func main() {
 	repository.Auth() //not used now
 
 	//load .env file
-	if err := godotenv.Load(".env"); err != nil {
+	if err := godotenv.Load(filepath.Join(".env")); err != nil {
 		log.Print("No .env file found")
 	} else {
 		fmt.Println("Loaded .env file")
