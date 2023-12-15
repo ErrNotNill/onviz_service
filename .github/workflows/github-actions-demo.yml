@@ -15,7 +15,6 @@ jobs:
 
       - name: Set up SSH
         run: |
-          chmod 600 ~root/.ssh/id_rsa
           eval "$(ssh-agent -s)"
           ssh-add ~root/.ssh/id_rsa
           ssh-keyscan -H 45.141.79.120 >> ~root/.ssh/id_rsa
