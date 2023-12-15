@@ -13,9 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Debug SSH files
-        run: ls -la /root/project/actions-runner/run.sh
-
       - name: Set up SSH
         run: |
           sudo chmod 400 /root/.ssh/id_rsa
