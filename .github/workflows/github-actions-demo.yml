@@ -19,6 +19,15 @@ jobs:
           eval "$(ssh-agent -s)"
           ssh-add -l
 
+      - name: Debug Workflow
+        run: |
+          pwd
+          ls -la /root/project/onviz_service/actions-runner/_work/onviz_service/onviz_service/
+          ls -la /root/project/onviz_service/actions-runner/_work/onviz_service/onviz_service/./actions-runner
+
+      - name: Change Directory
+        run: cd /root/project/onviz_service/actions-runner/_work/onviz_service/onviz_service/./actions-runner
+
       - name: Set up SSH
         run: |
           eval "$(ssh-agent -s)"
