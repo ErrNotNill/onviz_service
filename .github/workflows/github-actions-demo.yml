@@ -15,12 +15,15 @@ jobs:
 
       - name: Set up SSH
         run: |
+          echo "Start: $(date)"
           mkdir -p ~/.ssh
           echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_rsa
           ssh-keyscan -H 45.141.79.120 >> ~/.ssh/known_hosts
+          echo "End: $(date)"
+      
 
       - name: Deploy to Server
         run: |
