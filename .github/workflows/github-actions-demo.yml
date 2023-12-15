@@ -18,7 +18,9 @@ jobs:
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
 
       - name: Debug SSH files
-        run: ls -la ~/.ssh
+        run: |
+          ls -la ~/.ssh
+          cat ~/.ssh/id_rsa
 
       - name: Connect and pull
         run: |
