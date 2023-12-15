@@ -13,6 +13,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Debug SSH Agent
+        run: |
+          eval "$(ssh-agent -s)"
+          ssh-add -l
+
       - name: Set up SSH
         run: |
           eval "$(ssh-agent -s)"
