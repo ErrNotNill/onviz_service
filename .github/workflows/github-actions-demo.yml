@@ -18,9 +18,13 @@ jobs:
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 45.141.79.120 >> ~/.ssh/known_hosts
+          if [ ! -f ~/.ssh/id_rsa ]; then
+            echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+          fi
+          if [ ! -f ~/.ssh/known_hosts ]; then
+            ssh-keyscan -H 45.141.79.120 >> ~/.ssh/known_hosts
+          fi
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
