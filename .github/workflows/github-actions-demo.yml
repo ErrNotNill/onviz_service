@@ -16,6 +16,7 @@ jobs:
       - name: Debug SSH Agent
         run: |
           eval "$(ssh-agent -s)"
+          echo $SSH_AUTH_SOCK
           ssh-add -l
 
       - name: Set Permissions
