@@ -1,4 +1,4 @@
-name: Deploy to Server
+name: Your Workflow Name
 
 on:
   push:
@@ -7,30 +7,21 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-
-
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
-          if [ ! -f ~/.ssh/id_rsa ]; then
-            echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
-          fi
-          if [ ! -f ~/.ssh/known_hosts ]; then
-            ssh-keyscan -H 45.141.79.120 >> ~/.ssh/known_hosts
-          fi
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa
+          ssh-keyscan -H 45.141.79.120 >> ~/.ssh/known_hosts
 
       - name: Deploy to Server
-        uses: appleboy/ssh-action@master
-        with:
-          host: 45.141.79.120
-          username: root
-          key: ${{ secrets.DEPLOY_KEY }}
-          script: |
-            scp -r ./* root@45.141.79.120:project/onviz_service/
+        run: |
+          scp -r ./* root@45.141.79.120:project/onviz_service/
