@@ -1,31 +1,23 @@
-name: Deploy to Server
-
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  run_pull:
+    name: run pull
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up SSH
+      - name: install ssh keys
+        # check this thread to understand why its needed:
+        # https://stackoverflow.com/a/70447517
         run: |
-          sudo chmod 400 /root/.ssh/id_rsa
-          eval "$(ssh-agent -s)"
-          ssh-add /root/.ssh/id_rsa
-          ssh-keyscan -H 45.141.79.120 >> /root/.ssh/known_hosts
-      
-
-      - name: Deploy to Server
-        uses: appleboy/ssh-action@master
-        with:
-          host: 45.141.79.120
-          username: root
-          key: ${{ secrets.DEPLOY_KEY }}
-          script: |
-            scp -r ./* root@45.141.79.120:project/onviz_service/
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+      - name: connect and pull
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && exit"
+      - name: cleanup
+        run: rm -rf ~/.ssh
