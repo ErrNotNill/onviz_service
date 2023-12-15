@@ -68,7 +68,7 @@ func LoginUser() {
 	body := []byte(b)
 
 	req, _ := http.NewRequest(method, Host+uri, bytes.NewReader(body))
-
+	req.Header.Add("access_token", AccessToken)
 	BuildHeader(req, body)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
