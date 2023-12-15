@@ -15,12 +15,11 @@ jobs:
 
       - name: Set up SSH
         run: |
-          mkdir -p ~/.ssh
-          cp /root/.ssh/id_rsa ~/.ssh/id_rsa
+          cp ./root/.ssh/id_rsa ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_rsa
-          ssh-keyscan -H 45.141.79.120 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 45.141.79.120 >> ~/.ssh/id_rsa
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
