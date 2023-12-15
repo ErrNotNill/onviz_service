@@ -20,7 +20,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 45.141.79.120 >> ~/.ssh/github_deploy_key.pub
+          ssh-keyscan -H 45.141.79.120 >> ~/.ssh/known_hosts
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
