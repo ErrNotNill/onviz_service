@@ -5,6 +5,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/SevereCloud/vksdk/v2/api"
+	"github.com/SevereCloud/vksdk/v2/api/params"
 	"github.com/SevereCloud/vksdk/v2/callback"
 	"github.com/SevereCloud/vksdk/v2/events"
 	"log"
@@ -40,6 +42,26 @@ func CallBack(w http.ResponseWriter, r *http.Request) {
 	cb.SecretKey = SecretKey
 
 	fmt.Println("Confirmation accepted")
+
+	cb.MessageNew(func(ctx context.Context, obj events.MessageNewObject) {
+		vk := api.NewVK(ConfirmationToken)
+		fmt.Println("obj.ClientInfo", obj.ClientInfo)
+		fmt.Println("obj.Message.PeerID", obj.Message.PeerID)
+		fmt.Println("obj.Message.ID", obj.Message.ID)
+		fmt.Println("obj.Message.Text", obj.Message.Text)
+		if obj.Message.Text == "ping" {
+			b := params.NewMessagesSendBuilder()
+			b.Message("pong")
+			b.RandomID(0)
+			b.PeerID(obj.Message.PeerID)
+
+			_, err := vk.MessagesSend(b.Params)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+
+	})
 
 	cb.WallReplyNew(func(ctx context.Context, obj events.WallReplyNewObject) {
 
