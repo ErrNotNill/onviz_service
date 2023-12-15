@@ -13,12 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Debug SSH Agent
-        working-directory: .root/project/onviz_service/actions-runner/
-        run: |
-          eval "$(ssh-agent -s)"
-          ssh-add -l
-
       - name: Debug Workflow
         run: |
           pwd
