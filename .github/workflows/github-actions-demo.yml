@@ -13,7 +13,6 @@ jobs:
 
       - name: Connect and pull
         run: |
-          eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_rsa
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull"
 
