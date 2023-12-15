@@ -25,11 +25,3 @@ jobs:
           ssh-add ~/.ssh/id_rsa
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git pull"
 
-  cleanup:
-    runs-on: ubuntu-latest
-    needs: run_pull
-    steps:
-      - name: Kill SSH agent and cleanup
-        run: |
-          eval "$(ssh-agent -k)"
-          rm -rf ~/.ssh
