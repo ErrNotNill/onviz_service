@@ -1,51 +1,32 @@
-name: Your Workflow Name
+name: Deploy to Server
 
 on:
   push:
     branches:
-      - main  # Replace with your main branch name
+      - main
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Debug SSH Agent
-        run: |
-          eval "$(ssh-agent -s)"
-          echo $SSH_AUTH_SOCK
-          ssh-add -l
-
-      - name: Set Permissions
-        run: chmod 600 ~/.ssh/id_rsa
-
-      - name: Debug Workflow
-        run: |
-          pwd
-          ls -la /root/project/onviz_service/actions-runner
-          ls -la /root/project/onviz_service/actions-runner
-
-      - name: Change Directory
-        run: cd /root/project/onviz_service/actions-runner
-
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
-              echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_rsa
           ssh-keyscan -H 45.141.79.120 >> ~/.ssh/known_hosts
 
-      - name: Debug SSH-Add
-        run: |
-          ssh-add -l
-
-      - name: Clean Known Hosts
-        run: rm -f ~/.ssh/known_hosts
-
       - name: Deploy to Server
-        run: |
-          scp -r ./* root@45.141.79.120:root/project/onviz_service/
+        uses: appleboy/ssh-action@master
+        with:
+          host: 45.141.79.120
+          username: root
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            scp -r ./* root@45.141.79.120:project/onviz_service/
