@@ -19,7 +19,7 @@ import (
 
 func main() {
 	//queue.MqttInit()
-
+	fmt.Println("test github")
 	repository.Auth() //not used now
 
 	//load .env file
