@@ -7,21 +7,21 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Debug SSH files
-        run: ls -la /home/runner/.ssh
+        run: ls -la /root/project/actions-runner/run.sh
 
       - name: Set up SSH
         run: |
-          sudo chmod 400 ~/.ssh/id_rsa
+          sudo chmod 400 /root/.ssh/id_rsa
           eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/id_rsa
-          ssh-keyscan -H 45.141.79.120 >> ~/.ssh/known_hosts
+          ssh-add /root/.ssh/id_rsa
+          ssh-keyscan -H 45.141.79.120 >> /root/.ssh/known_hosts
       
 
       - name: Deploy to Server
