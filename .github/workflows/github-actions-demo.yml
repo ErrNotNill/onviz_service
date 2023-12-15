@@ -6,19 +6,23 @@ on:
 
 jobs:
   run_pull:
-    name: console
+    name: run pull
     runs-on: ubuntu-latest
 
     steps:
       - name: Set up Git and SSH
         run: |
+          mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
 
+      - name: Debug SSH files
+        run: ls -la ~/.ssh
+
       - name: Connect and pull
         run: |
-          eval "$(ssh-agent)"
+          eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_rsa
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull"
 
