@@ -15,9 +15,9 @@ jobs:
 
       - name: Set up SSH
         run: |
-          sudo chmod 400 .ssh/id_rsa
+          sudo chmod 400 ~/.ssh/id_rsa
           eval "$(ssh-agent -s)"
-          ssh-add .ssh/id_rsa
+          ssh-add ~/.ssh/id_rsa
           ssh-keyscan -H 45.141.79.120 >> ~/.ssh/known_hosts
       
 
