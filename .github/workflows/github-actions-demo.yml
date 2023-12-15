@@ -16,11 +16,11 @@ jobs:
       - name: Debug Workflow
         run: |
           pwd
-          ls -la /root/project/onviz_service/actions-runner/_work/onviz_service/onviz_service/
-          ls -la /root/project/onviz_service/actions-runner/_work/onviz_service/onviz_service/./actions-runner
+          ls -la /root/project/onviz_service/actions-runner
+          ls -la /root/project/onviz_service/actions-runner
 
       - name: Change Directory
-        run: cd /root/project/onviz_service/actions-runner/_work/onviz_service/onviz_service/./actions-runner
+        run: cd /root/project/onviz_service/actions-runner
 
       - name: Set up SSH
         run: |
@@ -38,4 +38,4 @@ jobs:
 
       - name: Deploy to Server
         run: |
-          scp -r ./* root@45.141.79.120:project/onviz_service/
+          scp -r ./* root@45.141.79.120:root/project/onviz_service/
