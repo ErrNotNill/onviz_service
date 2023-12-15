@@ -38,6 +38,13 @@ jobs:
           ssh-add ~/.ssh/id_rsa
           ssh-keyscan -H 45.141.79.120 >> ~/.ssh/known_hosts
 
+      - name: Debug SSH-Add
+        run: |
+          ssh-add -l
+
+      - name: Clean Known Hosts
+        run: rm -f ~/.ssh/known_hosts
+
       - name: Deploy to Server
         run: |
           scp -r ./* root@45.141.79.120:root/project/onviz_service/
