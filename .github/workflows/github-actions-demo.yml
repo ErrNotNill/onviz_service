@@ -14,7 +14,7 @@ jobs:
       - name: Set up SSH agent
         run: |
           eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/key
+          ssh-add ~/.ssh/id_rsa
           echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> $GITHUB_ENV
           echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $GITHUB_ENV
           
@@ -22,7 +22,7 @@ jobs:
       - name: Connect and pull
         run: |
           eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/key
+          ssh-add ~/.ssh/id_rsa
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git pull"
 
   cleanup:
