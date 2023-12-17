@@ -13,17 +13,22 @@ jobs:
 
       - name: Set up SSH agent
         run: |
+          mkdir -p ~/.ssh
+          echo "Host example-server" >> ~/.ssh/config
+          echo "  HostName example.com" >> ~/.ssh/config
+          echo "  User your-ssh-user" >> ~/.ssh/config
+          echo "  IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
+          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh/id_rsa
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_rsa
           echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> $GITHUB_ENV
           echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $GITHUB_ENV
-          
 
       - name: Connect and pull
         run: |
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/id_rsa
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git pull"
+          ssh-keyscan -H example.com >> ~/.ssh/known_hosts
+          ssh example-server "cd ${{ secrets.WORK_DIR }} && git pull"
 
   cleanup:
     runs-on: ubuntu-latest
