@@ -26,6 +26,7 @@ func Router() {
 	})
 	http.Handle("/api/auth_page", c.Handler(http.HandlerFunc(repository2.AuthPage)))
 	http.Handle("/api/login_page", c.Handler(http.HandlerFunc(repository2.LoginPage)))
+	http.HandleFunc("/api/callback/code", repository2.CallbackHandler)
 
 	//http.HandleFunc("/devices/:device_id", tuya2.GetDeviceNew)
 	http.HandleFunc("/api/v1.0/", yandex2.CheckConnection)
@@ -39,6 +40,8 @@ func Router() {
 	http.HandleFunc("/api/yandex/v1.0/user/unlink", service.UnlinkUser)
 	http.HandleFunc("/api/yandex/v1.0/user/devices/query", service.GetDevicesStatus)
 	http.HandleFunc("/api/yandex/v1.0/user/devices/action", service.GetDevicesStatusChanged)
+	http.HandleFunc("/api/yandex/v1.0/get_token", service.SendAccessTokenForYandex)
+	http.HandleFunc("/api/yandex/v1.0/refresh_token", service.SendRefreshTokenForYandex)
 
 	http.HandleFunc("/api/v1.0", yandex2.CheckConnectionYandex)
 	http.HandleFunc("/api/get_auth_token", repository2.GetAuthTokenYandex)

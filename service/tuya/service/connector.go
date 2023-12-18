@@ -45,7 +45,31 @@ func watitSignal() {
 	}
 }
 
-func GetDevicesStatusChanged(w http.ResponseWriter, r *http.Request) {
+func SendAccessTokenForYandex(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		w.WriteHeader(http.StatusOK)
+		bs, _ := io.ReadAll(r.Body)
+		log.Println("response:::", string(bs))
+		reqId := fmt.Sprintf(`{
+  "token": %v,
+}`, AccessToken)
+		w.Write([]byte(reqId))
+	}
+}
+
+func SendRefreshTokenForYandex(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		w.WriteHeader(http.StatusOK)
+		bs, _ := io.ReadAll(r.Body)
+		log.Println("response:::", string(bs))
+		reqId := fmt.Sprintf(`{
+  "request_id": %v,
+}`, RefreshTokenVal)
+		w.Write([]byte(reqId))
+	}
+}
+
+func GetDevicesStatus(w http.ResponseWriter, r *http.Request) {
 	var requestId int
 	if r.Method == "POST" {
 		w.WriteHeader(http.StatusOK)
@@ -58,7 +82,7 @@ func GetDevicesStatusChanged(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetDevicesStatus(w http.ResponseWriter, r *http.Request) {
+func GetDevicesStatusChanged(w http.ResponseWriter, r *http.Request) {
 	var requestId int
 	if r.Method == "POST" {
 		w.WriteHeader(http.StatusOK)

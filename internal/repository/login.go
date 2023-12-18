@@ -18,6 +18,7 @@ import (
 	"onviz/DB"
 	"onviz/internal/user/models"
 	"onviz/service/tuya/service"
+	"os"
 )
 
 func CreateAccount(name, email, password string) error {
@@ -100,6 +101,24 @@ func AuthPage(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseJSON)
 }
 
+func CallbackHandler(w http.ResponseWriter, r *http.Request) {
+	// Handle the callback after the user authorizes your application
+	code := r.URL.Query().Get("code")
+
+	// Exchange the authorization code for an access token
+	token, err := OauthConfig.Exchange(context.Background(), code)
+	if err != nil {
+		log.Printf("Error exchanging code for token: %v", err)
+		http.Error(w, "Error exchanging code for token", http.StatusInternalServerError)
+		return
+	}
+
+	// You can now use the access token to make authenticated requests to the OAuth provider's API
+	fmt.Printf("Access Token: %v\n", token.AccessToken)
+
+	// Your existing code...
+}
+
 func LoginPage(w http.ResponseWriter, r *http.Request) {
 
 	var userData models.UserData
@@ -128,7 +147,24 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("countryCode : %v, userData.Email : %v, userData.Password : %v", countryCode, userData.Email, userData.Password)
 
 	if userData.Email != "" {
+
 		uid := GetUserFromDbase(userData.Email)
+		if uid != "" {
+			oau := OauthConfig
+			oau.ClientID = uid
+			oau.ClientSecret = os.Getenv("TUYA_SECRET_KEY")
+			oau.RedirectURL = fmt.Sprintf("https://social.yandex.net/broker/redirect")
+
+			url := oau.AuthCodeURL("state", oauth2.AccessTypeOffline)
+
+			//todo probably need to parse `state` from yandex response
+			http.Redirect(w, r, url, http.StatusTemporaryRedirect)
+			bs, _ := io.ReadAll(r.Body)
+			fmt.Println("REDIRECT BODY >>>> ::: ", string(bs))
+			fmt.Println("URL>>>>>>>>>>:::::", url)
+			fmt.Println("redirect started")
+		}
+
 		service.GetDevicesFromUser(uid)
 		fmt.Println("uid_uid_uid::::", uid)
 	} else {
