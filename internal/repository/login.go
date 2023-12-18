@@ -15,6 +15,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"onviz/DB"
 	"onviz/internal/user/models"
 	"onviz/service/tuya/service"
@@ -119,6 +120,22 @@ func CallbackHandler(w http.ResponseWriter, r *http.Request) {
 	// Your existing code...
 }
 
+func GenerateYandexAuthURL(clientID, redirectURI, scope, state string) string {
+	baseURL := "https://oauth.yandex.com/authorize"
+	authURL, _ := url.Parse(baseURL)
+
+	queryParams := url.Values{}
+	queryParams.Add("client_id", clientID)
+	queryParams.Add("redirect_uri", redirectURI)
+	queryParams.Add("response_type", "code")
+	queryParams.Add("scope", scope)
+	queryParams.Add("state", state)
+
+	authURL.RawQuery = queryParams.Encode()
+
+	return authURL.String()
+}
+
 func LoginPage(w http.ResponseWriter, r *http.Request) {
 
 	//w.WriteHeader(http.StatusOK)
@@ -151,20 +168,23 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 
 		uid := GetUserFromDbase(userData.Email)
 		if uid != "" {
+
 			oau := OauthConfig
 			oau.ClientID = uid
 			oau.ClientSecret = os.Getenv("TUYA_SECRET_KEY")
 			oau.RedirectURL = fmt.Sprintf("https://social.yandex.net/broker/redirect/")
 
-			url := oau.AuthCodeURL("state", oauth2.AccessTypeOffline)
+			authUrl := GenerateYandexAuthURL(oau.ClientID, oau.RedirectURL, "scope", "state")
 
-			convUrl := oau.RedirectURL + url
+			//url := oau.AuthCodeURL("state", oauth2.AccessTypeOffline)
+
+			//convUrl := oau.RedirectURL + url
 
 			//todo probably need to parse `state` from yandex response
-			http.Redirect(w, r, convUrl, http.StatusSeeOther)
+			http.Redirect(w, r, authUrl, http.StatusSeeOther)
 			bs, _ := io.ReadAll(r.Body)
 			fmt.Println("REDIRECT BODY >>> ::: ", string(bs))
-			fmt.Println("URL>>>>>>>>>>:::::", url)
+			fmt.Println("URL>>>>>>>>>>:::::", authUrl)
 			fmt.Println("redirect started")
 		}
 
