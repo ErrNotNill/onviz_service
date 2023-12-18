@@ -258,7 +258,7 @@ func DeviceControl(deviceId string) {
     },
     {
       "code": "percent_control",
-      "value": 100
+      "value": 0
     }
   ]
 }`

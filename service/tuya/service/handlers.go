@@ -17,6 +17,7 @@ func TheTuyaAllFunctions() {
 	//706020145002916b779e //my device
 	//bf223afc6530ce5259mfcx
 	myDeviceId := `706020145002916b779e`
+	//DeviceControl(myDeviceId)
 	GetToken()
 	GetDevice(myDeviceId)
 	GetDeviceList()

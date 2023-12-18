@@ -154,12 +154,12 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 			oau := OauthConfig
 			oau.ClientID = uid
 			oau.ClientSecret = os.Getenv("TUYA_SECRET_KEY")
-			oau.RedirectURL = fmt.Sprintf("https://social.yandex.net/broker/redirected")
+			oau.RedirectURL = fmt.Sprintf("https://social.yandex.net/broker/redirect")
 
 			url := oau.AuthCodeURL("state", oauth2.AccessTypeOffline)
 
 			//todo probably need to parse `state` from yandex response
-			http.Redirect(w, r, url, http.StatusTemporaryRedirect)
+			http.Redirect(w, r, url, http.StatusSeeOther)
 			bs, _ := io.ReadAll(r.Body)
 			fmt.Println("REDIRECT BODY >>>> ::: ", string(bs))
 			fmt.Println("URL>>>>>>>>>>:::::", url)
