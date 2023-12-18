@@ -158,8 +158,10 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 
 			url := oau.AuthCodeURL("state", oauth2.AccessTypeOffline)
 
+			convUrl := oau.RedirectURL + url
+
 			//todo probably need to parse `state` from yandex response
-			http.Redirect(w, r, url, http.StatusSeeOther)
+			http.Redirect(w, r, convUrl, http.StatusSeeOther)
 			bs, _ := io.ReadAll(r.Body)
 			fmt.Println("REDIRECT BODY >>>> ::: ", string(bs))
 			fmt.Println("URL>>>>>>>>>>:::::", url)
