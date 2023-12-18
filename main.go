@@ -19,6 +19,7 @@ import (
 
 func main() {
 	//queue.MqttInit()
+
 	repository.Auth() //not used now
 
 	fmt.Println("good luck ^_^")
