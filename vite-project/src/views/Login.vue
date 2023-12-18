@@ -319,7 +319,6 @@ function signinUser() {
 
       // Set showSidebar to true to display the Sidebar
 
-
       // Redirect to the desired URL
       //window.location.href = 'http://localhost:5173/leads'; // Replace with the URL you want to redirect to
     })
@@ -329,7 +328,6 @@ function signinUser() {
       alert('Login failed...');
     });
 }
-
 
 function signupUser() {
   // Client-side validation

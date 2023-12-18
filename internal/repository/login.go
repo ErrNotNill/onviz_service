@@ -120,6 +120,7 @@ func CallbackHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
+
 	w.WriteHeader(http.StatusOK)
 	var userData models.UserData
 	if r.Method != http.MethodPost {
@@ -153,7 +154,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 			oau := OauthConfig
 			oau.ClientID = uid
 			oau.ClientSecret = os.Getenv("TUYA_SECRET_KEY")
-			oau.RedirectURL = fmt.Sprintf("https://social.yandex.net/broker/redirect")
+			oau.RedirectURL = fmt.Sprintf("https://social.yandex.net/broker/redirected")
 
 			url := oau.AuthCodeURL("state", oauth2.AccessTypeOffline)
 
