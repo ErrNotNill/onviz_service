@@ -21,6 +21,8 @@ func main() {
 	//queue.MqttInit()
 	repository.Auth() //not used now
 
+	fmt.Println("good luck ^_^")
+
 	//load .env file
 	if err := godotenv.Load(filepath.Join(".env")); err != nil {
 		log.Print("No .env file found")
