@@ -191,11 +191,13 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 
 func RedirectPage(w http.ResponseWriter, r *http.Request) {
 	//w.WriteHeader(http.StatusOK)
+	fmt.Println("redirect started")
 
 	method := "GET"
 	body := []byte(``)
 	req, _ := http.NewRequest(method, "https://social.yandex.net/broker/redirect/", bytes.NewReader(body))
 	req.Header.Get("X-Request-Id")
+	log.Println("r.Header", r.Header)
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -224,7 +226,6 @@ func RedirectPage(w http.ResponseWriter, r *http.Request) {
 	bs, _ := io.ReadAll(r.Body)
 	fmt.Println("REDIRECT BODY >>> ::: ", string(bs))
 	fmt.Println("URL>>>>>>>>>>:::::", authUrl)
-	fmt.Println("redirect started")
 
 }
 
