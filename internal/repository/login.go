@@ -193,7 +193,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
-func RedirectPageHandler(w http.ResponseWriter, r *http.Request) {
+func RedirectPage(w http.ResponseWriter, r *http.Request) {
 	//w.WriteHeader(http.StatusOK)
 	fmt.Println("redirect started")
 
