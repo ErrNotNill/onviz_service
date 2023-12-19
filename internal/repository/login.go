@@ -147,7 +147,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("string(readerFromYandex):::", string(readerFromYandex))
 
 	//w.WriteHeader(http.StatusOK)
-	var userData models.UserData
+	var userData models.UserDataOnviz
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
@@ -157,8 +157,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("Error decoding JSON", err.Error())
 	}
-
-	w.Header().Set("Content-Type", "application/json")
+	fmt.Printf("countryCode : %v, userData.Email : %v, userData.Password : %v", userData.Country, userData.Email, userData.Password)
 
 	countryCode := service.GetCountryCodeFromDbase(userData.Country)
 

@@ -8,3 +8,9 @@ type UserData struct {
 	Token    string `json:"token omitempty"`
 	Country  string `json:"country omitempty"`
 }
+
+type UserDataOnviz struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Country  string `json:"country"`
+}
