@@ -2,7 +2,9 @@ package repository
 
 import (
 	"context"
+	"crypto/rand"
 	"crypto/sha256"
+	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -181,7 +183,32 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 
 func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	//w.WriteHeader(http.StatusOK)
-	r.Header.Get("X-Request-Id")
+	state := r.FormValue("state")
+	redirectURI := r.FormValue("redirect_uri")
+	responseType := r.FormValue("response_type")
+	clientID := r.FormValue("client_id")
+	scope := r.FormValue("scope")
+
+	// Log the extracted parameters (you can customize this part)
+	log.Printf("Received OAuth parameters:\nState: %s\nRedirect URI: %s\nResponse Type: %s\nClient ID: %s\nScope: %s\n",
+		state, redirectURI, responseType, clientID, scope)
+
+	ClientID := os.Getenv("TUYA_CLIENT_ID")
+	//ClientSecret := os.Getenv("TUYA_SECRET_KEY")
+	authorizationEndpoint := "https://authorization-server.com/auth"
+	redirectUri := "https://social.yandex.net/broker/redirect"
+
+	state, err := generateRandomState()
+	if err != nil {
+		log.Println("Error generating random state:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	authorizationURL := fmt.Sprintf("%s?response_type=code&client_id=%s&redirect_uri=%s&scope=read&state=%s",
+		authorizationEndpoint, ClientID, redirectUri, state)
+
+	http.Redirect(w, r, authorizationURL, http.StatusFound)
 
 	rdr, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -261,6 +288,19 @@ func ExchangeAuthorizationCodeForToken(code string) (string, string, error) {
 	}
 
 	return token.AccessToken, token.RefreshToken, nil
+}
+
+func generateRandomState() (string, error) {
+	stateLength := 32
+	byteSize := stateLength / 4
+	randomBytes := make([]byte, byteSize)
+	_, err := rand.Read(randomBytes)
+	if err != nil {
+		return "", err
+	}
+	state := base64.URLEncoding.EncodeToString(randomBytes)
+	state = state[:len(state)-1]
+	return state, nil
 }
 
 func Auth() {
