@@ -226,9 +226,11 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	redirectURL := fmt.Sprintf("%s?state=%s&response_type=%s&client_id=%s&scope=%s",
 		redirectURI, state, responseType, clientID, scope)
 
+	log.Println("Redirect URL is: ", redirectURL)
 	// Use http.Redirect to perform the redirect
 	http.Redirect(w, r, redirectURL, http.StatusFound)
 	bs, _ := io.ReadAll(r.Body)
+
 	fmt.Println("rdr:::", string(bs))
 
 	/*//code, state, client_id и scope
