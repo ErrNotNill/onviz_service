@@ -207,6 +207,7 @@ func SplitString(path string) string {
 
 func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	//w.WriteHeader(http.StatusOK)
+	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	state := r.FormValue("state")
 	redirectURI := r.FormValue("redirect_uri")
 	responseType := r.FormValue("response_type")
