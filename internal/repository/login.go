@@ -136,6 +136,8 @@ func GenerateYandexAuthURL(clientID, redirectURI, scope, state string) string {
 	return authURL.String()
 }
 
+var UserFromTuya string
+
 func LoginPage(w http.ResponseWriter, r *http.Request) {
 
 	//w.WriteHeader(http.StatusOK)
@@ -168,26 +170,9 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 
 		uid := GetUserFromDbase(userData.Email)
 		if uid != "" {
-
-			oau := OauthConfig
-			oau.ClientID = uid
-			oau.ClientSecret = os.Getenv("TUYA_SECRET_KEY")
-			oau.RedirectURL = fmt.Sprintf("https://social.yandex.net/broker/redirect/")
-
-			authUrl := GenerateYandexAuthURL(oau.ClientID, oau.RedirectURL, "scope", "state")
-
-			//url := oau.AuthCodeURL("state", oauth2.AccessTypeOffline)
-
-			//convUrl := oau.RedirectURL + url
-
-			//todo probably need to parse `state` from yandex response
-			http.Redirect(w, r, authUrl, http.StatusSeeOther)
-			bs, _ := io.ReadAll(r.Body)
-			fmt.Println("REDIRECT BODY >>> ::: ", string(bs))
-			fmt.Println("URL>>>>>>>>>>:::::", authUrl)
-			fmt.Println("redirect started")
+			UserFromTuya = uid
+			w.WriteHeader(http.StatusOK)
 		}
-
 		service.GetDevicesFromUser(uid)
 		fmt.Println("uid_uid_uid::::", uid)
 	} else {
@@ -228,6 +213,26 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}*/
+}
+
+func RedirectPage(w http.ResponseWriter, r *http.Request) {
+	oau := OauthConfig
+	oau.ClientID = UserFromTuya
+	oau.ClientSecret = os.Getenv("TUYA_SECRET_KEY")
+	oau.RedirectURL = fmt.Sprintf("https://social.yandex.net/broker/redirect/")
+
+	authUrl := GenerateYandexAuthURL(oau.ClientID, oau.RedirectURL, "scope", "state")
+
+	//url := oau.AuthCodeURL("state", oauth2.AccessTypeOffline)
+
+	//convUrl := oau.RedirectURL + url
+
+	//todo probably need to parse `state` from yandex response
+	http.Redirect(w, r, authUrl, http.StatusSeeOther)
+	bs, _ := io.ReadAll(r.Body)
+	fmt.Println("REDIRECT BODY >>> ::: ", string(bs))
+	fmt.Println("URL>>>>>>>>>>:::::", authUrl)
+	fmt.Println("redirect started")
 }
 
 func GetUserFromDbase(email string) string {

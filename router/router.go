@@ -26,6 +26,8 @@ func Router() {
 	})
 	http.Handle("/api/auth_page", c.Handler(http.HandlerFunc(repository2.AuthPage)))
 	http.Handle("/api/login_page", c.Handler(http.HandlerFunc(repository2.LoginPage)))
+	http.HandleFunc("/api/redirect", repository2.RedirectPage) //here user redirects from login page
+
 	http.HandleFunc("/api/callback/code", repository2.CallbackHandler)
 
 	//http.HandleFunc("/devices/:device_id", tuya2.GetDeviceNew)

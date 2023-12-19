@@ -254,7 +254,7 @@ func DeviceControl(deviceId string) {
   "commands": [
     {
       "code": "control",
-      "value": "stop"
+      "value": "start"
     },
     {
       "code": "percent_control",
