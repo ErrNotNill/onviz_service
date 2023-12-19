@@ -176,40 +176,16 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 	}
 
-	/*uid := service.SynchronizeUser(countryCode, userData.Email, userData.Password)
-	if uid != "" {
-		fmt.Println("UID_UID_UID:::", uid)
-	}
-	*/
+}
 
-	/*if r.Body != nil && r.Method == "POST" && r.Header != nil {
-		// Check if the email exists
-		var dbEmail string
-		var dbPassword string
-		err := DB.Db.QueryRow("SELECT Email, Password FROM Users WHERE Email = ?", userData.Email).Scan(&dbEmail, &dbPassword)
-		if err != nil {
-			if err == sql.ErrNoRows {
-				// Email doesn't exist in the database
-				w.WriteHeader(http.StatusBadRequest)
-				fmt.Println("Email not found in the database:", err)
-			} else {
-				// Some other error occurred
-				w.WriteHeader(http.StatusInternalServerError)
-				fmt.Println("Error querying the database:", err)
-			}
-		} else {
-			// Email exists in the database
-			// Now, check if the passwords match
-			if userData.Password != dbPassword {
-				// Passwords do not match
-				w.WriteHeader(http.StatusUnauthorized) // You can use 401 (Unauthorized) for this
-				fmt.Println("Passwords do not match")
-			} else {
-				// Passwords match
-				w.WriteHeader(http.StatusOK)
-			}
-		}
-	}*/
+func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
+	rdr, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println("Error reading to access page", err.Error())
+	}
+	log.Println(string(rdr))
+	w.WriteHeader(http.StatusOK)
+	http.Redirect(w, r, "/", http.StatusFound)
 }
 
 func RedirectPage(w http.ResponseWriter, r *http.Request) {
@@ -339,4 +315,41 @@ func GetAuthTokenYandex(w http.ResponseWriter, r *http.Request) {
 	defer resp.Body.Close()
 	bs, _ := io.ReadAll(resp.Body)
 	log.Println("resp:", string(bs))
+}
+
+func LogicForSynchronizeUser() {
+	/*uid := service.SynchronizeUser(countryCode, userData.Email, userData.Password)
+	if uid != "" {
+		fmt.Println("UID_UID_UID:::", uid)
+	}
+	*/
+
+	/*if r.Body != nil && r.Method == "POST" && r.Header != nil {
+		// Check if the email exists
+		var dbEmail string
+		var dbPassword string
+		err := DB.Db.QueryRow("SELECT Email, Password FROM Users WHERE Email = ?", userData.Email).Scan(&dbEmail, &dbPassword)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				// Email doesn't exist in the database
+				w.WriteHeader(http.StatusBadRequest)
+				fmt.Println("Email not found in the database:", err)
+			} else {
+				// Some other error occurred
+				w.WriteHeader(http.StatusInternalServerError)
+				fmt.Println("Error querying the database:", err)
+			}
+		} else {
+			// Email exists in the database
+			// Now, check if the passwords match
+			if userData.Password != dbPassword {
+				// Passwords do not match
+				w.WriteHeader(http.StatusUnauthorized) // You can use 401 (Unauthorized) for this
+				fmt.Println("Passwords do not match")
+			} else {
+				// Passwords match
+				w.WriteHeader(http.StatusOK)
+			}
+		}
+	}*/
 }

@@ -261,6 +261,7 @@ function validatePassword(password) {
   return passwordRegex.test(password);
 }
 
+
 function signinUser() {
   // Create an object with the user's login data
   if (!selectedCountry.value) {
