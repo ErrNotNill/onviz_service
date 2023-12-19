@@ -212,7 +212,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	responseType := r.FormValue("response_type")
 	clientID := r.FormValue("client_id")
 	scope := r.FormValue("scope")
-	//splState := SplitString(state)
+	splState := SplitString(state)
 	// Log the extracted parameters (you can customize this part)
 	log.Printf("Received OAuth parameters:\nState: %s\nRedirect URI: %s\nResponse Type: %s\nClient ID: %s\nScope: %s\n",
 		state, redirectURI, responseType, clientID, scope)
@@ -224,7 +224,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	//log.Println("State NEW: ", splState)
 
 	redirectURL := fmt.Sprintf("%s?state=%s&response_type=%s&client_id=%s&scope=%s",
-		redirectURI, state, responseType, clientID, scope)
+		redirectURI, splState, responseType, clientID, scope)
 
 	log.Println("Redirect URL is: ", redirectURL)
 	// Use http.Redirect to perform the redirect
