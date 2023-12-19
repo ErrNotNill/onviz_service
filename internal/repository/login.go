@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"bytes"
 	"context"
 	"crypto/rand"
 	"crypto/sha256"
@@ -205,6 +206,8 @@ func SplitString(path string) string {
 	return FinalStr
 }
 
+var states = make(map[string]bool)
+
 func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	//w.WriteHeader(http.StatusOK)
 	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -234,7 +237,6 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("rdr:::", string(bs))
 
-	/*//code, state, client_id и scope
 	code, err := generateRandomCode()
 	if err != nil {
 		log.Printf("Error generating")
@@ -248,13 +250,20 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	req.Header.Add("client_id", clientID)
 	req.Header.Add("scope", scope)
 
-	dcd, err := http.DefaultClient.Do(req)
+	newState, err := generateRandomCode()
 	if err != nil {
-		log.Println(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	bs, _ := io.ReadAll(dcd.Body)
-	fmt.Println("bs:::", string(bs))*/
+
+	states[state] = true
+
+	// Construct the authorization URL with parameters
+	authorizationURL := fmt.Sprintf("%s?response_type=code&client_id=%s&redirect_uri=%s&scope=read&state=%s",
+		redirectURI, clientID, redirectURI, newState)
+
+	// Redirect the user to the authorization URL
+	http.Redirect(w, r, authorizationURL, http.StatusFound)
 
 	/*ClientID := os.Getenv("TUYA_CLIENT_ID")
 	//ClientSecret := os.Getenv("TUYA_SECRET_KEY")
