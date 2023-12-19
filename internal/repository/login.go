@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"bytes"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
@@ -12,7 +11,6 @@ import (
 	models2 "github.com/go-oauth2/oauth2/v4/models"
 	"github.com/go-oauth2/oauth2/v4/server"
 	"github.com/go-oauth2/oauth2/v4/store"
-	uuid "github.com/satori/go.uuid"
 	"golang.org/x/oauth2"
 	"io"
 	"log"
@@ -194,35 +192,27 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func RedirectPage(w http.ResponseWriter, r *http.Request) {
-	//w.WriteHeader(http.StatusOK)
-	fmt.Println("redirect started")
+
+	r.Header.Add("X-Request-Id", "fb3f2807-3af6-4fbd-aaf2-42b5402d15e4")
+
+	http.Redirect(w, r, "https://social.yandex.net/broker/redirect/", http.StatusFound)
 
 	oau := OauthConfig
 	oau.ClientID = os.Getenv("TUYA_CLIENT_ID")
 	oau.ClientSecret = os.Getenv("TUYA_SECRET_KEY")
+	oau.RedirectURL = fmt.Sprintf("https://social.yandex.net/broker/redirect/")
 
-	method := "GET"
-	body := []byte(``)
-	req, _ := http.NewRequest(method, "https://social.yandex.net/broker/redirect/", bytes.NewReader(body))
-	xRequestID := uuid.NewV4().String()
+	authUrl := GenerateYandexAuthURL(oau.ClientID, oau.RedirectURL, "scope", "state")
 
-	req.Header.Set("X-Request-Id", xRequestID)
-	req.Header.Set("client_id", oau.ClientID)
-	req.Header.Set("access_token", service.AccessToken)
-	req.Header.Set("secret", oau.ClientSecret)
+	//url := oau.AuthCodeURL("state", oauth2.AccessTypeOffline)
 
-	dd := r.Header.Get("X-Request-Id")
-	log.Println("r.Header.Get(\"X-Request-Id\")", dd)
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	defer resp.Body.Close()
-	rdr, _ := io.ReadAll(r.Body)
-	log.Println("string(bs_bs_bs):", string(rdr))
+	//convUrl := oau.RedirectURL + url
 
-	http.Redirect(w, r, "https://social.yandex.net/broker/redirect/", http.StatusFound)
+	//todo probably need to parse `state` from yandex response
+	//http.Redirect(w, r, authUrl, http.StatusSeeOther)
+	bs, _ := io.ReadAll(r.Body)
+	fmt.Println("REDIRECT BODY >>> ::: ", string(bs))
+	fmt.Println("URL>>>>>>>>>>:::::", authUrl)
 
 }
 
