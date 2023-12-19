@@ -179,12 +179,12 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 	rdr, err := io.ReadAll(r.Body)
 	if err != nil {
 		log.Println("Error reading to access page", err.Error())
 	}
 	log.Println(string(rdr))
-	w.WriteHeader(http.StatusOK)
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
