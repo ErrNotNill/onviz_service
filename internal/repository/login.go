@@ -167,11 +167,12 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("countryCode : %v, userData.Email : %v, userData.Password : %v", countryCode, userData.Email, userData.Password)
 
 	if userData.Email != "" {
-
+		fmt.Println("userData.Email_userData.Email_userData.Email", userData.Email)
 		uid := GetUserFromDbase(userData.Email)
 		if uid != "" {
-			UserFromTuya = uid
+			fmt.Println("uid_uid_uid_uid_uid::: ", uid)
 			w.WriteHeader(http.StatusOK)
+			UserFromTuya = uid
 		}
 		service.GetDevicesFromUser(uid)
 		fmt.Println("uid_uid_uid::::", uid)
@@ -216,6 +217,8 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func RedirectPage(w http.ResponseWriter, r *http.Request) {
+
+	w.WriteHeader(http.StatusOK)
 	oau := OauthConfig
 	oau.ClientID = UserFromTuya
 	oau.ClientSecret = os.Getenv("TUYA_SECRET_KEY")
@@ -233,6 +236,7 @@ func RedirectPage(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("REDIRECT BODY >>> ::: ", string(bs))
 	fmt.Println("URL>>>>>>>>>>:::::", authUrl)
 	fmt.Println("redirect started")
+
 }
 
 func GetUserFromDbase(email string) string {
