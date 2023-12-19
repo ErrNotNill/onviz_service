@@ -262,21 +262,9 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 
 func extractCallbackID(path string) string {
 	// Find the position of /web/ in the path
-	startIndex := strings.Index(path, "/web/") + len("/web/")
-	if startIndex == -1 {
-		return "" // /web/ not found
-	}
-
-	// Find the position of /callback after /web/
-	endIndex := strings.Index(path[startIndex:], "/callback")
-	if endIndex == -1 {
-		return "" // /callback not found after /web/
-	}
-
-	// Extract the substring between /web/ and /callback
-	callbackID := path[startIndex : startIndex+endIndex]
-
-	return callbackID
+	strings.Cut(path, "https://social.yandex.ru/broker2/authz_in_web/")
+	strings.Cut(path, "/callback")
+	return path
 }
 
 func RedirectPage(w http.ResponseWriter, r *http.Request) {
