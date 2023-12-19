@@ -190,6 +190,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func RedirectPage(w http.ResponseWriter, r *http.Request) {
+	//w.WriteHeader(http.StatusOK)
 
 	method := "GET"
 	body := []byte(``)
@@ -207,7 +208,6 @@ func RedirectPage(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "https://social.yandex.net/broker/redirect/", http.StatusSeeOther)
 
-	w.WriteHeader(http.StatusOK)
 	oau := OauthConfig
 	oau.ClientID = os.Getenv("TUYA_CLIENT_ID")
 	oau.ClientSecret = os.Getenv("TUYA_SECRET_KEY")
