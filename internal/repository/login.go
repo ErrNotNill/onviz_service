@@ -224,7 +224,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	//log.Println("State NEW: ", splState)
 
 	redirectURL := fmt.Sprintf("%s?state=%s&redirect_uri=%s&response_type=%s&client_id=%s&scope=%s",
-		redirectURI, state, responseType, clientID, scope)
+		redirectURI, state, redirectURI, responseType, clientID, scope)
 
 	// Use http.Redirect to perform the redirect
 	http.Redirect(w, r, redirectURL, http.StatusFound)
