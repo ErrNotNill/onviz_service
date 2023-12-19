@@ -140,6 +140,12 @@ var UserFromTuya string
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
 
+	readerFromYandex, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println("Error reading from yandex")
+	}
+	fmt.Println("string(readerFromYandex):::", string(readerFromYandex))
+
 	//w.WriteHeader(http.StatusOK)
 	var userData models.UserData
 	if r.Method != http.MethodPost {
@@ -231,7 +237,7 @@ func RedirectPage(w http.ResponseWriter, r *http.Request) {
 	//convUrl := oau.RedirectURL + url
 
 	//todo probably need to parse `state` from yandex response
-	http.Redirect(w, r, authUrl, http.StatusSeeOther)
+	//http.Redirect(w, r, authUrl, http.StatusSeeOther)
 	bs, _ := io.ReadAll(r.Body)
 	fmt.Println("REDIRECT BODY >>> ::: ", string(bs))
 	fmt.Println("URL>>>>>>>>>>:::::", authUrl)
