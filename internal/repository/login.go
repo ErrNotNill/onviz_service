@@ -184,7 +184,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("Error reading to access page", err.Error())
 	}
-	log.Println(string(rdr))
+	log.Println("string(rdr):", string(rdr))
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
