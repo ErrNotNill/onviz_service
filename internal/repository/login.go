@@ -110,7 +110,7 @@ func CallbackHandler(w http.ResponseWriter, r *http.Request) {
 	code := r.URL.Query().Get("code")
 
 	// Exchange the authorization code for an access token
-	token, err := OauthConfig.Exchange(context.Background(), code)
+	token, err := models.OauthConfig.Exchange(context.Background(), code)
 	if err != nil {
 		log.Printf("Error exchanging code for token: %v", err)
 		http.Error(w, "Error exchanging code for token", http.StatusInternalServerError)
@@ -205,6 +205,52 @@ func SplitString(path string) string {
 	return FinalStr
 }
 
+func Auth() {
+	manager := manage.NewDefaultManager()
+	// token memory store
+	manager.MustTokenStorage(store.NewMemoryTokenStore())
+
+	// client memory store
+	clientStore := store.NewClientStore()
+	clientStore.Set("000000", &models2.Client{
+		ID:     "000000",
+		Secret: "999999",
+		Domain: "http://localhost:9090",
+	})
+	manager.MapClientStorage(clientStore)
+
+	srv := server.NewDefaultServer(manager)
+	srv.SetAllowGetAccessRequest(true)
+	srv.SetClientInfoHandler(server.ClientFormHandler)
+
+	srv.SetInternalErrorHandler(func(err error) (re *errors.Response) {
+		log.Println("Internal Error:", err.Error())
+		return
+	})
+
+	srv.SetResponseErrorHandler(func(re *errors.Response) {
+		log.Println("Response Error:", re.Error.Error())
+	})
+
+	http.HandleFunc("/api/authorize", func(w http.ResponseWriter, r *http.Request) {
+		r.Header.Add("client_id", "9x8wfym7m5vyck7tdwwt")
+		r.Header.Add("client_secret", "d8205ed66f15471fa969aecab48ab495")
+		err := srv.HandleAuthorizeRequest(w, r)
+		if err != nil {
+			log.Println("HandeAuthorizeError")
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		}
+	})
+
+	http.HandleFunc("/api/token", func(w http.ResponseWriter, r *http.Request) {
+		err := srv.HandleTokenRequest(w, r)
+		if err != nil {
+			log.Println("Handler token error")
+			return
+		}
+	})
+}
+
 func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	//w.WriteHeader(http.StatusOK)
 	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -293,7 +339,7 @@ func RedirectPage(w http.ResponseWriter, r *http.Request) {
 	r.Header.Add("X-Request-Id", "fb3f2807-3af6-4fbd-aaf2-42b5402d15e4")
 	http.Redirect(w, r, "https://social.yandex.net/broker/redirect/", http.StatusFound)
 
-	oau := OauthConfig
+	oau := models.OauthConfig
 	oau.ClientID = os.Getenv("TUYA_CLIENT_ID")
 	oau.ClientSecret = os.Getenv("TUYA_SECRET_KEY")
 	oau.RedirectURL = fmt.Sprintf("https://social.yandex.net/broker/redirect/")
@@ -370,45 +416,6 @@ func generateRandomState() (string, error) {
 	state := base64.URLEncoding.EncodeToString(randomBytes)
 	state = state[:len(state)-1]
 	return state, nil
-}
-
-func Auth() {
-	manager := manage.NewDefaultManager()
-	// token memory store
-	manager.MustTokenStorage(store.NewMemoryTokenStore())
-
-	// client memory store
-	clientStore := store.NewClientStore()
-	clientStore.Set("000000", &models2.Client{
-		ID:     "000000",
-		Secret: "999999",
-		Domain: "http://localhost:9090",
-	})
-	manager.MapClientStorage(clientStore)
-
-	srv := server.NewDefaultServer(manager)
-	srv.SetAllowGetAccessRequest(true)
-	srv.SetClientInfoHandler(server.ClientFormHandler)
-
-	srv.SetInternalErrorHandler(func(err error) (re *errors.Response) {
-		log.Println("Internal Error:", err.Error())
-		return
-	})
-
-	srv.SetResponseErrorHandler(func(re *errors.Response) {
-		log.Println("Response Error:", re.Error.Error())
-	})
-
-	http.HandleFunc("/authorize", func(w http.ResponseWriter, r *http.Request) {
-		err := srv.HandleAuthorizeRequest(w, r)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-		}
-	})
-
-	http.HandleFunc("/token", func(w http.ResponseWriter, r *http.Request) {
-		srv.HandleTokenRequest(w, r)
-	})
 }
 
 func GetAuthTokenYandex(w http.ResponseWriter, r *http.Request) {
