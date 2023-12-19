@@ -140,6 +140,7 @@ func GenerateYandexAuthURL(clientID, redirectURI, scope, state string) string {
 var UserFromTuya string
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
+	r.Header.Get("X-Request-Id")
 
 	readerFromYandex, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -182,7 +183,6 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	//w.WriteHeader(http.StatusOK)
 	r.Header.Get("X-Request-Id")
-	log.Println(r.Header)
 
 	rdr, err := io.ReadAll(r.Body)
 	if err != nil {
