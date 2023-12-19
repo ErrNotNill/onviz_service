@@ -192,6 +192,11 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	// Log the extracted parameters (you can customize this part)
 	log.Printf("Received OAuth parameters:\nState: %s\nRedirect URI: %s\nResponse Type: %s\nClient ID: %s\nScope: %s\n",
 		state, redirectURI, responseType, clientID, scope)
+	log.Println("State is: ", state)
+	log.Println("redirectURI is: ", redirectURI)
+	log.Println("responseType is: ", responseType)
+	log.Println("clientID is: ", clientID)
+	log.Println("scope is: ", scope)
 
 	ClientID := os.Getenv("TUYA_CLIENT_ID")
 	//ClientSecret := os.Getenv("TUYA_SECRET_KEY")
