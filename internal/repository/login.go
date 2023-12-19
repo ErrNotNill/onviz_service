@@ -153,7 +153,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	rdr, _ := io.ReadAll(r.Body)
-	err := json.Unmarshal(rdr, &userData)
+	err = json.Unmarshal(rdr, &userData)
 	if err != nil {
 		log.Println("Error decoding JSON")
 	}
