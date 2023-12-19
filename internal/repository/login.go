@@ -169,7 +169,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 		uid := GetUserFromDbase(userData.Email)
 		if uid != "" {
 			fmt.Println("uid_uid_uid_uid_uid::: ", uid)
-			w.WriteHeader(http.StatusOK)
+			//w.WriteHeader(http.StatusOK)
 			UserFromTuya = uid
 			service.GetDevicesFromUser(uid)
 			fmt.Println("uid_uid_uid::::", uid)
