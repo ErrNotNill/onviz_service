@@ -196,6 +196,16 @@ func generateRandomCode() (string, error) {
 	return code, nil
 }
 
+func SplitString(path string) string {
+	newSpl := strings.Split(path, "https://social.yandex.ru/broker2/authz_in_web/")
+	var FinalStr string
+	for _, s := range newSpl {
+		nextSpl := strings.Split(s, "/callback")
+		FinalStr = nextSpl[0]
+	}
+	return FinalStr
+}
+
 func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	//w.WriteHeader(http.StatusOK)
 	state := r.FormValue("state")
@@ -203,8 +213,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	responseType := r.FormValue("response_type")
 	clientID := r.FormValue("client_id")
 	scope := r.FormValue("scope")
-	cbId := extractCallbackID(state)
-
+	splState := SplitString(state)
 	// Log the extracted parameters (you can customize this part)
 	log.Printf("Received OAuth parameters:\nState: %s\nRedirect URI: %s\nResponse Type: %s\nClient ID: %s\nScope: %s\n",
 		state, redirectURI, responseType, clientID, scope)
@@ -213,7 +222,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	log.Println("responseType is: ", responseType)
 	log.Println("clientID is: ", clientID)
 	log.Println("scope is: ", scope)
-	log.Println("State NEW: ", cbId)
+	log.Println("State NEW: ", splState)
 
 	//code, state, client_id и scope
 	code, err := generateRandomCode()
@@ -223,7 +232,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	body := []byte(``)
 	req, _ := http.NewRequest("GET", redirectURI, bytes.NewReader(body))
 	req.Header.Add("code", code)
-	req.Header.Add("state", cbId)
+	req.Header.Add("state", splState)
 	req.Header.Add("client_id", clientID)
 	req.Header.Add("scope", scope)
 
