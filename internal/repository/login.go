@@ -263,14 +263,13 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 func extractCallbackID(path string) string {
 	// Find the position of /web/ in the path
 	strings.Cut(path, "https://social.yandex.ru/broker2/authz_in_web/")
-	strings.Cut(path, "/callback")
-	return path
+	_, newStr, _ := strings.Cut(path, "/callback")
+	return newStr
 }
 
 func RedirectPage(w http.ResponseWriter, r *http.Request) {
 
 	r.Header.Add("X-Request-Id", "fb3f2807-3af6-4fbd-aaf2-42b5402d15e4")
-
 	http.Redirect(w, r, "https://social.yandex.net/broker/redirect/", http.StatusFound)
 
 	oau := OauthConfig
