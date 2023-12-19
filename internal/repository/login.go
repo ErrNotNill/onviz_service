@@ -23,6 +23,7 @@ import (
 	"onviz/internal/user/models"
 	"onviz/service/tuya/service"
 	"os"
+	"strings"
 )
 
 func CreateAccount(name, email, password string) error {
@@ -202,6 +203,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	responseType := r.FormValue("response_type")
 	clientID := r.FormValue("client_id")
 	scope := r.FormValue("scope")
+	cbId := extractCallbackID(state)
 
 	// Log the extracted parameters (you can customize this part)
 	log.Printf("Received OAuth parameters:\nState: %s\nRedirect URI: %s\nResponse Type: %s\nClient ID: %s\nScope: %s\n",
@@ -211,6 +213,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	log.Println("responseType is: ", responseType)
 	log.Println("clientID is: ", clientID)
 	log.Println("scope is: ", scope)
+	log.Println("State NEW: ", cbId)
 
 	//code, state, client_id и scope
 	code, err := generateRandomCode()
@@ -220,7 +223,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	body := []byte(``)
 	req, _ := http.NewRequest("GET", redirectURI, bytes.NewReader(body))
 	req.Header.Add("code", code)
-	req.Header.Add("state", state)
+	req.Header.Add("state", cbId)
 	req.Header.Add("client_id", clientID)
 	req.Header.Add("scope", scope)
 
@@ -255,6 +258,25 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("string(rdr):", string(rdr))
 	http.Redirect(w, r, "/", http.StatusFound)*/
+}
+
+func extractCallbackID(path string) string {
+	// Find the position of /web/ in the path
+	startIndex := strings.Index(path, "/web/") + len("/web/")
+	if startIndex == -1 {
+		return "" // /web/ not found
+	}
+
+	// Find the position of /callback after /web/
+	endIndex := strings.Index(path[startIndex:], "/callback")
+	if endIndex == -1 {
+		return "" // /callback not found after /web/
+	}
+
+	// Extract the substring between /web/ and /callback
+	callbackID := path[startIndex : startIndex+endIndex]
+
+	return callbackID
 }
 
 func RedirectPage(w http.ResponseWriter, r *http.Request) {
