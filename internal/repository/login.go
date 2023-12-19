@@ -218,7 +218,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error generating")
 	}
 	body := []byte(``)
-	req, _ := http.NewRequest("POST", redirectURI, bytes.NewReader(body))
+	req, _ := http.NewRequest("GET", redirectURI, bytes.NewReader(body))
 	req.Header.Add("code", code)
 	req.Header.Add("state", state)
 	req.Header.Add("client_id", clientID)
