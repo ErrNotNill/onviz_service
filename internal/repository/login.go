@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"bytes"
 	"context"
 	"crypto/rand"
 	"crypto/sha256"
@@ -181,6 +182,19 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func generateRandomCode() (string, error) {
+	length := 32
+	byteSize := length / 4
+	randomBytes := make([]byte, byteSize)
+	_, err := rand.Read(randomBytes)
+	if err != nil {
+		return "", err
+	}
+	code := base64.URLEncoding.EncodeToString(randomBytes)
+	code = code[:len(code)-1]
+	return code, nil
+}
+
 func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	//w.WriteHeader(http.StatusOK)
 	state := r.FormValue("state")
@@ -198,7 +212,27 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	log.Println("clientID is: ", clientID)
 	log.Println("scope is: ", scope)
 
-	ClientID := os.Getenv("TUYA_CLIENT_ID")
+	//code, state, client_id и scope
+	code, err := generateRandomCode()
+	if err != nil {
+		log.Printf("Error generating")
+	}
+	body := []byte(``)
+	req, _ := http.NewRequest("POST", redirectURI, bytes.NewReader(body))
+	req.Header.Add("code", code)
+	req.Header.Add("state", state)
+	req.Header.Add("client_id", clientID)
+	req.Header.Add("scope", scope)
+
+	dcd, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	bs, _ := io.ReadAll(dcd.Body)
+	fmt.Println("bs:::", string(bs))
+
+	/*ClientID := os.Getenv("TUYA_CLIENT_ID")
 	//ClientSecret := os.Getenv("TUYA_SECRET_KEY")
 	authorizationEndpoint := "https://authorization-server.com/auth"
 	redirectUri := "https://social.yandex.net/broker/redirect"
@@ -220,7 +254,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error reading to access page", err.Error())
 	}
 	log.Println("string(rdr):", string(rdr))
-	http.Redirect(w, r, "/", http.StatusFound)
+	http.Redirect(w, r, "/", http.StatusFound)*/
 }
 
 func RedirectPage(w http.ResponseWriter, r *http.Request) {
