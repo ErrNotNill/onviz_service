@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"bytes"
 	"context"
 	"crypto/rand"
 	"crypto/sha256"
@@ -230,7 +229,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	// Use http.Redirect to perform the redirect
 	http.Redirect(w, r, redirectURL, http.StatusFound)
 
-	//code, state, client_id и scope
+	/*//code, state, client_id и scope
 	code, err := generateRandomCode()
 	if err != nil {
 		log.Printf("Error generating")
@@ -250,7 +249,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	bs, _ := io.ReadAll(dcd.Body)
-	fmt.Println("bs:::", string(bs))
+	fmt.Println("bs:::", string(bs))*/
 
 	/*ClientID := os.Getenv("TUYA_CLIENT_ID")
 	//ClientSecret := os.Getenv("TUYA_SECRET_KEY")
