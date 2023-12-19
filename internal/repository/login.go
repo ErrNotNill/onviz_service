@@ -228,6 +228,8 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 
 	// Use http.Redirect to perform the redirect
 	http.Redirect(w, r, redirectURL, http.StatusFound)
+	bs, _ := io.ReadAll(r.Body)
+	fmt.Println("rdr:::", string(bs))
 
 	/*//code, state, client_id и scope
 	code, err := generateRandomCode()
