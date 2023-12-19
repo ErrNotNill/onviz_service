@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"bytes"
 	"context"
 	"crypto/rand"
 	"crypto/sha256"
@@ -216,7 +215,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	responseType := r.FormValue("response_type")
 	clientID := r.FormValue("client_id")
 	scope := r.FormValue("scope")
-	splState := SplitString(state)
+	//splState := SplitString(state)
 	// Log the extracted parameters (you can customize this part)
 	log.Printf("Received OAuth parameters:\nState: %s\nRedirect URI: %s\nResponse Type: %s\nClient ID: %s\nScope: %s\n",
 		state, redirectURI, responseType, clientID, scope)
@@ -226,29 +225,6 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	log.Println("clientID is: ", clientID)
 	log.Println("scope is: ", scope)
 	//log.Println("State NEW: ", splState)
-
-	redirectURL := fmt.Sprintf("%s?state=%s&response_type=%s&client_id=%s&scope=%s",
-		redirectURI, splState, responseType, clientID, scope)
-
-	log.Println("Redirect URL is: ", redirectURL)
-	// Use http.Redirect to perform the redirect
-	http.Redirect(w, r, redirectURL, http.StatusFound)
-	bs, _ := io.ReadAll(r.Body)
-
-	fmt.Println("rdr:::", string(bs))
-
-	code, err := generateRandomCode()
-	if err != nil {
-		log.Printf("Error generating")
-	}
-	body := []byte(``)
-	req, _ := http.NewRequest("POST", redirectURI, bytes.NewReader(body))
-
-	req.Header.Add("state", state)
-	req.Header.Add("redirect_uri", redirectURI)
-	req.Header.Add("response_type", code)
-	req.Header.Add("client_id", clientID)
-	req.Header.Add("scope", scope)
 
 	newState, err := generateRandomCode()
 	if err != nil {
