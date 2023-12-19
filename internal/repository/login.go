@@ -12,6 +12,7 @@ import (
 	models2 "github.com/go-oauth2/oauth2/v4/models"
 	"github.com/go-oauth2/oauth2/v4/server"
 	"github.com/go-oauth2/oauth2/v4/store"
+	uuid "github.com/satori/go.uuid"
 	"golang.org/x/oauth2"
 	"io"
 	"log"
@@ -169,12 +170,11 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 		uid := GetUserFromDbase(userData.Email)
 		if uid != "" {
 			fmt.Println("uid_uid_uid_uid_uid::: ", uid)
-			//w.WriteHeader(http.StatusOK)
+			w.WriteHeader(http.StatusOK)
 			UserFromTuya = uid
-			service.GetDevicesFromUser(uid)
-			fmt.Println("uid_uid_uid::::", uid)
-			http.Redirect(w, r, "https://social.yandex.net/broker/redirect/", http.StatusFound)
 		}
+		service.GetDevicesFromUser(uid)
+		fmt.Println("uid_uid_uid::::", uid)
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
 	}
@@ -197,10 +197,19 @@ func RedirectPage(w http.ResponseWriter, r *http.Request) {
 	//w.WriteHeader(http.StatusOK)
 	fmt.Println("redirect started")
 
+	oau := OauthConfig
+	oau.ClientID = os.Getenv("TUYA_CLIENT_ID")
+	oau.ClientSecret = os.Getenv("TUYA_SECRET_KEY")
+
 	method := "GET"
 	body := []byte(``)
 	req, _ := http.NewRequest(method, "https://social.yandex.net/broker/redirect/", bytes.NewReader(body))
-	req.Header.Get("X-Request-Id")
+	xRequestID := uuid.NewV4().String()
+
+	req.Header.Set("X-Request-Id", xRequestID)
+	req.Header.Set("client_id", oau.ClientID)
+	req.Header.Set("access_token", service.AccessToken)
+	req.Header.Set("secret", oau.ClientSecret)
 
 	dd := r.Header.Get("X-Request-Id")
 	log.Println("r.Header.Get(\"X-Request-Id\")", dd)
@@ -214,23 +223,6 @@ func RedirectPage(w http.ResponseWriter, r *http.Request) {
 	log.Println("string(bs_bs_bs):", string(rdr))
 
 	http.Redirect(w, r, "https://social.yandex.net/broker/redirect/", http.StatusFound)
-
-	oau := OauthConfig
-	oau.ClientID = os.Getenv("TUYA_CLIENT_ID")
-	oau.ClientSecret = os.Getenv("TUYA_SECRET_KEY")
-	oau.RedirectURL = fmt.Sprintf("https://social.yandex.net/broker/redirect/")
-
-	authUrl := GenerateYandexAuthURL(oau.ClientID, oau.RedirectURL, "scope", "state")
-
-	//url := oau.AuthCodeURL("state", oauth2.AccessTypeOffline)
-
-	//convUrl := oau.RedirectURL + url
-
-	//todo probably need to parse `state` from yandex response
-	//http.Redirect(w, r, authUrl, http.StatusSeeOther)
-	bs, _ := io.ReadAll(r.Body)
-	fmt.Println("REDIRECT BODY >>> ::: ", string(bs))
-	fmt.Println("URL>>>>>>>>>>:::::", authUrl)
 
 }
 
