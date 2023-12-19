@@ -152,28 +152,19 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
 	}
-	rdr, _ := io.ReadAll(r.Body)
-	err = json.Unmarshal(rdr, &userData)
+
+	err = json.Unmarshal(readerFromYandex, &userData)
 	if err != nil {
-		log.Println("Error decoding JSON")
+		log.Println("Error decoding JSON", err.Error())
 	}
 
-	fmt.Println("userData: ", userData)
-	// Process user registration data (userData) as needed
-	fmt.Printf("Received registration data: %+v\n", userData)
-	// You can now handle the registration logic, such as storing the data in a database
-	// Send a response back to the client
 	w.Header().Set("Content-Type", "application/json")
-
-	fmt.Println("userData.Email", userData.Email)
-	fmt.Println("userData.Country", userData.Country)
 
 	countryCode := service.GetCountryCodeFromDbase(userData.Country)
 
-	fmt.Printf("countryCode : %v, userData.Email : %v, userData.Password : %v", countryCode, userData.Email, userData.Password)
-
 	if userData.Email != "" {
-		fmt.Println("userData.Email_userData.Email_userData.Email", userData.Email)
+
+		fmt.Printf("countryCode : %v, userData.Email : %v, userData.Password : %v", countryCode, userData.Email, userData.Password)
 		uid := GetUserFromDbase(userData.Email)
 		if uid != "" {
 			fmt.Println("uid_uid_uid_uid_uid::: ", uid)
