@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"bytes"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
@@ -190,9 +191,25 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 
 func RedirectPage(w http.ResponseWriter, r *http.Request) {
 
+	method := "GET"
+	body := []byte(``)
+	req, _ := http.NewRequest(method, "https://social.yandex.net/broker/redirect/", bytes.NewReader(body))
+	r.Header.Get("X-Request-Id")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	defer resp.Body.Close()
+	rdr, _ := io.ReadAll(r.Body)
+	log.Println("string(bs_bs_bs):", string(rdr))
+
+	http.Redirect(w, r, "https://social.yandex.net/broker/redirect/", http.StatusSeeOther)
+
 	w.WriteHeader(http.StatusOK)
 	oau := OauthConfig
-	oau.ClientID = UserFromTuya
+	oau.ClientID = os.Getenv("TUYA_CLIENT_ID")
 	oau.ClientSecret = os.Getenv("TUYA_SECRET_KEY")
 	oau.RedirectURL = fmt.Sprintf("https://social.yandex.net/broker/redirect/")
 
