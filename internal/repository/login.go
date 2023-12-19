@@ -213,7 +213,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	responseType := r.FormValue("response_type")
 	clientID := r.FormValue("client_id")
 	scope := r.FormValue("scope")
-	splState := SplitString(state)
+	//splState := SplitString(state)
 	// Log the extracted parameters (you can customize this part)
 	log.Printf("Received OAuth parameters:\nState: %s\nRedirect URI: %s\nResponse Type: %s\nClient ID: %s\nScope: %s\n",
 		state, redirectURI, responseType, clientID, scope)
@@ -222,7 +222,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	log.Println("responseType is: ", responseType)
 	log.Println("clientID is: ", clientID)
 	log.Println("scope is: ", scope)
-	log.Println("State NEW: ", splState)
+	//log.Println("State NEW: ", splState)
 
 	//code, state, client_id и scope
 	code, err := generateRandomCode()
@@ -231,8 +231,10 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	}
 	body := []byte(``)
 	req, _ := http.NewRequest("GET", redirectURI, bytes.NewReader(body))
-	req.Header.Add("code", code)
-	req.Header.Add("state", splState)
+
+	req.Header.Add("state", state)
+	req.Header.Add("redirect_uri", redirectURI)
+	req.Header.Add("response_type", code)
 	req.Header.Add("client_id", clientID)
 	req.Header.Add("scope", scope)
 
