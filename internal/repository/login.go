@@ -171,9 +171,10 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("uid_uid_uid_uid_uid::: ", uid)
 			w.WriteHeader(http.StatusOK)
 			UserFromTuya = uid
+			service.GetDevicesFromUser(uid)
+			fmt.Println("uid_uid_uid::::", uid)
+			http.Redirect(w, r, "https://social.yandex.net/broker/redirect/", http.StatusFound)
 		}
-		service.GetDevicesFromUser(uid)
-		fmt.Println("uid_uid_uid::::", uid)
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
 	}
@@ -192,7 +193,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
-func RedirectPage(w http.ResponseWriter, r *http.Request) {
+func RedirectPageHandler(w http.ResponseWriter, r *http.Request) {
 	//w.WriteHeader(http.StatusOK)
 	fmt.Println("redirect started")
 
@@ -212,7 +213,7 @@ func RedirectPage(w http.ResponseWriter, r *http.Request) {
 	rdr, _ := io.ReadAll(r.Body)
 	log.Println("string(bs_bs_bs):", string(rdr))
 
-	http.Redirect(w, r, "https://social.yandex.net/broker/redirect/", http.StatusSeeOther)
+	http.Redirect(w, r, "https://social.yandex.net/broker/redirect/", http.StatusFound)
 
 	oau := OauthConfig
 	oau.ClientID = os.Getenv("TUYA_CLIENT_ID")
