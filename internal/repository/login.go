@@ -199,6 +199,8 @@ func RedirectPage(w http.ResponseWriter, r *http.Request) {
 	req.Header.Get("X-Request-Id")
 	log.Println("r.Header", r.Header)
 
+	r.Header.Get("X-Request-Id")
+	log.Println("r.Header.Get(\"X-Request-Id\")", r.Header.Get("X-Request-Id"))
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println(err)
