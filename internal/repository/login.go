@@ -224,13 +224,19 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 	log.Println("scope is: ", scope)
 	//log.Println("State NEW: ", splState)
 
+	redirectURL := fmt.Sprintf("%s?state=%s&redirect_uri=%s&response_type=%s&client_id=%s&scope=%s",
+		"https://social.yandex.net/broker/redirect", state, redirectURI, responseType, clientID, scope)
+
+	// Use http.Redirect to perform the redirect
+	http.Redirect(w, r, redirectURL, http.StatusFound)
+
 	//code, state, client_id и scope
 	code, err := generateRandomCode()
 	if err != nil {
 		log.Printf("Error generating")
 	}
 	body := []byte(``)
-	req, _ := http.NewRequest("GET", redirectURI, bytes.NewReader(body))
+	req, _ := http.NewRequest("POST", redirectURI, bytes.NewReader(body))
 
 	req.Header.Add("state", state)
 	req.Header.Add("redirect_uri", redirectURI)
