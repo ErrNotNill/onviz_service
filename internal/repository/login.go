@@ -197,10 +197,9 @@ func RedirectPage(w http.ResponseWriter, r *http.Request) {
 	body := []byte(``)
 	req, _ := http.NewRequest(method, "https://social.yandex.net/broker/redirect/", bytes.NewReader(body))
 	req.Header.Get("X-Request-Id")
-	log.Println("r.Header", r.Header)
 
-	r.Header.Get("X-Request-Id")
-	log.Println("r.Header.Get(\"X-Request-Id\")", r.Header.Get("X-Request-Id"))
+	dd := r.Header.Get("X-Request-Id")
+	log.Println("r.Header.Get(\"X-Request-Id\")", dd)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println(err)
