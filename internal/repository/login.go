@@ -221,6 +221,7 @@ func Auth() {
 		Secret: "d8205ed66f15471fa969aecab48ab495",
 		Domain: "https://social.yandex.net/broker/redirect",
 	})
+	fmt.Println("clientStore>>>>>>>>>>", clientStore)
 	if err != nil {
 		log.Println("Error sett client", err.Error())
 		return
