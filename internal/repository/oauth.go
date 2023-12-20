@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/go-oauth2/oauth2/v4/errors"
@@ -9,14 +8,11 @@ import (
 	models2 "github.com/go-oauth2/oauth2/v4/models"
 	"github.com/go-oauth2/oauth2/v4/server"
 	"github.com/go-oauth2/oauth2/v4/store"
-	"golang.org/x/oauth2"
 	"io"
 	"log"
 	"net/http"
 	"onviz/internal/user/models"
 	"onviz/service/tuya/service"
-	"os"
-	"time"
 )
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
@@ -69,35 +65,7 @@ type AuthRequest struct {
 }
 
 func NewAuth(w http.ResponseWriter, r *http.Request) {
-	ctx := context.Background()
-
-	clId := os.Getenv("TUYA_CLIENT_ID")
-	scrId := os.Getenv("TUYA_SECRET_KEY")
-
-	conf := &oauth2.Config{
-		ClientID:     clId,
-		ClientSecret: scrId,
-		Scopes:       []string{"SCOPE1", "SCOPE2"},
-		Endpoint: oauth2.Endpoint{
-			TokenURL: "https://onviz-api.ru/token",
-			AuthURL:  "https://onviz-api.ru/auth",
-		},
-	}
-	url := conf.AuthCodeURL("state", oauth2.AccessTypeOffline)
-	fmt.Printf("Visit the URL for the auth dialog: %v", url)
-
-	var code string
-	if _, err := fmt.Scan(&code); err != nil {
-		log.Fatal(err)
-	}
-	httpClient := &http.Client{Timeout: 2 * time.Second}
-	ctx = context.WithValue(ctx, oauth2.HTTPClient, httpClient)
-	tok, err := conf.Exchange(ctx, code)
-	if err != nil {
-		log.Fatal(err)
-	}
-	client := conf.Client(ctx, tok)
-	_ = client
+	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=token&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
 
 }
 
