@@ -96,7 +96,7 @@ func NewAuth() {
 	})
 
 	http.HandleFunc("/api/authorize", func(w http.ResponseWriter, r *http.Request) {
-		auth := AuthRequest{}
+		var auth AuthRequest
 		rdr, err := io.ReadAll(r.Body)
 		fmt.Println("string(rdr):", string(rdr))
 		if err != nil {
