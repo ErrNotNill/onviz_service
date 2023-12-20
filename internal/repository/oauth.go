@@ -100,17 +100,6 @@ func NewAuth() {
 	})
 
 	http.HandleFunc("/api/authorize", func(w http.ResponseWriter, r *http.Request) {
-		var auth interface{}
-		rdr, err := io.ReadAll(r.Body)
-		fmt.Println("string(rdr):", string(rdr))
-		if err != nil {
-			log.Println("Internal Error:", err.Error())
-		}
-		err = json.Unmarshal(rdr, &auth)
-		if err != nil {
-			fmt.Println("Error:", err)
-		}
-		fmt.Println("auth body is: ", auth)
 
 		err = srv.HandleAuthorizeRequest(w, r)
 		if err != nil {
