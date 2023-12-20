@@ -73,7 +73,7 @@ func NewAuth() {
 	clientID := os.Getenv("TUYA_CLIENT_ID")
 	clientSecret := os.Getenv("TUYA_SECRET_KEY")
 	redirUr := "https://onviz-api.ru"
-	domain := fmt.Sprintf("https://social.yandex.net/broker/redirect?response_type=code&client_id=%s&redirect_uri=%s", clientID, redirUr)
+	domain := fmt.Sprintf("https:/direct?response_type=code&client_id=%s&redirect_uri=%s", clientID, redirUr)
 
 	// client memory store
 	clientStore := store.NewClientStore()
