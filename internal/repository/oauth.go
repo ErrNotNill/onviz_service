@@ -73,7 +73,7 @@ func NewAuth() {
 	clientID := os.Getenv("TUYA_CLIENT_ID")
 	clientSecret := os.Getenv("TUYA_SECRET_KEY")
 	redirUr := "https://onviz-api.ru"
-	domain := fmt.Sprintf("https:/direct?response_type=code&client_id=%s&redirect_uri=%s", clientID, redirUr)
+	domain := fmt.Sprintf("https://social.yandex.net/broker/redirect?response_type=code&client_id=%s&redirect_uri=%s", clientID, redirUr)
 
 	// client memory store
 	clientStore := store.NewClientStore()
@@ -103,7 +103,16 @@ func NewAuth() {
 
 	http.HandleFunc("/api/authorize", func(w http.ResponseWriter, r *http.Request) {
 		r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
+		state := r.FormValue("state")
+		redirectURI := r.FormValue("redirect_uri")
+		responseType := r.FormValue("response_type")
+		clientID := r.FormValue("client_id")
+		scope := r.FormValue("scope")
+		r.Header.Add("state", state)
+		r.Header.Add("redirect_uri", redirectURI)
+		r.Header.Add("response_type", responseType)
+		r.Header.Add("client_id", clientID)
+		r.Header.Add("scope", scope)
 		err = srv.HandleAuthorizeRequest(w, r)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest) //here error
