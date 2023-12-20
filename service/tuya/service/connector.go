@@ -28,7 +28,12 @@ func InitConnector() {
 	// Start the service
 	go messaging.Listener()
 	r := router.NewGinEngin()
-	go r.Run(":9090")
+	go func() {
+		err := r.Run(":9090")
+		if err != nil {
+			log.Println("Error run connector", err.Error())
+		}
+	}()
 	watitSignal()
 }
 

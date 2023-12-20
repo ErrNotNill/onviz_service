@@ -128,7 +128,11 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(response)
+	err := json.NewEncoder(w).Encode(response)
+	if err != nil {
+		log.Println("Error encode json:", err.Error())
+		return
+	}
 
 	reader := r.Body
 	var yaParams = YandexAuthParams{}
@@ -200,5 +204,8 @@ func RefreshTokenHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(response)
+	err := json.NewEncoder(w).Encode(response)
+	if err != nil {
+		log.Println("Error encode:", err.Error())
+	}
 }

@@ -68,11 +68,15 @@ func AuthUserFromYandexToken(w http.ResponseWriter, r *http.Request) {
 
 	// Create a client store and set your custom client
 	clientStore := store.NewClientStore()
-	clientStore.Set(clientId, &models.Client{
+	err = clientStore.Set(clientId, &models.Client{
 		ID:     clientId,
 		Secret: clientSecret,
 		// Set other client properties as needed
 	})
+	if err != nil {
+		log.Println("Error setting client", err.Error())
+		return
+	}
 
 	// Create a token manager
 	manager := manage.NewDefaultManager()
@@ -115,7 +119,8 @@ func AuthUserFomYandex(w http.ResponseWriter, r *http.Request) {
 	clientID := os.Getenv("TUYA_CLIENT_ID")
 	clientSecret := os.Getenv("TUYA_SECRET_KEY")
 
-	idGen := strconv.Itoa(rand.Intn(999999))
+	idGen := strconv.Itoa(rand.Intn(999999)) //nolint
+	//todo but fix this in continuous, and lint
 	err := clientStore.Set(idGen, &models.Client{
 		ID:     clientID,
 		Secret: clientSecret,

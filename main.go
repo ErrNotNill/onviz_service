@@ -15,6 +15,7 @@ import (
 	"onviz/service/tuya/service"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 func main() {
@@ -64,11 +65,15 @@ func main() {
 
 	fmt.Println("Server started")
 	fmt.Println("http://localhost:9090")
-	err = http.ListenAndServe(":9090", nil)
 
+	server := &http.Server{
+		Addr:              ":9090",
+		ReadHeaderTimeout: 3 * time.Second,
+	}
+	err = server.ListenAndServe()
 	if err != nil {
 		fmt.Println("Server started with error")
-		return
+		panic(err)
 	}
 
 }

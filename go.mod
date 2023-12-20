@@ -1,6 +1,6 @@
 module onviz
 
-go 1.19
+go 1.22
 
 require (
 	github.com/SevereCloud/vksdk/v2 v2.16.0

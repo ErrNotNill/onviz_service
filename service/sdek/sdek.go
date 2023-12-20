@@ -22,7 +22,11 @@ func SdekStart() {
 	body, err := io.ReadAll(post.Body)
 
 	resp := &Response{}
-	json.Unmarshal(body, &resp)
+	err = json.Unmarshal(body, &resp)
+	if err != nil {
+		log.Println("Error decoding", err.Error())
+		return
+	}
 
 	fmt.Println(post.StatusCode)
 	fmt.Println("access_token", resp.AccessToken)

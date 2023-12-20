@@ -49,8 +49,8 @@ func SchemaUser() {
 
 func LoginUser() {
 
-	userName := "commongoverygoodguy@gmail.com"
-	userPass := "htZHtFxG5728"
+	userName := "" //todo env
+	userPass := "" //todo env
 
 	uri := fmt.Sprintf("/v1.0/iot-03/users/login")
 

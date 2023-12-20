@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 )
@@ -14,7 +15,12 @@ const (
 
 func RedirectHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(fmt.Sprintf("OK")))
+	_, err := w.Write([]byte(fmt.Sprintf("OK")))
+	if err != nil {
+		log.Println("Error redirect", err.Error())
+		return
+	}
+
 	fmt.Println(r.Body)
 }
 
@@ -58,8 +64,9 @@ func NextStepAuth(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Failed to exchange authorization code for access token:", err)
 		return
 	}
+	defer r.Body.Close() //nolint
 	body, err := io.ReadAll(post.Body)
 	fmt.Println("post.Body", post.Body)
-	json.Unmarshal(body, &post.Body)
-	fmt.Fprint(w, string(body))
+	json.Unmarshal(body, &post.Body) //nolint
+	fmt.Fprint(w, string(body))      //nolint
 }

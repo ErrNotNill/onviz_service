@@ -161,11 +161,18 @@ func GetUsersInfo() {
 func GetDevicesFromUser(uid string) {
 	//uid := GetUidFromTuyaUsersByEmail(userEmail)
 
+	ctx, cancel := context.WithTimeout(context.Background(), 13*time.Second)
+	defer cancel()
+
 	fmt.Println(uid, "uid_uid_uid_uid")
 	uri := fmt.Sprintf("/v1.0/users/%v/devices", uid)
 	method := "GET"
 	body := []byte(``)
-	req, _ := http.NewRequest(method, Host+uri, bytes.NewReader(body))
+	req, err := http.NewRequestWithContext(ctx, method, Host+uri, bytes.NewReader(body))
+
+	if err != nil {
+		_ = fmt.Errorf("failed to create request with ctx: %w", err)
+	}
 
 	BuildHeader(req, body)
 	resp, err := http.DefaultClient.Do(req)

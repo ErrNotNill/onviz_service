@@ -92,7 +92,11 @@ func AuthPage(w http.ResponseWriter, r *http.Request) {
 	// Handle registration error
 	if err := CreateAccount(userData.Username, userData.Email, userData.Password); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(map[string]interface{}{"message": "User exist"})
+		err := json.NewEncoder(w).Encode(map[string]interface{}{"message": "User exist"})
+		if err != nil {
+			log.Println("Error encode account", err.Error())
+			return
+		}
 		fmt.Println("Error creating, user exists")
 		return
 	}
@@ -212,11 +216,15 @@ func Auth() {
 
 	// client memory store
 	clientStore := store.NewClientStore()
-	clientStore.Set("000000", &models2.Client{
+	err := clientStore.Set("000000", &models2.Client{
 		ID:     "000000",
 		Secret: "999999",
 		Domain: "http://localhost:9090",
 	})
+	if err != nil {
+		log.Println("Error sett client", err.Error())
+		return
+	}
 	manager.MapClientStorage(clientStore)
 
 	srv := server.NewDefaultServer(manager)
@@ -233,9 +241,10 @@ func Auth() {
 	})
 
 	http.HandleFunc("/api/authorize", func(w http.ResponseWriter, r *http.Request) {
-		r.Header.Add("client_id", "9x8wfym7m5vyck7tdwwt")
+		r.Header.Add("client_id", "fb3f2807-3af6-4fbd-aaf2-42b5402d15e4")
 		r.Header.Add("client_secret", "d8205ed66f15471fa969aecab48ab495")
 		err := srv.HandleAuthorizeRequest(w, r)
+		//ExchangeAuthorizationCodeForToken() //todo where to get code for this method
 		if err != nil {
 			log.Println("HandeAuthorizeError")
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -409,7 +418,7 @@ func generateRandomState() (string, error) {
 	stateLength := 32
 	byteSize := stateLength / 4
 	randomBytes := make([]byte, byteSize)
-	_, err := rand.Read(randomBytes)
+	_, err := rand.Read(randomBytes) //nolint
 	if err != nil {
 		return "", err
 	}

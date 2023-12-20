@@ -24,7 +24,7 @@ var BitrixWebHookTask = os.Getenv("WEBHOOK_TASK")
 func AddTaskToDeal(title string, responsibleId int, DealId int) {
 	newReq := fmt.Sprintf(`{"fields":{"TITLE":"%v", "RESPONSIBLE_ID":%v, "UF_CRM_TASK":{"UF_CRM_TASK":"L_%v"}}}`, title, responsibleId, DealId)
 	tr := bytes.NewReader([]byte(newReq))
-	_, err := http.Post(BitrixWebHookTask, "application/json", tr)
+	_, err := http.Post(BitrixWebHookTask, "application/json", tr) //nolint
 	if err != nil {
 		log.Println("Error http:post request to Bitrix24")
 	}

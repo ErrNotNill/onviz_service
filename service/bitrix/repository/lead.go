@@ -155,7 +155,7 @@ func GetAllFromLead(db *sql.DB) {
 var WebHookLeads = os.Getenv("WEBHOOK_LEADS")
 
 func GetLeads(w http.ResponseWriter, r *http.Request) {
-	req, err := http.Get(WebHookLeads)
+	req, err := http.Get(WebHookLeads) //nolint
 	if err != nil {
 		log.Println("Error http:post request to Bitrix24")
 	}

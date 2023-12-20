@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"github.com/go-vk-api/vk"
 	"log"
+	"os"
 )
 
 func StartVkBridge() {
-	accessToken := "05ba15dd05ba15dd05ba15dd6206af28c2005ba05ba15dd616abbee5ba2f8bf0f779c09"
+	accessToken := os.Getenv("VK_BRIDGE_ACCESS_TOKEN")
 	client, err := vk.NewClientWithOptions(
 		vk.WithToken(accessToken),
 	)

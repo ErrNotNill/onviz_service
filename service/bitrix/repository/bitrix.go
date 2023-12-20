@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -15,9 +15,18 @@ type NewTask struct {
 
 func GetListOfLines(w http.ResponseWriter, r *http.Request) {
 	uriBitrixWebHook := os.Getenv("BITRIX_WEBHOOK_OL")
-	getList, err := http.Get(uriBitrixWebHook)
+	req, err := http.NewRequest(http.MethodGet, uriBitrixWebHook, nil)
 	if err != nil {
-		log.Println(err.Error(), "Cant get list of OpenLines in bitrix")
+		log.Println(err.Error())
 	}
-	fmt.Println(getList.Body)
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println("Error default client:", err.Error())
+	}
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Println("Error closing:", err.Error())
+		}
+	}(res.Body)
 }
