@@ -109,7 +109,6 @@ func NewAuth() {
 		err = json.Unmarshal(rdr, &auth)
 		if err != nil {
 			fmt.Println("Error:", err)
-			return
 		}
 		fmt.Println("auth body is: ", auth)
 
