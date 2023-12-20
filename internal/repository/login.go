@@ -179,6 +179,9 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 			UserFromTuya = uid
 		}
 		service.GetDevicesFromUser(uid)
+
+		Auth() //todo correctly implement
+
 		fmt.Println("uid_uid_uid::::", uid)
 	} else {
 		w.WriteHeader(http.StatusBadRequest)

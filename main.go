@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"onviz/DB"
 	"onviz/chat/cache"
-	"onviz/internal/repository"
 	"onviz/router"
 	"onviz/service/tuya/service"
 	"os"
@@ -20,10 +19,6 @@ import (
 
 func main() {
 	//queue.MqttInit()
-
-	fmt.Println("good luck ^_^")
-
-	repository.Auth() //not used now
 
 	fmt.Println("good luck ^_^")
 
