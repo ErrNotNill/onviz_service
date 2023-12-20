@@ -68,7 +68,7 @@ type AuthRequest struct {
 	Scope        string `json:"scope"`
 }
 
-func NewAuth() {
+func NewAuth(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	clId := os.Getenv("TUYA_CLIENT_ID")
