@@ -219,7 +219,7 @@ func Auth() {
 	err := clientStore.Set("9x8wfym7m5vyck7tdwwt", &models2.Client{
 		ID:     "9x8wfym7m5vyck7tdwwt",
 		Secret: "d8205ed66f15471fa969aecab48ab495",
-		Domain: "http://localhost:9090",
+		Domain: "https://social.yandex.net/broker/redirect",
 	})
 	if err != nil {
 		log.Println("Error sett client", err.Error())
