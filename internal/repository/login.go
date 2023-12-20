@@ -180,6 +180,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 		}
 		service.GetDevicesFromUser(uid)
 
+		http.Redirect(w, r, "https://onviz-api.ru/api/authorize", http.StatusFound)
 		Auth() //todo correctly implement
 
 		fmt.Println("uid_uid_uid::::", uid)
