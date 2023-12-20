@@ -216,9 +216,9 @@ func Auth() {
 
 	// client memory store
 	clientStore := store.NewClientStore()
-	err := clientStore.Set("000000", &models2.Client{
-		ID:     "000000",
-		Secret: "999999",
+	err := clientStore.Set("fb3f2807-3af6-4fbd-aaf2-42b5402d15e4", &models2.Client{
+		ID:     "fb3f2807-3af6-4fbd-aaf2-42b5402d15e4",
+		Secret: "d8205ed66f15471fa969aecab48ab495",
 		Domain: "http://localhost:9090",
 	})
 	if err != nil {
