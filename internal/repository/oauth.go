@@ -103,7 +103,7 @@ func NewAuth() {
 
 		err = srv.HandleAuthorizeRequest(w, r)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest) //here error
 		}
 	})
 
