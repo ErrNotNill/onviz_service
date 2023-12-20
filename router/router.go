@@ -36,8 +36,9 @@ func Router() {
 	http.HandleFunc("/api/v1.0/user/devices", yandex2.CheckConnection) //todo get user devices GET
 	//http.HandleFunc("/v1.0/user/devices/query", yandex2.InfoAboutDevicesState) //todo info about state devices POST
 	//http.HandleFunc("/v1.0/user/devices/action", yandex2.ChangeDevicesState)   //todo change state of devices POST
-
 	http.HandleFunc("/api/yandex/token", yandex2.AuthUserFromYandexToken)
+
+	http.HandleFunc("/api/ya/auth", repository2.NewAuth)
 
 	http.HandleFunc("/api/yandex/v1.0/user/devices", service.GetDeviceNew)
 	http.HandleFunc("/api/yandex/v1.0/user/unlink", service.UnlinkUser)

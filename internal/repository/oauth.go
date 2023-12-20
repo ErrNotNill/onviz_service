@@ -66,7 +66,6 @@ type AuthRequest struct {
 
 func NewAuth(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=token&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
-
 }
 
 func Auth() {
