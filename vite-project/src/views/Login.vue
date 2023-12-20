@@ -296,7 +296,7 @@ function signinUser() {
         //window.location.href = "https://onviz-api.ru/api/yandex/authorize"
         //window.location.href = "https://social.yandex.net/broker/redirect"
 
-       // window.location.href = "https://onviz-api.ru/api/redirect"
+       window.location.href = "https://onviz-api.ru/api/authorize"
         return response.text(); // Assuming the response is a SHA-256 token string
 
       } else if (response.status === 400) {

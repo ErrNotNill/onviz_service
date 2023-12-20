@@ -175,12 +175,10 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 		uid := GetUserFromDbase(userData.Email)
 		if uid != "" {
 			fmt.Println("uid_uid_uid_uid_uid::: ", uid)
-			//w.WriteHeader(http.StatusOK)
+			w.WriteHeader(http.StatusOK)
 			UserFromTuya = uid
 		}
 		service.GetDevicesFromUser(uid)
-
-		http.Redirect(w, r, "https://onviz-api.ru/api/authorize", http.StatusFound)
 
 		fmt.Println("uid_uid_uid::::", uid)
 	} else {
