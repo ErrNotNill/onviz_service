@@ -16,6 +16,9 @@ import (
 //todo endpoints for yandex
 
 func Router() {
+
+	http.HandleFunc("/api/access", repository2.NewAuth) //here user redirects from login page
+
 	//http.HandleFunc("/authorize", tuya.GetDeviceNew)
 	//http.HandleFunc("/token", tuya.GetDeviceNew)
 	//http.Handle("/", http.FileServer(http.Dir("./chat/public")))
@@ -26,8 +29,7 @@ func Router() {
 	})
 	http.Handle("/api/auth_page", c.Handler(http.HandlerFunc(repository2.AuthPage)))
 	http.Handle("/api/login_page", c.Handler(http.HandlerFunc(repository2.LoginPage)))
-	http.HandleFunc("/api/redirect", repository2.RedirectPage)    //here user redirects from login page
-	http.HandleFunc("/api/access", repository2.AccessToLoginPage) //here user redirects from login page
+	http.HandleFunc("/api/redirect", repository2.RedirectPage) //here user redirects from login page
 
 	http.HandleFunc("/api/callback/code", repository2.CallbackHandler)
 
