@@ -113,6 +113,11 @@ func NewAuth() {
 		r.Header.Add("response_type", responseType)
 		r.Header.Add("client_id", clientID)
 		r.Header.Add("scope", scope)
+		log.Println("State is: ", state)
+		log.Println("redirectURI is: ", redirectURI)
+		log.Println("responseType is: ", responseType)
+		log.Println("clientID is: ", clientID)
+		log.Println("scope is: ", scope)
 		err = srv.HandleAuthorizeRequest(w, r)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest) //here error
