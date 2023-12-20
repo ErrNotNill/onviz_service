@@ -95,7 +95,7 @@ func NewAuth() {
 		log.Println("Response Error:", re.Error.Error())
 	})
 
-	http.HandleFunc("/authorize", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/api/authorize", func(w http.ResponseWriter, r *http.Request) {
 		auth := AuthRequest{}
 		rdr, err := io.ReadAll(r.Body)
 		if err != nil {
@@ -114,7 +114,7 @@ func NewAuth() {
 		}
 	})
 
-	http.HandleFunc("/token", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/api/token", func(w http.ResponseWriter, r *http.Request) {
 		srv.HandleTokenRequest(w, r)
 	})
 }
