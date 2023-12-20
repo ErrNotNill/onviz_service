@@ -65,7 +65,7 @@ type AuthRequest struct {
 	Scope        string `json:"scope"`
 }
 
-func NewAuth(w http.ResponseWriter, r *http.Request) {
+func NewAuth() {
 	manager := manage.NewDefaultManager()
 	// token memory store
 	manager.MustTokenStorage(store.NewMemoryTokenStore())
