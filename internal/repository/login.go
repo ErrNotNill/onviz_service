@@ -242,7 +242,7 @@ func Auth() {
 
 	http.HandleFunc("/api/authorize", func(w http.ResponseWriter, r *http.Request) {
 		r.Header.Add("client_id", "fb3f2807-3af6-4fbd-aaf2-42b5402d15e4")
-		r.Header.Add("client_secret", "d8205ed66f15471fa969aecab48ab495")
+		//r.Header.Add("client_secret", "d8205ed66f15471fa969aecab48ab495")
 		err := srv.HandleAuthorizeRequest(w, r)
 		//ExchangeAuthorizationCodeForToken() //todo where to get code for this method
 		if err != nil {
