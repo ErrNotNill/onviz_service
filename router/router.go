@@ -17,8 +17,6 @@ import (
 
 func Router() {
 
-	http.HandleFunc("/api/access", repository2.NewAuth) //here user redirects from login page
-
 	//http.HandleFunc("/authorize", tuya.GetDeviceNew)
 	//http.HandleFunc("/token", tuya.GetDeviceNew)
 	//http.Handle("/", http.FileServer(http.Dir("./chat/public")))
