@@ -284,7 +284,7 @@ func AccessToLoginPage(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("Redirect URL is: ", redirectURL)
 	// Use http.Redirect to perform the redirect
-	http.Redirect(w, r, redirectURL, http.StatusFound)
+	http.Redirect(w, r, redirectURI, http.StatusFound)
 	bs, _ := io.ReadAll(r.Body)
 
 	fmt.Println("rdr:::", string(bs))
