@@ -72,13 +72,15 @@ func NewAuth() {
 
 	clientID := os.Getenv("TUYA_CLIENT_ID")
 	clientSecret := os.Getenv("TUYA_SECRET_KEY")
+	redirUr := "https://onviz-api.ru"
+	domain := fmt.Sprintf("https://social.yandex.net/broker/redirect?response_type=code&client_id=%s&redirect_uri=%s", clientID, redirUr)
 
 	// client memory store
 	clientStore := store.NewClientStore()
 	err := clientStore.Set(clientID, &models2.Client{
 		ID:     clientID,
 		Secret: clientSecret,
-		Domain: "https://social.yandex.net/broker/redirect",
+		Domain: domain,
 	})
 	if err != nil {
 		log.Println("Could not set client")
@@ -100,6 +102,7 @@ func NewAuth() {
 	})
 
 	http.HandleFunc("/api/authorize", func(w http.ResponseWriter, r *http.Request) {
+		r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 		err = srv.HandleAuthorizeRequest(w, r)
 		if err != nil {
