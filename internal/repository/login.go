@@ -216,8 +216,8 @@ func Auth() {
 
 	// client memory store
 	clientStore := store.NewClientStore()
-	err := clientStore.Set("fb3f2807-3af6-4fbd-aaf2-42b5402d15e4", &models2.Client{
-		ID:     "fb3f2807-3af6-4fbd-aaf2-42b5402d15e4",
+	err := clientStore.Set("9x8wfym7m5vyck7tdwwt", &models2.Client{
+		ID:     "9x8wfym7m5vyck7tdwwt",
 		Secret: "d8205ed66f15471fa969aecab48ab495",
 		Domain: "http://localhost:9090",
 	})
@@ -241,7 +241,7 @@ func Auth() {
 	})
 
 	http.HandleFunc("/api/authorize", func(w http.ResponseWriter, r *http.Request) {
-		r.Header.Add("client_id", "fb3f2807-3af6-4fbd-aaf2-42b5402d15e4")
+		r.Header.Add("client_id", "9x8wfym7m5vyck7tdwwt")
 		r.Header.Add("client_secret", "d8205ed66f15471fa969aecab48ab495")
 		err := srv.HandleAuthorizeRequest(w, r)
 		//ExchangeAuthorizationCodeForToken() //todo where to get code for this method
