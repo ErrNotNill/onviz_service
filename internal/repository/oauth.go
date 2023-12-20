@@ -75,11 +75,15 @@ func NewAuth() {
 
 	// client memory store
 	clientStore := store.NewClientStore()
-	clientStore.Set(clientID, &models2.Client{
+	err := clientStore.Set(clientID, &models2.Client{
 		ID:     clientID,
 		Secret: clientSecret,
 		Domain: "https://social.yandex.net/broker/redirect",
 	})
+	if err != nil {
+		log.Println("Could not set client")
+		return
+	}
 	manager.MapClientStorage(clientStore)
 
 	srv := server.NewDefaultServer(manager)
