@@ -324,6 +324,7 @@ function signinUser() {
     .then(response => {
       if (response.status === 200) {
         console.log(response.status)
+        console.log(response.json())
         // Login successful, get the token
         //showSidebar.value = true;
 
