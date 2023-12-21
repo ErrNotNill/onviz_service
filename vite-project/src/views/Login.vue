@@ -249,10 +249,9 @@ const signupPassword = ref('');
 const signupPasswordConfirm = ref('');
 const tokenEndpoint = 'https://onviz-api.ru/api/yandex/token';
 // Replace these with your actual client credentials and user credentials
-const clientId = 'zxc';
-const clientSecret = 'qwe';
-const username = 'user-username';
-const password = 'user-password';
+const clientId = ref('zxc');
+const clientSecret = ref('qwe');
+
 
 // Prepare the token request
 const formData = new URLSearchParams();
