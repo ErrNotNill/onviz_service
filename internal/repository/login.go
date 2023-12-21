@@ -169,12 +169,26 @@ func extractCallbackID(path string) string {
 	return newStr
 }
 
+type AccessToken struct {
+	AccessToken string `json:"access_token"`
+	TokenType   string `json:"token_type"`
+	ExpiresIn   int    `json:"expires_in"`
+}
+
 func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	rdr, err := io.ReadAll(r.Body)
 	if err != nil {
 		log.Println("Error reading response")
 	}
 	fmt.Println(string(rdr))
+	var users AccessToken
+	err = json.Unmarshal(rdr, &users)
+	if err != nil {
+		log.Println("Error unmarshalling response:", err)
+		return
+	}
+	fmt.Println("users:>", users)
+	fmt.Println("users.AccessToken:>", users.AccessToken)
 }
 
 func RedirectPage(w http.ResponseWriter, r *http.Request) {
