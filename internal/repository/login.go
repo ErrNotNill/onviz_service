@@ -176,6 +176,8 @@ type AccessToken struct {
 }
 
 func TokenOauth(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("r.RequestURI", r.RequestURI)
+
 	rdr, err := io.ReadAll(r.Body)
 	if err != nil {
 		log.Println("Error reading response")
