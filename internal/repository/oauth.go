@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/go-oauth2/oauth2/v4/errors"
@@ -14,7 +13,6 @@ import (
 	"net/http"
 	"onviz/internal/user/models"
 	"onviz/service/tuya/service"
-	"os"
 )
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
@@ -71,22 +69,20 @@ func NewAuth() {
 	// token memory store
 	manager.MustTokenStorage(store.NewMemoryTokenStore())
 
-	clientID := os.Getenv("TUYA_CLIENT_ID")
-	clientSecret := os.Getenv("TUYA_SECRET_KEY")
-	redirUr := "https://onviz-api.ru"
-	domain := fmt.Sprintf("https://social.yandex.net/broker/redirect?response_type=code&client_id=%s&redirect_uri=%s", clientID, redirUr)
-
 	// client memory store
 	clientStore := store.NewClientStore()
-	err := clientStore.Set(clientID, &models2.Client{
-		ID:     clientID,
-		Secret: clientSecret,
-		Domain: domain,
+	err := clientStore.Set("", &models2.Client{
+		ID:     "9x8wfym7m5vyck7tdwwt",
+		Secret: "d8205ed66f15471fa969aecab48ab495",
+		Domain: "https://localhost:9090/api/token",
 	})
+
+	fmt.Println("clientStore>>>>>>>>>>", clientStore)
 	if err != nil {
-		log.Println("Could not set client")
+		log.Println("Error sett client", err.Error())
 		return
 	}
+
 	manager.MapClientStorage(clientStore)
 
 	srv := server.NewDefaultServer(manager)
@@ -103,55 +99,22 @@ func NewAuth() {
 	})
 
 	http.HandleFunc("/api/authorize", func(w http.ResponseWriter, r *http.Request) {
-		r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-		state := r.FormValue("state")
-		redirectURI := r.FormValue("redirect_uri")
-		responseType := r.FormValue("response_type")
-		clientID := r.FormValue("client_id")
-		scope := r.FormValue("scope")
-		r.Header.Add("state", state)
-		r.Header.Add("redirect_uri", redirectURI)
-		r.Header.Add("response_type", responseType)
-		r.Header.Add("client_id", clientID)
-		r.Header.Add("scope", scope)
-		r.Header.Add("code", "asdadad123123asdasdfa")
-
-		log.Println("State is: ", state)
-		log.Println("redirectURI is: ", redirectURI)
-		log.Println("responseType is: ", responseType)
-		log.Println("clientID is: ", clientID)
-		log.Println("scope is: ", scope)
-		err = srv.HandleAuthorizeRequest(w, r)
+		r.Header.Add("client_id", "9x8wfym7m5vyck7tdwwt")
+		r.Header.Add("client_secret", "d8205ed66f15471fa969aecab48ab495")
+		err := srv.HandleAuthorizeRequest(w, r)
+		//ExchangeAuthorizationCodeForToken() //todo where to get code for this method
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest) //here error
+			log.Println("HandeAuthorizeError")
+			http.Error(w, err.Error(), http.StatusBadRequest)
 		}
-		/*userInfo := fmt.Sprintf(`{
-		  "country_code":"%v",
-		  "username":"%v",
-		  "password":"%v",
-		  "username_type":2,
-		  "time_zone_id": ""
-		  }`, countryCode, username, pass)*/
-
-		body := []byte(``)
-		req, err := http.NewRequest("POST", redirectURI, bytes.NewReader(body))
-		if err != nil {
-			log.Println("Error creating request:", err)
-		}
-		resp, err := http.DefaultClient.Do(req)
-		if err != nil {
-			log.Println("Error sending request:", err)
-		}
-		defer resp.Body.Close()
 	})
 
 	http.HandleFunc("/api/token", func(w http.ResponseWriter, r *http.Request) {
-		rdr, err := io.ReadAll(r.Body)
+		err := srv.HandleTokenRequest(w, r)
 		if err != nil {
-			log.Println("Error reading", err.Error())
+			log.Println("Handler token error")
+			return
 		}
-		fmt.Println("string(rdr):>", string(rdr))
-		srv.HandleTokenRequest(w, r)
 	})
 }
 
