@@ -35,9 +35,9 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("Error decoding JSON", err.Error())
 	}
-	fmt.Printf("countryCode : %v, userData.Email : %v, userData.Password : %v", userData.Country, userData.Email, userData.Password)
 
 	countryCode := service.GetCountryCodeFromDbase(userData.Country)
+	fmt.Printf("countryCode : %v, userData.Email : %v, userData.Password : %v, userData.ClientID: %v, userData.ClientSecret: %v", countryCode, userData.Email, userData.Password, userData.ClientID, userData.ClientSecret)
 
 	if userData.Email != "" {
 
