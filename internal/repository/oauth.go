@@ -46,6 +46,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 		if uid != "" {
 			fmt.Println("uid_uid_uid_uid_uid::: ", uid)
 			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Authorization", "Bearer TOKEN")
 			UserFromTuya = uid
 		}
 		//service.GetDevicesFromUser(uid)
