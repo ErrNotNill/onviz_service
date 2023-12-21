@@ -4,6 +4,7 @@ import About from '../src/views/About.vue'
 import Chat from '@/views/Chat.vue'
 import Team from '@/views/Team.vue'
 import Login from '@/views/Login.vue'
+import Auth from '@/views/Auth.vue'
 import Start from "@/views/Start.vue";
 import Leads from "@/views/Leads.vue";
 import StartPage from "@/views/StartPage.vue";
@@ -14,6 +15,10 @@ const router = createRouter({
         {
             path: '/',
             component: Login
+        },
+        {
+            path: '/auth',
+            component: Auth
         },
         {
             path: '/leads',

@@ -196,20 +196,18 @@
 <script setup>
 
 window.onload = function() {
-
   window.YaAuthSuggest.init({
       client_id: '4fed8408c435482b950afeb2d6e0f3cc',
       response_type: 'token',
       redirect_uri: 'https://onviz-api.ru/api/token_oauth'
     },
-    'https://onviz-api.ru/api/token_oauth', {
+    'https://onviz-api.ru/auth', {
       view: 'button',
       parentId: 'container',
-      buttonView: 'icon',
+      buttonView: 'main',
       buttonTheme: 'light',
-      buttonSize: 'xxl',
-      buttonBorderRadius: "24",
-      buttonIcon: 'ya',
+      buttonSize: 'm',
+      buttonBorderRadius: 0
     }
   )
     .then(function(result) {
