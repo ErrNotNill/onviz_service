@@ -210,8 +210,7 @@ window.onload = function() {
     }
   )
     .then(function(result) {
-      alert(result.handler())
-      return result.handler()
+      //return result.handler()
     })
     .then(function(data) {
       alert('message with token')
