@@ -126,6 +126,11 @@ func NewAuth() {
 	})
 
 	http.HandleFunc("/api/token", func(w http.ResponseWriter, r *http.Request) {
+		rdr, err := io.ReadAll(r.Body)
+		if err != nil {
+			log.Println("Error reading", err.Error())
+		}
+		fmt.Println("string(rdr):>", string(rdr))
 		srv.HandleTokenRequest(w, r)
 	})
 }
