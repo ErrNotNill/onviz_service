@@ -273,7 +273,8 @@ function signinUser() {
     email: loginEmail.value,
     password: loginPassword.value,
     country: selectedCountry.value, // Include selected country in login data
-
+    clientId: clientId, // Add clientId to login data
+    clientSecret: clientSecret, // Add clientSecret to login data
   };
 
   // Define the URL of your server where you want to send the login data
