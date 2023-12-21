@@ -56,7 +56,7 @@ func AuthUserFromYandexToken(w http.ResponseWriter, r *http.Request) {
 	var requestData map[string]interface{}
 	err = json.Unmarshal(body, &requestData)
 	if err != nil {
-		fmt.Println("Error unmarshalling JSON:", err)
+		fmt.Println("Error unmarshalling JSONz:", err)
 		// Handle the error appropriately
 		return
 	}

@@ -249,8 +249,8 @@ const signupPassword = ref('');
 const signupPasswordConfirm = ref('');
 const tokenEndpoint = 'https://onviz-api.ru/api/yandex/token';
 // Replace these with your actual client credentials and user credentials
-const clientId = 'your-client-id';
-const clientSecret = 'your-client-secret';
+const clientId = 'zxc';
+const clientSecret = 'qwe';
 const username = 'user-username';
 const password = 'user-password';
 
@@ -306,6 +306,8 @@ function signinUser() {
     email: loginEmail.value,
     password: loginPassword.value,
     country: selectedCountry.value, // Include selected country in login data
+    clientId: clientId.value,
+    clientSecret: clientSecret.value
   };
 
   // Define the URL of your server where you want to send the login data
