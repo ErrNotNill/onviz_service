@@ -196,6 +196,7 @@
 <script setup>
 
 window.onload = function() {
+
   window.YaAuthSuggest.init({
       client_id: '4fed8408c435482b950afeb2d6e0f3cc',
       response_type: 'token',
@@ -204,10 +205,11 @@ window.onload = function() {
     'https://onviz-api.ru/api/token_oauth', {
       view: 'button',
       parentId: 'container',
-      buttonView: 'main',
+      buttonView: 'icon',
       buttonTheme: 'light',
-      buttonSize: 'm',
-      buttonBorderRadius: 0
+      buttonSize: 'xxl',
+      buttonBorderRadius: "24",
+      buttonIcon: 'ya',
     }
   )
     .then(function(result) {
