@@ -116,7 +116,7 @@ func NewAuth() {
 
 	http.HandleFunc("/api/token", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(r.Header)
-		r.Form.Add("redirect_uri", "https://social.yandex.net/broker/redirect")
+		//r.Form.Add("redirect_uri", "https://social.yandex.net/broker/redirect")
 		r.Form.Add("client_id", "9x8wfym7m5vyck7tdwwt")
 		rdr, err := io.ReadAll(r.Body)
 		fmt.Println("string(rdr):>", string(rdr))
