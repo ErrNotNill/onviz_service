@@ -8,6 +8,11 @@
   </div>
 
 
+  <component
+    src="https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-with-polyfills-latest.js"
+    :is="'script'"
+  ></component>
+
   <div class="center-form">
     <div class="container" :class="{ active: isSignup }">
       <div class="forms">
@@ -190,6 +195,33 @@
 
 <script setup>
 
+window.onload = function() {
+  window.YaAuthSuggest.init({
+      client_id: '4fed8408c435482b950afeb2d6e0f3cc',
+      response_type: 'token',
+      redirect_uri: 'https://examplesite.com/suggest/token'
+    },
+    'https://examplesite.com', {
+      view: 'button',
+      parentId: 'container',
+      buttonView: 'main',
+      buttonTheme: 'light',
+      buttonSize: 'm',
+      buttonBorderRadius: 0
+    }
+  )
+    .then(function(result) {
+      return result.handler()
+    })
+    .then(function(data) {
+      console.log('Сообщение с токеном: ', data);
+      document.body.innerHTML += `Сообщение с токеном: ${JSON.stringify(data)}`;
+    })
+    .catch(function(error) {
+      console.log('Что-то пошло не так: ', error);
+      document.body.innerHTML += `Что-то пошло не так: ${JSON.stringify(error)}`;
+    });
+};
 
 import Sidebar from '../components/Sidebar.vue';
 import { ref } from 'vue';
@@ -296,7 +328,7 @@ function signinUser() {
         //window.location.href = "https://onviz-api.ru/api/yandex/authorize"
         //window.location.href = "https://social.yandex.net/broker/redirect"
 
-       window.location.href = "https://onviz-api.ru/api/authorize"
+       // window.location.href = "https://onviz-api.ru/api/redirect"
         return response.text(); // Assuming the response is a SHA-256 token string
 
       } else if (response.status === 400) {
