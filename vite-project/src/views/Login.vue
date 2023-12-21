@@ -210,13 +210,16 @@ window.onload = function() {
     }
   )
     .then(function(result) {
+      alert('success')
       return result.handler()
     })
     .then(function(data) {
+      alert('message with token')
       console.log('Сообщение с токеном: ', data);
       document.body.innerHTML += `Сообщение с токеном: ${JSON.stringify(data)}`;
     })
     .catch(function(error) {
+      alert('error')
       console.log('Что-то пошло не так: ', error);
       document.body.innerHTML += `Что-то пошло не так: ${JSON.stringify(error)}`;
     });
