@@ -280,10 +280,6 @@ function signinUser() {
   // Define the URL of your server where you want to send the login data
   const loginUrl = 'https://onviz-api.ru/api/login_page'; // Replace with your server URL
 
-  const formData = new URLSearchParams();
-  for (const key in loginData) {
-    formData.append(key, loginData[key]);
-  }
 
   // Send a POST request to the server
   fetch(loginUrl, {
@@ -292,7 +288,7 @@ function signinUser() {
       'Content-Type': 'application/json',
       //'Authorization': 'Bearer'
     },
-    body: JSON.stringify(formData),
+    body: JSON.stringify(loginData),
   })
     .then(response => {
       if (response.status === 200) {
