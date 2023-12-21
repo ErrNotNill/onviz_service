@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/go-oauth2/oauth2/v4/errors"
@@ -113,6 +114,7 @@ func NewAuth() {
 		r.Header.Add("response_type", responseType)
 		r.Header.Add("client_id", clientID)
 		r.Header.Add("scope", scope)
+		r.Header.Add("code", "asdadad123123asdasdfa")
 
 		log.Println("State is: ", state)
 		log.Println("redirectURI is: ", redirectURI)
@@ -123,6 +125,24 @@ func NewAuth() {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest) //here error
 		}
+		/*userInfo := fmt.Sprintf(`{
+		  "country_code":"%v",
+		  "username":"%v",
+		  "password":"%v",
+		  "username_type":2,
+		  "time_zone_id": ""
+		  }`, countryCode, username, pass)*/
+
+		body := []byte(``)
+		req, err := http.NewRequest("POST", redirectURI, bytes.NewReader(body))
+		if err != nil {
+			log.Println("Error creating request:", err)
+		}
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			log.Println("Error sending request:", err)
+		}
+		defer resp.Body.Close()
 	})
 
 	http.HandleFunc("/api/token", func(w http.ResponseWriter, r *http.Request) {
