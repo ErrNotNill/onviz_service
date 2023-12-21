@@ -74,7 +74,7 @@ func NewAuth() {
 	err := clientStore.Set("9x8wfym7m5vyck7tdwwt", &models2.Client{
 		ID:     "9x8wfym7m5vyck7tdwwt",
 		Secret: "d8205ed66f15471fa969aecab48ab495",
-		Domain: "https://localhost:9090/api/token",
+		Domain: "https://onviz-api.ru/api/token",
 	})
 
 	fmt.Println("clientStore>>>>>>>>>>", clientStore)
