@@ -102,6 +102,10 @@ func NewAuth() {
 	http.HandleFunc("/api/authorize", func(w http.ResponseWriter, r *http.Request) {
 		r.Header.Add("client_id", "9x8wfym7m5vyck7tdwwt")
 		r.Header.Add("client_secret", "d8205ed66f15471fa969aecab48ab495")
+
+		r.Form.Add("redirect_uri", "https://social.yandex.net/broker/redirect")
+		r.Form.Add("client_id", "9x8wfym7m5vyck7tdwwt")
+
 		err := srv.HandleAuthorizeRequest(w, r)
 		//ExchangeAuthorizationCodeForToken() //todo where to get code for this method
 		if err != nil {
