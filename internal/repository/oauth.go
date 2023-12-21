@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"onviz/internal/user/models"
 	"onviz/service/tuya/service"
+	"os"
 )
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
@@ -64,8 +65,69 @@ type AuthRequest struct {
 	Scope        string `json:"scope"`
 }
 
-func NewAuth(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=token&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
+func NewAuth() {
+	manager := manage.NewDefaultManager()
+	// token memory store
+	manager.MustTokenStorage(store.NewMemoryTokenStore())
+
+	clientID := os.Getenv("TUYA_CLIENT_ID")
+	clientSecret := os.Getenv("TUYA_SECRET_KEY")
+	redirUr := "https://onviz-api.ru"
+	domain := fmt.Sprintf("https://social.yandex.net/broker/redirect?response_type=code&client_id=%s&redirect_uri=%s", clientID, redirUr)
+
+	// client memory store
+	clientStore := store.NewClientStore()
+	err := clientStore.Set(clientID, &models2.Client{
+		ID:     clientID,
+		Secret: clientSecret,
+		Domain: domain,
+	})
+	if err != nil {
+		log.Println("Could not set client")
+		return
+	}
+	manager.MapClientStorage(clientStore)
+
+	srv := server.NewDefaultServer(manager)
+	srv.SetAllowGetAccessRequest(true)
+	srv.SetClientInfoHandler(server.ClientFormHandler)
+
+	srv.SetInternalErrorHandler(func(err error) (re *errors.Response) {
+		log.Println("Internal Error:", err.Error())
+		return
+	})
+
+	srv.SetResponseErrorHandler(func(re *errors.Response) {
+		log.Println("Response Error:", re.Error.Error())
+	})
+
+	http.HandleFunc("/api/authorize", func(w http.ResponseWriter, r *http.Request) {
+		r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+		state := r.FormValue("state")
+		redirectURI := r.FormValue("redirect_uri")
+		responseType := r.FormValue("response_type")
+		clientID := r.FormValue("client_id")
+		scope := r.FormValue("scope")
+		r.Header.Add("state", state)
+		r.Header.Add("redirect_uri", redirectURI)
+		r.Header.Add("response_type", responseType)
+		r.Header.Add("client_id", clientID)
+		r.Header.Add("scope", scope)
+
+		log.Println("State is: ", state)
+		log.Println("redirectURI is: ", redirectURI)
+		log.Println("responseType is: ", responseType)
+		log.Println("clientID is: ", clientID)
+		log.Println("scope is: ", scope)
+		err = srv.HandleAuthorizeRequest(w, r)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest) //here error
+		}
+	})
+
+	http.HandleFunc("/api/token", func(w http.ResponseWriter, r *http.Request) {
+		srv.HandleTokenRequest(w, r)
+	})
 }
 
 func Auth() {
