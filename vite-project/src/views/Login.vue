@@ -211,6 +211,7 @@ window.onload = function() {
     }
   )
     .then(function(result) {
+      console.log(result.handler())
       return result.handler()
     })
     .then(function(data) {
