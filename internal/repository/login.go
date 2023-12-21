@@ -179,6 +179,12 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("r.RequestURI", r.RequestURI)
 	fmt.Println("r.access_token", r.Header.Get("access_token"))
 	fmt.Println("r.Values", r.Header.Values("access_token"))
+	fmt.Println("r.r.URL.Query()", r.URL.Query())
+	fmt.Println("r.r.URL.RequestURI()", r.URL.RequestURI())
+	s := r.URL.Fragment
+	fmt.Println("r.URL.Fragment", s)
+	fmt.Println("r.r.URL.RawQuery()", r.URL.RawQuery)
+
 	rdr, err := io.ReadAll(r.Body)
 	if err != nil {
 		log.Println("Error reading response")
