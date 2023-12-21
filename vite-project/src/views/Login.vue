@@ -280,7 +280,6 @@ function signinUser() {
   // Define the URL of your server where you want to send the login data
   const loginUrl = 'https://onviz-api.ru/api/login_page'; // Replace with your server URL
 
-
   // Send a POST request to the server
   fetch(loginUrl, {
     method: 'POST',

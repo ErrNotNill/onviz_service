@@ -13,6 +13,6 @@ type UserDataOnviz struct {
 	Email        string `json:"email"`
 	Password     string `json:"password"`
 	Country      string `json:"country"`
-	ClientID     string `json:"client_id"`
-	ClientSecret string `json:"client_secret"`
+	ClientID     string `json:"clientId"`
+	ClientSecret string `json:"clientSecret"`
 }
