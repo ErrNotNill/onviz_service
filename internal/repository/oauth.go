@@ -42,12 +42,14 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	if userData.Email != "" {
 
 		fmt.Printf("countryCode : %v, userData.Email : %v, userData.Password : %v, userData.ClientID: %v, userData.ClientSecret: %v", countryCode, userData.Email, userData.Password, userData.ClientID, userData.ClientSecret)
+
 		uid := GetUserFromDbase(userData.Email)
 		if uid != "" {
 			fmt.Println("uid_uid_uid_uid_uid::: ", uid)
-
-			w.Header().Set("Authorization", "Bearer TOKEN")
-			UserFromTuya = uid
+			err := json.NewEncoder(w).Encode("tokenFromEncode")
+			if err != nil {
+				log.Println("Error encoding token")
+			}
 		}
 		//service.GetDevicesFromUser(uid)
 		fmt.Println("uid_uid_uid::::", uid)
