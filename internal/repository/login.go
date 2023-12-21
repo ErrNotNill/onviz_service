@@ -170,7 +170,11 @@ func extractCallbackID(path string) string {
 }
 
 func TokenOauth(w http.ResponseWriter, r *http.Request) {
-
+	rdr, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println("Error reading response")
+	}
+	fmt.Println(string(rdr))
 }
 
 func RedirectPage(w http.ResponseWriter, r *http.Request) {
