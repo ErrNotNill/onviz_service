@@ -110,7 +110,12 @@ func NewAuth() {
 	})
 
 	http.HandleFunc("/api/token", func(w http.ResponseWriter, r *http.Request) {
-		err := srv.HandleTokenRequest(w, r)
+		fmt.Println(r.Header)
+
+		rdr, err := io.ReadAll(r.Body)
+		fmt.Println("string(rdr):>", string(rdr))
+
+		err = srv.HandleTokenRequest(w, r)
 		if err != nil {
 			log.Println("Handler token error")
 			return
