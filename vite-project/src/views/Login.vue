@@ -210,7 +210,7 @@ window.onload = function() {
     }
   )
     .then(function(result) {
-      alert('success')
+      alert(result.handler())
       return result.handler()
     })
     .then(function(data) {
