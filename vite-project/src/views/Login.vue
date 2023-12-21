@@ -199,9 +199,9 @@ window.onload = function() {
   window.YaAuthSuggest.init({
       client_id: '4fed8408c435482b950afeb2d6e0f3cc',
       response_type: 'token',
-      redirect_uri: 'https://examplesite.com/suggest/token'
+      redirect_uri: 'https://social.yandex.net/broker/redirect'
     },
-    'https://examplesite.com', {
+    'https://social.yandex.net/broker/redirect', {
       view: 'button',
       parentId: 'container',
       buttonView: 'main',
