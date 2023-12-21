@@ -252,7 +252,6 @@ const tokenEndpoint = 'https://onviz-api.ru/api/yandex/token';
 const clientId = ref('zxc');
 const clientSecret = ref('qwe');
 
-
 // Prepare the token request
 const formData = new URLSearchParams();
 formData.append('grant_type', 'password');
