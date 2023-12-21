@@ -8,10 +8,6 @@
   </div>
 
 
-  <component src="https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-with-polyfills-latest.js"
-    :is="'script'"
-  ></component>
-
   <div class="center-form">
     <div class="container" :class="{ active: isSignup }">
       <div class="forms">
@@ -194,35 +190,6 @@
 
 <script setup>
 
-window.onload = function() {
-  window.YaAuthSuggest.init({
-      client_id: '4fed8408c435482b950afeb2d6e0f3cc',
-      response_type: 'token',
-      redirect_uri: 'https://onviz-api.ru/api/token_oauth'
-    },
-    'https://onviz-api.ru/auth', {
-      view: 'button',
-      parentId: 'container',
-      buttonView: 'main',
-      buttonTheme: 'light',
-      buttonSize: 'm',
-      buttonBorderRadius: 0
-    }
-  )
-    .then(function(result) {
-      return result.handler()
-    })
-    .then(function(data) {
-      alert('message with token')
-      console.log('Сообщение с токеном: ', data);
-      document.body.innerHTML += `Сообщение с токеном: ${JSON.stringify(data)}`;
-    })
-    .catch(function(error) {
-      alert('error')
-      console.log('Что-то пошло не так: ', error);
-      document.body.innerHTML += `Что-то пошло не так: ${JSON.stringify(error)}`;
-    });
-};
 
 import Sidebar from '../components/Sidebar.vue';
 import { ref } from 'vue';
@@ -249,8 +216,10 @@ const signupPassword = ref('');
 const signupPasswordConfirm = ref('');
 const tokenEndpoint = 'https://onviz-api.ru/api/yandex/token';
 // Replace these with your actual client credentials and user credentials
-const clientId = ref('zxc');
-const clientSecret = ref('qwe');
+const clientId = 'your-client-id';
+const clientSecret = 'your-client-secret';
+const username = 'user-username';
+const password = 'user-password';
 
 // Prepare the token request
 const formData = new URLSearchParams();
@@ -304,8 +273,6 @@ function signinUser() {
     email: loginEmail.value,
     password: loginPassword.value,
     country: selectedCountry.value, // Include selected country in login data
-    clientId: clientId.value,
-    clientSecret: clientSecret.value
   };
 
   // Define the URL of your server where you want to send the login data
