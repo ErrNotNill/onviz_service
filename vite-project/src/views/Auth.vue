@@ -12,7 +12,7 @@
 <script setup>
 
 window.onload = function() {
-  window.YaAuthSuggest.init("https://examplesite.com", {
+  window.YaSendSuggestToken.init("https://examplesite.com", {
     "kek": true
   });
 };

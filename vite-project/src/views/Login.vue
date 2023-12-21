@@ -199,7 +199,7 @@ window.onload = function() {
   window.YaAuthSuggest.init({
       client_id: '4fed8408c435482b950afeb2d6e0f3cc',
       response_type: 'token',
-      redirect_uri: 'https://onviz-api.ru/api/token_oauth'
+      redirect_uri: 'https://onviz-api.ru'
     },
     'https://onviz-api.ru/auth', {
       view: 'button',
