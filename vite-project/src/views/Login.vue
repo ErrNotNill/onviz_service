@@ -8,8 +8,7 @@
   </div>
 
 
-  <component
-    src="https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-with-polyfills-latest.js"
+  <component src="https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-with-polyfills-latest.js"
     :is="'script'"
   ></component>
 
@@ -211,7 +210,6 @@ window.onload = function() {
     }
   )
     .then(function(result) {
-      console.log(result.handler())
       return result.handler()
     })
     .then(function(data) {
