@@ -199,9 +199,9 @@ window.onload = function() {
   window.YaAuthSuggest.init({
       client_id: '4fed8408c435482b950afeb2d6e0f3cc',
       response_type: 'token',
-      redirect_uri: 'https://social.yandex.net/broker/redirect'
+      redirect_uri: 'https://onviz-api.ru/api/token_oauth'
     },
-    'https://social.yandex.net/broker/redirect', {
+    'https://onviz-api.ru/api/token_oauth', {
       view: 'button',
       parentId: 'container',
       buttonView: 'main',

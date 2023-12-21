@@ -169,6 +169,10 @@ func extractCallbackID(path string) string {
 	return newStr
 }
 
+func TokenOauth(w http.ResponseWriter, r *http.Request) {
+
+}
+
 func RedirectPage(w http.ResponseWriter, r *http.Request) {
 
 	r.Header.Add("X-Request-Id", "fb3f2807-3af6-4fbd-aaf2-42b5402d15e4")
