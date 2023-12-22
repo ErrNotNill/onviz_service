@@ -193,17 +193,17 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error reading response")
 	}
 	fmt.Println("string(rdr):>", string(rdr))
-	var client Client
+	var client map[string]interface{}
 	err = json.Unmarshal(rdr, &client)
 	if err != nil {
 		log.Println("Error unmarshalling response:", err)
 		return
 	}
 	fmt.Println("users:>", client)
-	fmt.Println("users.AccessToken:>", client.ClientId)
+	/*fmt.Println("users.AccessToken:>", client.ClientId)
 	fmt.Println("client.RedirectURI:>", client.RedirectURI)
 	fmt.Println("client.ResponseType:>", client.ResponseType)
-	fmt.Println("client.Code:>", client.Code)
+	fmt.Println("client.Code:>", client.Code)*/
 
 }
 
