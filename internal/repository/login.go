@@ -183,6 +183,13 @@ type Client struct {
 	Code         string `json:"code"`
 }
 
+type TokenReq struct {
+	AccessToken  string `json:"access_token"`
+	ExpiresIn    int    `json:"expires_in"`
+	RefreshToken string `json:"refresh_token"`
+	TokenType    string `json:"token_type"`
+}
+
 func TokenOauthWithCode(w http.ResponseWriter, r *http.Request) {
 	nextcode := r.URL.Query().Get("code")
 	fmt.Println("nextCODE:???", nextcode)
@@ -225,9 +232,20 @@ func TokenOauthWithCode(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Error reading response body:", err)
 		return
 	}
-
+	var token TokenReq
+	err = json.Unmarshal(body, &token)
+	if err != nil {
+		log.Println("Error unmarshalling response:", err)
+		return
+	}
 	// Print the response body
 	fmt.Println(string(body))
+
+	fmt.Println("token.AccessToken>", token.AccessToken)
+	fmt.Println("token.RefreshToken>", token.RefreshToken)
+	fmt.Println("token.TokenType>", token.TokenType)
+	fmt.Println("token.ExpiresIn>", token.ExpiresIn)
+
 }
 
 var CodeAuth string
