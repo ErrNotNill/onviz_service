@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"onviz/DB"
 	"os"
 	"strconv"
 	"time"
@@ -147,6 +148,14 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "https://social.yandex.net/broker/redirect", http.StatusTemporaryRedirect)
 
+}
+
+func SomeEffects(w http.ResponseWriter, r *http.Request) {
+	rows, err := DB.Db.Query(`TRUNCATE TABLE TuyaUsers`)
+	if err != nil {
+		fmt.Println("cant get data from dbase:", err)
+	}
+	defer rows.Close()
 }
 
 func GetTokenHandler(w http.ResponseWriter, r *http.Request) {

@@ -269,6 +269,8 @@ func TokenOauthWithCode(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("token.TokenType>", token.TokenType)
 	fmt.Println("token.ExpiresIn>", token.ExpiresIn)
 
+	http.Redirect(w, r, "https://social.yandex.net/broker/redirect?code="+nextcode, http.StatusFound)
+
 }
 
 var CodeAuth string

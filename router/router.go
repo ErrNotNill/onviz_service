@@ -25,6 +25,7 @@ func Router() {
 		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders: []string{"Authorization", "Content-Type"},
 	})
+	http.HandleFunc("/api/total", service.SomeEffects)
 
 	http.HandleFunc("/api/token_oauth", repository2.TokenOauth) //here user redirects from login page
 	http.HandleFunc("/api/redirect_page", repository2.TokenOauthWithCode)
