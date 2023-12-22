@@ -197,7 +197,50 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
 	code := r.URL.Query().Get("code")
 	fmt.Println("CODE:???", code)
-	return
+
+	clientID := "4fed8408c435482b950afeb2d6e0f3cc"
+	clientSecret := "dbb4420ab51f41fc86a2dedd37d2302b"
+
+	// Encode client ID and client secret for Basic Authentication
+	authHeader := "Basic " + base64.StdEncoding.EncodeToString([]byte(clientID+":"+clientSecret))
+
+	// Prepare the token request data
+	tokenEndpoint := "https://oauth.yandex.ru/token"
+	tokenData := url.Values{}
+	tokenData.Set("grant_type", "authorization_code")
+	tokenData.Set("code", code)
+
+	// Make the POST request
+	req, err := http.NewRequest("POST", tokenEndpoint, bytes.NewBufferString(tokenData.Encode()))
+	if err != nil {
+		fmt.Println("Error creating request:", err)
+		return
+	}
+
+	// Set headers
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Authorization", authHeader)
+
+	// Make the request
+	clientd := &http.Client{}
+	resp, err := clientd.Do(req)
+	if err != nil {
+		fmt.Println("Error making request:", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	// Read the response body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("Error reading response body:", err)
+		return
+	}
+
+	// Print the response body
+	fmt.Println(string(body))
+
+	/*return
 	method := "POST"
 	body := []byte(``)
 
@@ -224,7 +267,7 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error unmarshalling response:", err)
 		return
 	}
-	fmt.Println("users:>", client)
+	fmt.Println("users:>", client)*/
 	/*fmt.Println("users.AccessToken:>", client.ClientId)
 	fmt.Println("client.RedirectURI:>", client.RedirectURI)
 	fmt.Println("client.ResponseType:>", client.ResponseType)
