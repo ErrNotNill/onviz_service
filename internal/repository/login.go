@@ -190,12 +190,23 @@ type TokenReq struct {
 	TokenType    string `json:"token_type"`
 }
 
+var TransferData interface{}
+
+func ReturnTokenToYandex(w http.ResponseWriter, r *http.Request) {
+	b, err := json.Marshal(TransferData)
+	if err != nil {
+		panic(err)
+	}
+	w.Write(b)
+}
+
 func TokenOauthWithCode(w http.ResponseWriter, r *http.Request) {
+
 	nextcode := r.URL.Query().Get("code")
 	fmt.Println("nextCODE:???", nextcode)
 
-	clientID := "4fed8408c435482b950afeb2d6e0f3cc"
-	clientSecret := "dbb4420ab51f41fc86a2dedd37d2302b"
+	clientID := os.Getenv("OAUTH_CLIENT_ID")
+	clientSecret := os.Getenv("OAUTH_CLIENT_SECRET")
 
 	// Encode client ID and client secret for Basic Authentication
 	authHeader := "Basic " + base64.StdEncoding.EncodeToString([]byte(clientID+":"+clientSecret))
@@ -237,10 +248,16 @@ func TokenOauthWithCode(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Error reading response body:", err)
 		return
 	}
+	TransferData = body
 	var token TokenReq
 	err = json.Unmarshal(body, &token)
 	if err != nil {
 		log.Println("Error unmarshalling response:", err)
+		return
+	}
+	err = json.Unmarshal(body, &TransferData)
+	if err != nil {
+		log.Println("Error unmarshalling transfer_data response:", err)
 		return
 	}
 	// Print the response body
