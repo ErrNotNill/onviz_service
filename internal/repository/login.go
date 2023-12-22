@@ -184,6 +184,9 @@ type Client struct {
 }
 
 func TokenOauthWithCode(w http.ResponseWriter, r *http.Request) {
+	nextcode := r.URL.Query().Get("code")
+	fmt.Println("CODE:???", nextcode)
+
 	clientID := "4fed8408c435482b950afeb2d6e0f3cc"
 	clientSecret := "dbb4420ab51f41fc86a2dedd37d2302b"
 
@@ -194,7 +197,7 @@ func TokenOauthWithCode(w http.ResponseWriter, r *http.Request) {
 	tokenEndpoint := "https://oauth.yandex.ru/token"
 	tokenData := url.Values{}
 	tokenData.Set("grant_type", "authorization_code")
-	tokenData.Set("code", CodeAuth)
+	tokenData.Set("code", nextcode)
 
 	// Make the POST request
 	req, err := http.NewRequest("POST", tokenEndpoint, bytes.NewBufferString(tokenData.Encode()))
