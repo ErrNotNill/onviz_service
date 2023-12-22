@@ -188,6 +188,15 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	'code'          => $_GET['code'],
 	'client_id'     => $clientId,
 	'client_secret' => $clientSecret*/
+	rdrNew, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println("Error reading response")
+	}
+	fmt.Println("string(rdr First Query):>", string(rdrNew))
+
+	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
+	code := r.URL.Query().Get("code")
+	fmt.Println("CODE:???", code)
 
 	method := "POST"
 	body := []byte(``)
