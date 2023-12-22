@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"bytes"
 	"context"
 	"crypto/rand"
 	"crypto/sha256"
@@ -187,8 +188,21 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	'code'          => $_GET['code'],
 	'client_id'     => $clientId,
 	'client_secret' => $clientSecret*/
+	method := "GET"
+	body := []byte(``)
+	req, err := http.NewRequest(method, "https: //oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", bytes.NewReader(body))
+	if err != nil {
+		log.Println("Error creating request:", err)
+		return
+	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println("Error sending request:", err)
+		return
+	}
+	defer resp.Body.Close()
 
-	rdr, err := io.ReadAll(r.Body)
+	rdr, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Println("Error reading response")
 	}
