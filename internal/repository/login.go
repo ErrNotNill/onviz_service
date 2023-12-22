@@ -179,6 +179,7 @@ type Client struct {
 	ClientId     string `json:"client_id"`
 	RedirectURI  string `json:"redirect_uri"`
 	ResponseType string `json:"response_type"`
+	Code         string `json:"code"`
 }
 
 func TokenOauth(w http.ResponseWriter, r *http.Request) {
@@ -186,8 +187,6 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	'code'          => $_GET['code'],
 	'client_id'     => $clientId,
 	'client_secret' => $clientSecret*/
-	code := r.FormValue("code")
-	fmt.Println("code", code)
 
 	rdr, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -204,6 +203,8 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("users.AccessToken:>", client.ClientId)
 	fmt.Println("client.RedirectURI:>", client.RedirectURI)
 	fmt.Println("client.ResponseType:>", client.ResponseType)
+	fmt.Println("client.Code:>", client.Code)
+
 }
 
 func RedirectPage(w http.ResponseWriter, r *http.Request) {
