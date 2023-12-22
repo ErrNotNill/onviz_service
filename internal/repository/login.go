@@ -190,7 +190,7 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	'client_secret' => $clientSecret*/
 	method := "POST"
 	body := []byte(``)
-	req, err := http.NewRequest(method, "https: //oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", bytes.NewReader(body))
+	req, err := http.NewRequest(method, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", bytes.NewReader(body))
 	if err != nil {
 		log.Println("Error creating request:", err)
 		return
