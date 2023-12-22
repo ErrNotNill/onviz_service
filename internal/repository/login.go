@@ -198,6 +198,7 @@ func ReturnTokenToYandex(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	w.Write(b)
+	fmt.Println("string(b):>> ", string(b))
 }
 
 func TokenOauthWithCode(w http.ResponseWriter, r *http.Request) {
