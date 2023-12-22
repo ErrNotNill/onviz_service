@@ -185,7 +185,7 @@ type Client struct {
 
 func TokenOauthWithCode(w http.ResponseWriter, r *http.Request) {
 	nextcode := r.URL.Query().Get("code")
-	fmt.Println("CODE:???", nextcode)
+	fmt.Println("nextCODE:???", nextcode)
 
 	clientID := "4fed8408c435482b950afeb2d6e0f3cc"
 	clientSecret := "dbb4420ab51f41fc86a2dedd37d2302b"
