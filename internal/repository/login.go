@@ -241,9 +241,9 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println("string(rdr First Query):>", string(rdrNew))
 
-	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
+	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusOK)
 	time.Sleep(4 * time.Second)
-	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
+	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusOK)
 	code := r.URL.Query().Get("code")
 	fmt.Println("CODE:???", code)
 	CodeAuth = code
