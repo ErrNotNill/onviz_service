@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"bytes"
 	"context"
 	"crypto/rand"
 	"crypto/sha256"
@@ -188,9 +189,9 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	'client_id'     => $clientId,
 	'client_secret' => $clientSecret*/
 
-	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
-	/*method := "POST"
+	method := "POST"
 	body := []byte(``)
+
 	req, err := http.NewRequest(method, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", bytes.NewReader(body))
 	if err != nil {
 		log.Println("Error creating request:", err)
@@ -214,7 +215,7 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error unmarshalling response:", err)
 		return
 	}
-	fmt.Println("users:>", client)*/
+	fmt.Println("users:>", client)
 	/*fmt.Println("users.AccessToken:>", client.ClientId)
 	fmt.Println("client.RedirectURI:>", client.RedirectURI)
 	fmt.Println("client.ResponseType:>", client.ResponseType)
