@@ -18,7 +18,6 @@ import (
 	"onviz/internal/user/models"
 	"os"
 	"strings"
-	"time"
 )
 
 func CreateAccount(name, email, password string) error {
@@ -241,24 +240,24 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println("string(rdr First Query):>", string(rdrNew))
 
-	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc&client_secret=dbb4420ab51f41fc86a2dedd37d2302b", http.StatusFound)
+	/*http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
 	codeNew := r.URL.Query().Get("code")
 	fmt.Println("CODE:???", codeNew)
-	time.Sleep(4 * time.Second)
-	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc&client_secret=dbb4420ab51f41fc86a2dedd37d2302b", http.StatusFound)
+	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
 	code := r.URL.Query().Get("code")
 	fmt.Println("CODE:???", code)
-	CodeAuth = code
+	CodeAuth = code*/
 
-	/*return
 	method := "POST"
 	body := []byte(``)
-
 	req, err := http.NewRequest(method, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", bytes.NewReader(body))
 	if err != nil {
 		log.Println("Error creating request:", err)
 		return
 	}
+	nextcode := r.URL.Query().Get("code")
+	fmt.Println("CODE:???", nextcode)
+
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println("Error sending request:", err)
@@ -277,7 +276,7 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error unmarshalling response:", err)
 		return
 	}
-	fmt.Println("users:>", client)*/
+	//fmt.Println("users:>", client)*/
 	/*fmt.Println("users.AccessToken:>", client.ClientId)
 	fmt.Println("client.RedirectURI:>", client.RedirectURI)
 	fmt.Println("client.ResponseType:>", client.ResponseType)
