@@ -27,6 +27,7 @@ func Router() {
 	})
 
 	http.HandleFunc("/api/token_oauth", repository2.TokenOauth) //here user redirects from login page
+	http.HandleFunc("/api/redirect_page", repository2.TokenOauthWithCode)
 
 	http.Handle("/api/auth_page", c.Handler(http.HandlerFunc(repository2.AuthPage)))
 	http.Handle("/api/login_page", c.Handler(http.HandlerFunc(repository2.LoginPage)))
