@@ -175,29 +175,35 @@ type AccessToken struct {
 	ExpiresIn   int    `json:"expires_in"`
 }
 
+type Client struct {
+	ClientId     string `json:"client_id"`
+	RedirectURI  string `json:"redirect_uri"`
+	ResponseType string `json:"response_type"`
+}
+
 func TokenOauth(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("r.RequestURI", r.RequestURI)
-	fmt.Println("r.access_token", r.Header.Get("access_token"))
-	fmt.Println("r.Values", r.Header.Values("access_token"))
-	fmt.Println("r.r.URL.Query()", r.URL.Query())
-	fmt.Println("r.r.URL.RequestURI()", r.URL.RequestURI())
-	s := r.URL.Fragment
-	fmt.Println("r.URL.Fragment", s)
-	fmt.Println("r.r.URL.RawQuery()", r.URL.RawQuery)
+	/*'grant_type'    => 'authorization_code',
+	'code'          => $_GET['code'],
+	'client_id'     => $clientId,
+	'client_secret' => $clientSecret*/
+	code := r.FormValue("code")
+	fmt.Println("code", code)
 
 	rdr, err := io.ReadAll(r.Body)
 	if err != nil {
 		log.Println("Error reading response")
 	}
-	fmt.Println(string(rdr))
-	var users AccessToken
-	err = json.Unmarshal(rdr, &users)
+	fmt.Println("string(rdr):>", string(rdr))
+	var client Client
+	err = json.Unmarshal(rdr, &client)
 	if err != nil {
 		log.Println("Error unmarshalling response:", err)
 		return
 	}
-	fmt.Println("users:>", users)
-	fmt.Println("users.AccessToken:>", users.AccessToken)
+	fmt.Println("users:>", client)
+	fmt.Println("users.AccessToken:>", client.ClientId)
+	fmt.Println("client.RedirectURI:>", client.RedirectURI)
+	fmt.Println("client.ResponseType:>", client.ResponseType)
 }
 
 func RedirectPage(w http.ResponseWriter, r *http.Request) {
