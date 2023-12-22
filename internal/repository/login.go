@@ -243,15 +243,11 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println("string(rdr First Query):>", string(rdrNew))
 
-	/*http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
+	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
 	codeNew := r.URL.Query().Get("code")
 	fmt.Println("CODE:???", codeNew)
-	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
-	code := r.URL.Query().Get("code")
-	fmt.Println("CODE:???", code)
-	CodeAuth = code*/
 
-	method := "POST"
+	/*method := "POST"
 	body := []byte(``)
 	req, err := http.NewRequest(method, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", bytes.NewReader(body))
 	if err != nil {
@@ -278,7 +274,7 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("Error unmarshalling response:", err)
 		return
-	}
+	}*/
 	//fmt.Println("users:>", client)*/
 	/*fmt.Println("users.AccessToken:>", client.ClientId)
 	fmt.Println("client.RedirectURI:>", client.RedirectURI)
