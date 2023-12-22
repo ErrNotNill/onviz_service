@@ -224,7 +224,12 @@ func TokenOauthWithCode(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Error making request:", err)
 		return
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Println("Error closing body:", err.Error())
+		}
+	}(resp.Body)
 
 	// Read the response body
 	body, err := io.ReadAll(resp.Body)
