@@ -70,7 +70,20 @@ func SendRefreshTokenForYandex(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(reqId))
 }
 
-func GetDevicesStatus(w http.ResponseWriter, r *http.Request) {
+func GetDevicesInfo(w http.ResponseWriter, r *http.Request) {
+	var requestId int
+	if r.Method == "GET" {
+		w.WriteHeader(http.StatusOK)
+		bs, _ := io.ReadAll(r.Body)
+		log.Println("response:::", string(bs))
+		reqId := fmt.Sprintf(`{
+  "request_id": %v,
+}`, requestId)
+		w.Write([]byte(reqId))
+	}
+}
+
+func GetDevicesState(w http.ResponseWriter, r *http.Request) {
 	var requestId int
 	if r.Method == "POST" {
 		w.WriteHeader(http.StatusOK)
@@ -82,7 +95,6 @@ func GetDevicesStatus(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(reqId))
 	}
 }
-
 func GetDevicesStatusChanged(w http.ResponseWriter, r *http.Request) {
 	var requestId int
 	if r.Method == "POST" {
