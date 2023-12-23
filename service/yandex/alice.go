@@ -155,6 +155,12 @@ func AuthUserFomYandex(w http.ResponseWriter, r *http.Request) {
 }
 
 func CheckConnection(w http.ResponseWriter, r *http.Request) {
+	bd, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println("Failed to read yandex")
+	}
+	fmt.Println("CheckConnection(bd):>", string(bd))
+
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.WriteHeader(http.StatusOK)
@@ -168,6 +174,7 @@ func CheckConnection(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println("Error reading body from server")
 	}
+	fmt.Println("body i: ", i)
 	js := json.Unmarshal(body, i)
 	fmt.Println("body request: ", js)
 }

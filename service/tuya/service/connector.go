@@ -71,6 +71,12 @@ func SendRefreshTokenForYandex(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetDevicesInfo(w http.ResponseWriter, r *http.Request) {
+	bd, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println("Failed to read yandex")
+	}
+	fmt.Println("GetDevicesInfo(bd):>", string(bd))
+
 	var requestId int
 	if r.Method == "GET" {
 		w.WriteHeader(http.StatusOK)
@@ -84,6 +90,12 @@ func GetDevicesInfo(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetDevicesState(w http.ResponseWriter, r *http.Request) {
+	bd, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println("Failed to read yandex")
+	}
+	fmt.Println("GetDevicesState(bd):>", string(bd))
+
 	var requestId int
 	if r.Method == "POST" {
 		w.WriteHeader(http.StatusOK)
@@ -96,6 +108,12 @@ func GetDevicesState(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func GetDevicesStatusChanged(w http.ResponseWriter, r *http.Request) {
+	bd, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println("Failed to read yandex")
+	}
+	fmt.Println("GetDevicesStatusChanged(bd):>", string(bd))
+
 	var requestId int
 	if r.Method == "POST" {
 		w.WriteHeader(http.StatusOK)
@@ -109,6 +127,12 @@ func GetDevicesStatusChanged(w http.ResponseWriter, r *http.Request) {
 }
 
 func UnlinkUser(w http.ResponseWriter, r *http.Request) {
+	bd, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println("Failed to read yandex")
+	}
+	fmt.Println("UnlinkUser(bd):>", string(bd))
+
 	var requestId int
 	if r.Method == "POST" {
 		w.WriteHeader(http.StatusOK)
