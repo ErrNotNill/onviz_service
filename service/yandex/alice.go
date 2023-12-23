@@ -60,7 +60,7 @@ func AuthUserFromYandexToken(w http.ResponseWriter, r *http.Request) {
 		// Handle the error appropriately
 		return
 	}
-	fmt.Println("Body request:", requestData)
+	fmt.Println("Body request AuthUserFromYandexToken :", requestData)
 
 	// Your custom client ID and secret
 	clientId := os.Getenv("TUYA_CLIENT_ID")
@@ -176,7 +176,7 @@ func CheckConnection(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println("body i: ", i)
 	js := json.Unmarshal(body, i)
-	fmt.Println("body request: ", js)
+	fmt.Println("body request CheckConnection: ", js)
 }
 func UpdateDevices(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -187,7 +187,7 @@ func UpdateDevices(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Error reading body from server")
 	}
 	js := json.Unmarshal(body, i)
-	fmt.Println("body request: ", js)
+	fmt.Println("body request CheckConnection: ", js)
 
 	if r.Method == "GET" {
 
