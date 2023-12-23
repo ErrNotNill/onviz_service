@@ -155,8 +155,8 @@ func AuthUserFomYandex(w http.ResponseWriter, r *http.Request) {
 }
 
 func CheckConnection(w http.ResponseWriter, r *http.Request) {
-	session_id := r.URL.Query().Get("session_id")
-	fmt.Println("session_id", session_id)
+	client_id := r.URL.Query().Get("client_id")
+	fmt.Println("client_id", client_id)
 	bd, err := io.ReadAll(r.Body)
 	if err != nil {
 		log.Println("Failed to read yandex")
