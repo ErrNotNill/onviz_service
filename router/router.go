@@ -1,7 +1,10 @@
 package router
 
 import (
+	"fmt"
 	"github.com/rs/cors"
+	"io"
+	"log"
 	"net/http"
 	"onviz/addons"
 	"onviz/chat"
@@ -15,11 +18,23 @@ import (
 
 //todo endpoints for yandex
 
+func TestFunc(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Testing function starting")
+	bd, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println("Failed to read yandex")
+	}
+	fmt.Println("string(bd):>", string(bd))
+}
+
 func Router() {
+
+	http.HandleFunc("/api/v2.0", TestFunc)
 
 	//http.HandleFunc("/authorize", tuya.GetDeviceNew)
 	//http.HandleFunc("/token", tuya.GetDeviceNew)
 	//http.Handle("/", http.FileServer(http.Dir("./chat/public")))
+
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"}, // Change this to the specific origin of your Vue.js app in a production environment.
 		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
