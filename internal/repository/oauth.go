@@ -17,6 +17,8 @@ import (
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
 	r.Header.Get("X-Request-Id")
+	client_id := r.URL.Query().Get("client_id")
+	fmt.Println("client_id", client_id)
 
 	readerFromYandex, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -51,6 +53,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 				log.Println("Error encoding token")
 			}
 		}
+		http.Redirect(w, r, "https://social.yandex.net/broker/redirect?"+client_id, http.StatusFound)
 		//service.GetDevicesFromUser(uid)
 		fmt.Println("uid_uid_uid::::", uid)
 	} else {
