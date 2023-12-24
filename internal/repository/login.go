@@ -206,7 +206,7 @@ func TokenOauthWithCode(w http.ResponseWriter, r *http.Request) {
 
 	nextcode := r.URL.Query().Get("code")
 	fmt.Println("nextCODE:???", nextcode)
-
+	http.Redirect(w, r, "https://social.yandex.net/broker/redirect?code="+nextcode, http.StatusFound)
 	clientID := os.Getenv("OAUTH_CLIENT_ID")
 	clientSecret := os.Getenv("OAUTH_CLIENT_SECRET")
 
