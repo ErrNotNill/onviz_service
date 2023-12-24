@@ -281,6 +281,7 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	'code'          => $_GET['code'],
 	'client_id'     => $clientId,
 	'client_secret' => $clientSecret*/
+
 	rdrNew, err := io.ReadAll(r.Body)
 	if err != nil {
 		log.Println("Error reading response")
