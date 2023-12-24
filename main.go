@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/azzzak/alice"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/redis/go-redis/v9"
@@ -65,10 +66,19 @@ func main() {
 		Addr:              ":9090",
 		ReadHeaderTimeout: 3 * time.Second,
 	}
+
+	updates := alice.ListenForWebhook("/api/hook")
+
 	err = server.ListenAndServe()
 	if err != nil {
 		fmt.Println("Server started with error")
 		panic(err)
 	}
-
+	updates.Loop(func(k alice.Kit) *alice.Response {
+		req, resp := k.Init()
+		if req.IsNewSession() {
+			return resp.Text("привет")
+		}
+		return resp.Text(req.OriginalUtterance())
+	})
 }
