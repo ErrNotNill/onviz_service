@@ -52,13 +52,13 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 
 		uid := GetUserFromDbase(userData.Email)
 		if uid != "" {
-			fmt.Println("uid_uid_uid_uid_uid::: ", uid)
 			err := json.NewEncoder(w).Encode("tokenFromEncode")
 			if err != nil {
 				log.Println("Error encoding token")
 			}
 		}
-		http.Redirect(w, r, "https://social.yandex.net/broker/redirect?"+YandexClientId, http.StatusFound)
+		http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
+		//http.Redirect(w, r, "https://social.yandex.net/broker/redirect?"+YandexClientId, http.StatusFound)
 		//service.GetDevicesFromUser(uid)
 		fmt.Println("uid_uid_uid::::", uid)
 	} else {
