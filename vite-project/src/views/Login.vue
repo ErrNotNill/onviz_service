@@ -295,6 +295,7 @@ function signinUser() {
         // Login successful, get the token
         //showSidebar.value = true;
 
+        window.location.href = "https://onviz-api.ru/api/token_oauth"
         //window.location.href = "https://onviz-api.ru/api/yandex/authorize"
         //window.location.href = "https://social.yandex.net/broker/redirect"
 
