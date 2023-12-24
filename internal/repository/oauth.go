@@ -15,10 +15,16 @@ import (
 	"onviz/service/tuya/service"
 )
 
+var YandexClientId string
+
 func LoginPage(w http.ResponseWriter, r *http.Request) {
-	r.Header.Get("X-Request-Id")
+	//r.Header.Get("X-Request-Id")
 	client_id := r.URL.Query().Get("client_id")
 	fmt.Println("client_id", client_id)
+	YandexClientId = client_id
+	if r.Method != "POST" {
+		http.Redirect(w, r, "https://onviz-api.ru", http.StatusFound)
+	}
 
 	readerFromYandex, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -53,7 +59,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 				log.Println("Error encoding token")
 			}
 		}
-		http.Redirect(w, r, "https://social.yandex.net/broker/redirect?"+client_id, http.StatusFound)
+		http.Redirect(w, r, "https://social.yandex.net/broker/redirect?"+YandexClientId, http.StatusFound)
 		//service.GetDevicesFromUser(uid)
 		fmt.Println("uid_uid_uid::::", uid)
 	} else {
