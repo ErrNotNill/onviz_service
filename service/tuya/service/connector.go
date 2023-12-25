@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/gorilla/schema"
 	"github.com/tuya/tuya-connector-go/connector"
 	"github.com/tuya/tuya-connector-go/connector/constant"
 	"github.com/tuya/tuya-connector-go/connector/env"
@@ -71,6 +72,19 @@ func SendRefreshTokenForYandex(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetDevicesInfo(w http.ResponseWriter, r *http.Request) {
+
+	if err := r.ParseForm(); err != nil {
+		log.Println("Error parsing")
+	}
+
+	var filter interface{}
+	if err := schema.NewDecoder().Decode(filter, r.Form); err != nil {
+		log.Println("Error decoding filter")
+	}
+
+	// Do something with filter
+	fmt.Printf("%+v", filter)
+
 	bd, err := io.ReadAll(r.Body)
 	if err != nil {
 		log.Println("Failed to read yandex")
