@@ -13,6 +13,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"onviz/internal/repository"
 	"os"
 	"strconv"
 )
@@ -40,6 +41,7 @@ func SimpleSkill() {
 func AuthUserFromYandexToken(w http.ResponseWriter, r *http.Request) {
 	// Set CORS headers
 
+	fmt.Println("CODE_AUTH:?>", repository.CodeAuth)
 	code := r.URL.Query().Get("code")
 	fmt.Println("what is code returned from yandex?:>", code)
 
