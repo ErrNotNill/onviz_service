@@ -334,7 +334,7 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	clientSecret := "dbb4420ab51f41fc86a2dedd37d2302b"
 
 	// Replace this with the authorization code you received
-	authorizationCode := CodeAuth
+	authorizationCode := randomcode
 
 	fmt.Println("authorization_code:>>", authorizationCode)
 	fmt.Println("clientID:>>", clientID)
