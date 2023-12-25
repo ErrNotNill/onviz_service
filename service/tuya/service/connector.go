@@ -73,6 +73,9 @@ func SendRefreshTokenForYandex(w http.ResponseWriter, r *http.Request) {
 
 func GetDevicesInfo(w http.ResponseWriter, r *http.Request) {
 
+	urlQueries := r.URL.Query().Encode()
+	fmt.Println("urlQueries:>", urlQueries)
+
 	if err := r.ParseForm(); err != nil {
 		log.Println("Error parsing")
 	}
