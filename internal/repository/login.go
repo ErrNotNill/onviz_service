@@ -276,6 +276,50 @@ func TokenOauthWithCode(w http.ResponseWriter, r *http.Request) {
 
 var CodeAuth string
 
+type TokenResponse struct {
+	AccessToken  string `json:"access_token"`
+	ExpiresIn    int    `json:"expires_in"`
+	RefreshToken string `json:"refresh_token"`
+	TokenType    string `json:"token_type"`
+}
+
+func ExchangeCodeForToken(code string, clientID string, clientSecret string) (*TokenResponse, error) {
+	tokenEndpoint := "https://oauth.yandex.ru/token"
+
+	// Prepare the form data for the token request
+	formData := url.Values{
+		"grant_type":    {"authorization_code"},
+		"code":          {code},
+		"client_id":     {clientID},
+		"client_secret": {clientSecret},
+	}
+
+	// Make the POST request to the token endpoint
+	resp, err := http.PostForm(tokenEndpoint, formData)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	// Read the response body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check if the request was successful (status code 200)
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("Token request failed with status: %d, response: %s", resp.StatusCode, body)
+	}
+
+	// Parse the JSON response into a TokenResponse struct
+	var tokenResponse TokenResponse
+	if err := json.Unmarshal(body, &tokenResponse); err != nil {
+		return nil, err
+	}
+
+	return &tokenResponse, nil
+}
 func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	/*'grant_type'    => 'authorization_code',
 	'code'          => $_GET['code'],
@@ -285,6 +329,28 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	randomcode, _ := generateRandomCode()
 	CodeAuth = randomcode
 	fmt.Println("random_code:>>", randomcode)
+
+	clientID := "4fed8408c435482b950afeb2d6e0f3cc"
+	clientSecret := "dbb4420ab51f41fc86a2dedd37d2302b"
+
+	// Replace this with the authorization code you received
+	authorizationCode := "your-authorization-code"
+
+	// Exchange the authorization code for a token
+	tokenResponse, err := ExchangeCodeForToken(authorizationCode, clientID, clientSecret)
+	if err != nil {
+		fmt.Println("Error exchanging code for token:", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+
+	// Encode the TokenResponse as JSON and write it to the response
+	err = json.NewEncoder(w).Encode(tokenResponse)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error encoding JSON: %s", err), http.StatusInternalServerError)
+		return
+	}
+
 	rdrNew, err := io.ReadAll(r.Body)
 	if err != nil {
 		log.Println("Error reading response")
