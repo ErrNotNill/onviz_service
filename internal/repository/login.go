@@ -297,6 +297,7 @@ func ExchangeCodeForToken(code string, clientID string, clientSecret string) (*T
 	// Make the POST request to the token endpoint
 	resp, err := http.PostForm(tokenEndpoint, formData)
 	if err != nil {
+		fmt.Println("Error creating post request to token endpoint")
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -304,6 +305,7 @@ func ExchangeCodeForToken(code string, clientID string, clientSecret string) (*T
 	// Read the response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
+		fmt.Println("Error read json")
 		return nil, err
 	}
 
