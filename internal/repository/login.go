@@ -336,6 +336,9 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	// Replace this with the authorization code you received
 	authorizationCode := CodeAuth
 
+	fmt.Println("authorization_code:>>", authorizationCode)
+	fmt.Println("clientID:>>", clientID)
+	fmt.Println("clientSecret:>>", clientSecret)
 	// Exchange the authorization code for a token
 	tokenResponse, err := ExchangeCodeForToken(authorizationCode, clientID, clientSecret)
 	if err != nil {
