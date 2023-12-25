@@ -295,9 +295,9 @@ function signinUser() {
         // Login successful, get the token
         //showSidebar.value = true;
 
-         //window.location.href = "https://oauth.yandex.ru/authorize?client_id=4fed8408c435482b950afeb2d6e0f3cc&client_secret=dbb4420ab51f41fc86a2dedd37d2302b"
+       window.location.href = "https://oauth.yandex.ru/authorize?client_id=4fed8408c435482b950afeb2d6e0f3cc&client_secret=dbb4420ab51f41fc86a2dedd37d2302b"
 
-        window.location.href = "https://onviz-api.ru/api/token_oauth"
+        //window.location.href = "https://onviz-api.ru/api/token_oauth"
         //window.location.href = "https://onviz-api.ru/api/yandex/authorize"
         //window.location.href = "https://social.yandex.net/broker/redirect"
 
