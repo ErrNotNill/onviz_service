@@ -39,6 +39,10 @@ func SimpleSkill() {
 
 func AuthUserFromYandexToken(w http.ResponseWriter, r *http.Request) {
 	// Set CORS headers
+
+	code := r.URL.Query().Get("code")
+	fmt.Println("what is code returned from yandex?:>", code)
+
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.WriteHeader(http.StatusOK)

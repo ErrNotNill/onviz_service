@@ -282,6 +282,9 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 	'client_id'     => $clientId,
 	'client_secret' => $clientSecret*/
 
+	randomcode, _ := generateRandomCode()
+	CodeAuth = randomcode
+	fmt.Println("random_code:>>", randomcode)
 	rdrNew, err := io.ReadAll(r.Body)
 	if err != nil {
 		log.Println("Error reading response")
@@ -290,8 +293,9 @@ func TokenOauth(w http.ResponseWriter, r *http.Request) {
 
 	codeNew := r.URL.Query().Get("code")
 	fmt.Println("CODE:???", codeNew)
+	http.Redirect(w, r, "https://social.yandex.net/broker/redirect?code="+randomcode, http.StatusFound)
 
-	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
+	//http.Redirect(w, r, "https://oauth.yandex.ru/authorize?client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
 
 	/*method := "POST"
 	body := []byte(``)
